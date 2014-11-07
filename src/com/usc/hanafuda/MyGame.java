@@ -2,7 +2,7 @@ package com.usc.hanafuda;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
+//comment by Henry
 public class MyGame extends JFrame{
 
 	public static final boolean DEBUG = true;
