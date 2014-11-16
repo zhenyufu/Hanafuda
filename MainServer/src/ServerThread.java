@@ -68,6 +68,12 @@ public class ServerThread extends Thread{
 					hs.removeDisconnection(this);
 					break;
 				}
+				//
+				if(line.equals("Signal:StartGame")){
+					
+					hs.onStartOfGame();
+					
+				}
 				
 				System.out.println("received message: "+line);
 			}
