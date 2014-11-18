@@ -10,7 +10,9 @@ public class HServer {
 	private Vector<ServerThread> vServerThread=new Vector<ServerThread>();
 	//Field variable
 	private Deck deck;
-	private ArrayList<Card> Field;
+	public ArrayList<Card> Field;
+	public ArrayList<Card> Collection;
+	private ServerThread currentPlayer;
 	public HServer(int port){
 		try{
 			ServerSocket ss=new ServerSocket(port);
@@ -59,9 +61,25 @@ public class HServer {
 		//TODO: Initialize Deck object
 		deck=new Deck();
 		//TODO: Initialize whatever is being used to store field
-		Field=new ArrayList(8);
 		
-		for(int i=0;i<8;i++)
+		int numInitialFieldCard=0;
+		int numInitialHandCard=0;
+		
+		if(vServerThread.size()==2){
+			numInitialFieldCard=8;
+			numInitialHandCard=8;
+		}
+		if(vServerThread.size()==3){
+			numInitialFieldCard=6;
+			numInitialHandCard=7;
+		}
+		if(vServerThread.size()==4){
+			numInitialFieldCard=8;
+			numInitialHandCard=5;
+		}
+		Field=new ArrayList(numInitialFieldCard);
+		
+		for(int i=0;i<numInitialFieldCard;i++)
 		Field.add(deck.drawCard());//deck should be 48-8=40 now
 		
 		
@@ -69,7 +87,7 @@ public class HServer {
 		for(int i=0;i<vServerThread.size();i++){//every person
 			ServerThread current=vServerThread.get(i);
 			
-			for(int j=0;j<8;j++){
+			for(int j=0;j<numInitialHandCard;j++){
 			sendMessage("Signal:SendHands",current);
 			
 			//make sure the messages are not send to clients at the same time as the cards 
@@ -92,7 +110,7 @@ public class HServer {
 			ServerThread current=vServerThread.get(i);
 			//signal clients that the next few cards will be the field.
 			
-			for(int j=0;j<Field.size();j++){
+			for(int j=0;j<numInitialFieldCard;j++){
 				
 				//signal clients that the next few cards will be the field.
 				sendMessage("Signal:SendField",current);
@@ -116,6 +134,7 @@ public class HServer {
 		//As default, the host is the first one to act
 		ServerThread host=vServerThread.get(0);
 		sendMessage("Signal:Turn", host);
+		currentPlayer=host;
 		
 	}//OnStartOfGame block
 	
@@ -152,10 +171,44 @@ public class HServer {
 		
 	}//updateField block
 	
+	public void updateCollection() {
+		//TODO: Update field; send updated field to each client
+		//send the field again to each client
+		for(int i=0;i<vServerThread.size();i++){
+			
+		ServerThread current=vServerThread.get(i);
+			
+		sendMessage("Signal:UpdateCollection",current);
+		
+		//make sure the messages are not send to clients at the same time as the cards 
+		for(int j=0;j<Field.size();j++){
+			
+			//signal clients that the next few cards will be the field.
+			sendMessage("Signal:SendCollection",current);
+			
+			//make sure the messages are not send to clients at the same time as the cards 
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			sendCard(Collection.get(j),current);
+		
+		}
+		
+		
+	}
+		
+	}
 	
 	//This method will send card from deck to the client
 	public void sendCardFromDeck () {
 		//TODO: Draw card from deck
+		Card current=deck.drawCard();
+		sendMessage("Signal:SendCardFromDeck", currentPlayer);
+		
 		//TODO: If the card has a match in the field, send this card and its match to the client;
 				//If not, add this card to the field
 		//TODO: Send updated field to each client

@@ -59,4 +59,9 @@ public class Card implements Serializable{
 		return name;
 	}
 	
+	public boolean isMatch(Card cd){
+		//TODOS
+		return false;
+	}
+	
 }
