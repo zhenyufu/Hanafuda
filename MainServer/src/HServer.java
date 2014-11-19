@@ -207,17 +207,54 @@ public class HServer {
 	public void sendCardFromDeck () {
 		//TODO: Draw card from deck
 		Card current=deck.drawCard();
-		sendMessage("Signal:SendCardFromDeck", currentPlayer);
+		sendMessage("Signal:SendCardFromDeck", currentPlayer); 
 		
 		//TODO: If the card has a match in the field, send this card and its match to the client;
 				//If not, add this card to the field
+		int numMatched =0;
+		for(int i=0;i<Field.size();i++){
+			if(current.isMatch(Field.get(i)))numMatched++;	// check for num of matched cards in the field		
+		}
 		//TODO: Send updated field to each client
+		if(numMatched!=0){ // if there is a match,
+			sendMessage("Signal:SendMatchingCardsFromField",currentPlayer); 
+			sendCard(current,currentPlayer); // send drawn card to client
+			for(int i=0;i<Field.size();i++){
+				if(current.isMatch(Field.get(i))){ // send all matched card to client
+					sendMessage("Signal:SendMatchingCardsFromField",currentPlayer); 
+					sendCard(Field.get(i),currentPlayer);
+				}
+			}
+		}else{ // if there is no match on the field, add card to field
+			Field.add(current); // 
+			updateField();
+		}
+		
+
 	}
 	
 	//This method is called when the client notifies the server of the end of turn
 	public void onEndOfTurn () {
 		//TODO: Check for end of game
+		if(Field.size()==0){// if game ended, tell each player game is over
+			for(int i=0;i<vServerThread.size();i++){				
+			ServerThread current=vServerThread.get(i);
+			sendMessage("Signal:GameEnded",current); 
+			}
+		}
 		//TODO: If the game hasn't ended, notify next player of turn
+		else{
+			for(int i=0;i<vServerThread.size();i++){				
+				ServerThread current=vServerThread.get(i);
+				if(current.equals(currentPlayer)){ //signals the next player that it's his or her turn
+					sendMessage("Signal:YourTurn",vServerThread.get(i+1)); 
+					currentPlayer =vServerThread.get(i+1);
+					break;
+				}
+			}
+			
+		}
+		
 	}
 	
 	public static void main(String [] args){

@@ -60,8 +60,8 @@ public class Card implements Serializable{
 	}
 	
 	public boolean isMatch(Card cd){
-		//TODOS
-		return false;
+		if(this.month ==cd.getMonth()) return true;
+		else return false;
 	}
 	
 }

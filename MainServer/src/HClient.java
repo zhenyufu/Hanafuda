@@ -285,6 +285,31 @@ public class HClient extends Thread{
 			}
 		}
 		}
+		//takes in matched cards from field. You to user in GUI and and the user decide which card should be added to collection
+		if(line.equals("Signal:SendMatchingCardsFromField")){  
+			try {
+				Card received =  (Card) is.readObject();
+				// TODO show these cards to user a matching card.Then add that card to collection
+			} catch (ClassNotFoundException e) {
+				
+				e.printStackTrace();
+			}
+			
+
+		}
+		if(line.equals("Signal:GameEnded")){  
+			//TODO: print to GUI that the game ended and show final score
+
+		}
+		if(line.equals("Signal:YourTurn")){  
+			//TODO: reenable player's access in GUI
+			// player chooses a card and system checks if there are any matching cards in the field
+			//1. if no match, then put the card in the field
+			//2. if there is one match, add both of these cards to collection
+			//3. if there is more than one match, let the player choose which card, along with the card chosen, should be added to collection
+				// if there is a match at all, then player should draw another card from a deck and system compares that card with the cards on field
+				//repeat steps 1,2,3 once
+		}
 			
 	}//while(true) block
 		
