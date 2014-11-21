@@ -1,4 +1,4 @@
-package com.usc.hanafuda;
+package com.usc.hanafuda.screens;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,6 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.usc.hanafuda.MyGame;
 
 public class MenuScreen extends JPanel {
 	

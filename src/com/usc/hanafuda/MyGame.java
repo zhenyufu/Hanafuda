@@ -2,6 +2,9 @@ package com.usc.hanafuda;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.usc.hanafuda.handlers.MyAssetHandler;
+import com.usc.hanafuda.screens.MenuScreen;
+
 public class MyGame extends JFrame{
 
 	public static final boolean DEBUG = true;

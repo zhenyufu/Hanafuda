@@ -1,4 +1,4 @@
-package com.usc.hanafuda;
+package com.usc.hanafuda.screens;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,6 +20,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.usc.hanafuda.MyGame;
+import com.usc.hanafuda.handlers.MyAssetHandler;
 
 public class GameScreen extends JPanel {
 	//
@@ -105,7 +108,7 @@ public class GameScreen extends JPanel {
 		chatBottomPanel.add(sendMessage);
 		
 		textPanel.add(chatBottomPanel, BorderLayout.SOUTH);
-		textArea = new JTextArea("chat content", 7, 20);
+		textArea = new JTextArea("", 7, 20);
 		textArea.setEditable(false);
 		textPanel.add(textArea, BorderLayout.CENTER);
 
@@ -147,7 +150,8 @@ public class GameScreen extends JPanel {
 		// temp:
 		//g.setColor(Color.black);
 		//g.drawRect(100, 100, 1000, 700);
-		
+		g.drawImage(MyAssetHandler.deckImage, 300, 300, null);
+
 		g.drawImage(MyAssetHandler.cardImageArray[0], 40, 40, null);
 		g.drawImage(MyAssetHandler.cardImageArray[1], 400, 400, null);
 		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 800, null);

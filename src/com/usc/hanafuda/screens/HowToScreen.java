@@ -1,4 +1,4 @@
-package com.usc.hanafuda;
+package com.usc.hanafuda.screens;
 
 import java.awt.BorderLayout;
 import java.io.IOException;

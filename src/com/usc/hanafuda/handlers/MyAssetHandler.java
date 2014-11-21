@@ -1,4 +1,4 @@
-package com.usc.hanafuda;
+package com.usc.hanafuda.handlers;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -21,7 +21,7 @@ public class MyAssetHandler {
 	
 
 	public static BufferedImage[] cardImageArray = new BufferedImage[SIZE];
-	
+	public static BufferedImage deckImage;
 	
 	
 	public static void load () {
@@ -29,12 +29,12 @@ public class MyAssetHandler {
 		try {
 			image = ImageIO.read(new File("all.png"));
 			System.out.println("load + cardImage.jpg");
-		
+			deckImage = ImageIO.read(new File("deck.png"));
 		
 			for(int i = 0; i < ROW; i++){
 				for(int j = 0; j < COL ; j++){
 				//cardImageArray[i] = new BufferedImage(500, 500, image.getType());
-					System.out.println(i + "," + j);
+					//System.out.println(i + "," + j);
 				cardImageArray[i*COL+j] = image.getSubimage(j * WIDTH, i * HEIGHT, WIDTH, HEIGHT);
 				}
 			}
