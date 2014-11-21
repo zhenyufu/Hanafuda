@@ -13,6 +13,8 @@ public class MyGame extends JFrame{
 		setLocation(150, 30);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		
+		
 		currentPanel = new MenuScreen(this);
 		add(currentPanel);
 		
@@ -23,6 +25,7 @@ public class MyGame extends JFrame{
 	
 	
 	public static void main(String[] args) {
+		MyAssetHandler.load();
 		MyGame  g = new MyGame();
 	}
 	
