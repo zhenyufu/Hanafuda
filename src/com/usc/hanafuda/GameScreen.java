@@ -20,7 +20,7 @@ import javax.swing.JTextField;
 
 public class GameScreen extends JPanel {
 
-	private JLabel t = new JLabel("another player");
+	//private JLabel t = new JLabel("another player");
 	private JButton backButton;
 	private JTextField textField;
 	private JTextArea textArea;
@@ -33,13 +33,12 @@ public class GameScreen extends JPanel {
 		deckPanel.setOpaque(false);
 		add(deckPanel);
 
-		deckPanel.add(t, BorderLayout.WEST);
+		//deckPanel.add(t, BorderLayout.WEST);
 
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(new File("Image1.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -50,7 +49,7 @@ public class GameScreen extends JPanel {
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BorderLayout());
 		add(textPanel, BorderLayout.EAST);
-		textPanel.setPreferredSize(new Dimension(200, 600));
+		textPanel.setPreferredSize(new Dimension(200, 1000));
 
 		backButton = new JButton("Back");
 		textPanel.add(backButton, BorderLayout.NORTH);
@@ -74,37 +73,37 @@ public class GameScreen extends JPanel {
 		
 		
 		
-		// temp code:
-		JPanel tf = new JPanel();
-		tf.setOpaque(false);
-		JLabel ml = new JLabel("another player");
-		tf.add(ml);
-		deckPanel.add(tf, BorderLayout.NORTH);
-
-		JPanel te = new JPanel();
-		te.setOpaque(false);
-		JLabel mle = new JLabel("another player");
-		te.add(mle);
-		deckPanel.add(mle, BorderLayout.EAST);
-
-		JPanel o = new JPanel();
-		o.setOpaque(false);
-		o.setLayout(new GridBagLayout());
-		JLabel m = new JLabel("main deck");
-		o.add(m);
-		deckPanel.add(o, BorderLayout.CENTER);
+//		// temp code:
+//		JPanel tf = new JPanel();
+//		tf.setOpaque(false);
+//		JLabel ml = new JLabel("another player");
+//		tf.add(ml);
+//		deckPanel.add(tf, BorderLayout.NORTH);
+//
+//		JPanel te = new JPanel();
+//		te.setOpaque(false);
+//		JLabel mle = new JLabel("another player");
+//		te.add(mle);
+//		deckPanel.add(mle, BorderLayout.EAST);
+//
+//		JPanel o = new JPanel();
+//		o.setOpaque(false);
+//		o.setLayout(new GridBagLayout());
+//		JLabel m = new JLabel("main deck");
+//		o.add(m);
+//		deckPanel.add(o, BorderLayout.CENTER);
 
 	}
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		g.setColor(new Color(246, 244, 186));
-		g.fillRect(0, 0, 1400, 1000);
+		//g.setColor(new Color(246, 244, 186));
+		//g.fillRect(0, 0, 1400, 1000);
 
 		// temp:
-		g.setColor(Color.black);
-		g.drawRect(100, 100, 1000, 700);
+		//g.setColor(Color.black);
+		//g.drawRect(100, 100, 1000, 700);
 
 	}
 
