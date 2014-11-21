@@ -57,7 +57,11 @@ public class MenuScreen extends JPanel {
 		});
 		multiPlayButton  = new JButton("Multi Player");
 		howToButton = new JButton("How To Play");
-		
+		howToButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				new HowToScreen();
+			}
+		});
 		singlePlayButton.setPreferredSize(new Dimension(150, 100));
 		multiPlayButton.setPreferredSize(new Dimension(150, 100));
 		howToButton.setPreferredSize(new Dimension(150, 100));
