@@ -2,8 +2,6 @@ package com.usc.hanafuda;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-//comment by Henry
-//hahahah
 public class MyGame extends JFrame{
 
 	public static final boolean DEBUG = true;
@@ -12,7 +10,7 @@ public class MyGame extends JFrame{
 	public MyGame() {
 		super("Hanafuda");
 		setSize(1400, 1000);
-		setLocation(100, 30);
+		setLocation(150, 30);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		currentPanel = new MenuScreen(this);

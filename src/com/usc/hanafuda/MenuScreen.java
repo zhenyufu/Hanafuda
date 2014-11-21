@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,20 +29,19 @@ public class MenuScreen extends JPanel {
 		
 		this.setLayout(new GridBagLayout());
 		JPanel center = new JPanel(new GridLayout(2,1));
+		
 		center.setOpaque(false);
 		add(center);
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(new File("ha.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		JLabel imageLabel = new JLabel(new ImageIcon(image));
 		
 		center.add(imageLabel);
-		
 		
 		JPanel south = new JPanel();
 		center.add(south);
@@ -49,8 +50,7 @@ public class MenuScreen extends JPanel {
 		singlePlayButton = new JButton("Single Player"); 
 		singlePlayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent aa) {
-				//if(MyGame.DEBUG){System.out.println("start new game ");}
-				
+
 				myGame.setPanel(new GameScreen(myGame));
 				
 			}
@@ -74,8 +74,9 @@ public class MenuScreen extends JPanel {
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
-		g.setColor(new Color(246, 244, 186));
-		g.fillRect(0, 0, 1400, 1000);
+		//g.setColor(new Color(246, 244, 186));
+		
+		//g.fillRect(0, 0, 1400, 1000);
 
 	}
 	
