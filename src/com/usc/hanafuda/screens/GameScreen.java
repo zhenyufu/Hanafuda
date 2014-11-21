@@ -1,10 +1,8 @@
 package com.usc.hanafuda.screens;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -14,14 +12,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.usc.hanafuda.MyGame;
+import com.usc.hanafuda.entities.FieldPanel;
+import com.usc.hanafuda.entities.HandPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 public class GameScreen extends JPanel {
@@ -31,6 +29,8 @@ public class GameScreen extends JPanel {
 	private JTextField textField;
 	private JTextArea textArea;
 	private JButton sendMessage;
+	private HandPanel handPanel;
+	private FieldPanel fieldPanel;
 	public GameScreen(MyGame myGame) {
 		
 		
@@ -38,21 +38,27 @@ public class GameScreen extends JPanel {
 		JPanel deckPanel = new JPanel();
 		deckPanel.setLayout(new BorderLayout());
 		deckPanel.setOpaque(false);
-		add(deckPanel);
+		add(deckPanel, BorderLayout.CENTER);
 
 		//deckPanel.add(t, BorderLayout.WEST);
 
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(new File("Image1.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		BufferedImage image = null;
+//		try {
+//			image = ImageIO.read(new File("Image1.png"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
-		JLabel imageLabel = new JLabel(new ImageIcon(image));
+		//JLabel imageLabel = new JLabel(new ImageIcon(image));
 
-		deckPanel.add(imageLabel, BorderLayout.SOUTH);
+		//deckPanel.add(imageLabel, BorderLayout.SOUTH);
+		handPanel = new HandPanel();
+		deckPanel.add(handPanel, BorderLayout.SOUTH);
 
+		//fieldPanel = new FieldPanel();
+		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
+		
+		
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BorderLayout());
 		add(textPanel, BorderLayout.EAST);
@@ -152,10 +158,7 @@ public class GameScreen extends JPanel {
 		//g.drawRect(100, 100, 1000, 700);
 		g.drawImage(MyAssetHandler.deckImage, 300, 300, null);
 
-		g.drawImage(MyAssetHandler.cardImageArray[0], 40, 40, null);
-		g.drawImage(MyAssetHandler.cardImageArray[1], 400, 400, null);
-		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 800, null);
-
+	
 	}
 
 }
