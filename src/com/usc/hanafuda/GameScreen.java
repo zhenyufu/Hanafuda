@@ -104,6 +104,10 @@ public class GameScreen extends JPanel {
 		// temp:
 		//g.setColor(Color.black);
 		//g.drawRect(100, 100, 1000, 700);
+		
+		g.drawImage(MyAssetHandler.cardImageArray[0], 40, 40, null);
+		g.drawImage(MyAssetHandler.cardImageArray[1], 400, 400, null);
+		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 800, null);
 
 	}
 
