@@ -2,10 +2,13 @@ package com.usc.hanafuda;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,9 +27,10 @@ public class GameScreen extends JPanel {
 	private JButton backButton;
 	private JTextField textField;
 	private JTextArea textArea;
-
+	private JButton sendMessage;
 	public GameScreen(MyGame myGame) {
-
+		
+		
 		this.setLayout(new BorderLayout());
 		JPanel deckPanel = new JPanel();
 		deckPanel.setLayout(new BorderLayout());
@@ -49,7 +53,7 @@ public class GameScreen extends JPanel {
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BorderLayout());
 		add(textPanel, BorderLayout.EAST);
-		textPanel.setPreferredSize(new Dimension(200, 1000));
+		textPanel.setPreferredSize(new Dimension(250, 1000));
 
 		backButton = new JButton("Back");
 		textPanel.add(backButton, BorderLayout.NORTH);
@@ -59,11 +63,50 @@ public class GameScreen extends JPanel {
 
 			}
 		});
-
-		textField = new JTextField("input");
-		textPanel.add(textField, BorderLayout.SOUTH);
-
+		
+		JPanel chatBottomPanel = new JPanel(new FlowLayout());
+		
+		textField = new JTextField(15);
+		//textPanel.add(textField, BorderLayout.SOUTH);
+		
+		sendMessage = new JButton("Send");
+		//textPanel.add(sendMessage, BorderLayout.SOUTH);
+		sendMessage.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				if(textField.getText().length()<1){
+					//do nothing, no message
+				}
+				else{
+					textArea.append("<" + "userName" + ">: " + textField.getText() + "\n"); 
+					textField.setText("");
+				}
+			}
+		});
+		textField.addKeyListener(new KeyListener(){
+			public void keyPressed(KeyEvent ke) {
+				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
+					if(textField.getText().length()<1){
+						//do nothing, no message
+					}
+					else{
+						textArea.append("<" + "userName" + ">: " + textField.getText() + "\n"); 
+						textField.setText("");
+					}
+				}
+			}
+			public void keyReleased(KeyEvent ke) {
+			}
+			public void keyTyped(KeyEvent ke) {
+				
+			}
+		});
+		
+		chatBottomPanel.add(textField);
+		chatBottomPanel.add(sendMessage);
+		
+		textPanel.add(chatBottomPanel, BorderLayout.SOUTH);
 		textArea = new JTextArea("chat content", 7, 20);
+		textArea.setEditable(false);
 		textPanel.add(textArea, BorderLayout.CENTER);
 
 		
