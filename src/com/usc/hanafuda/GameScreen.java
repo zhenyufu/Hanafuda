@@ -19,7 +19,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class GameScreen extends JPanel {
-
+	//
 	//private JLabel t = new JLabel("another player");
 	private JButton backButton;
 	private JTextField textField;
