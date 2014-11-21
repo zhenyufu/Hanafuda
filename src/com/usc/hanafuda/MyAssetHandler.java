@@ -14,10 +14,10 @@ public class MyAssetHandler {
 //	public final static int WIDTH = 194;
 //	public final static int HEIGHT = 318;
 	
-	public final static int ROW = 4;
-	public final static int COL = 12;
-	public final static int WIDTH = 64;
-	public final static int HEIGHT = 104;
+	public final static int ROW = 12;
+	public final static int COL = 4;
+	public final static int WIDTH = 85;
+	public final static int HEIGHT = 140;
 	
 
 	public static BufferedImage[] cardImageArray = new BufferedImage[SIZE];
@@ -27,7 +27,7 @@ public class MyAssetHandler {
 	public static void load () {
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(new File("image111.png"));
+			image = ImageIO.read(new File("all.png"));
 			System.out.println("load + cardImage.jpg");
 		
 		
