@@ -18,8 +18,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.usc.hanafuda.MyGame;
-import com.usc.hanafuda.entities.FieldPanel;
 import com.usc.hanafuda.entities.HandPanel;
+import com.usc.hanafuda.entities.HorizontalOpponentPanel;
+import com.usc.hanafuda.entities.VerticalOpponentPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 public class GameScreen extends JPanel {
@@ -30,7 +31,8 @@ public class GameScreen extends JPanel {
 	private JTextArea textArea;
 	private JButton sendMessage;
 	private HandPanel handPanel;
-	private FieldPanel fieldPanel;
+	private HorizontalOpponentPanel opponentPanelNorth;
+	private VerticalOpponentPanel opponentPanelWest, opponentPanelEast;
 	public GameScreen(MyGame myGame) {
 		
 		
@@ -55,9 +57,16 @@ public class GameScreen extends JPanel {
 		handPanel = new HandPanel();
 		deckPanel.add(handPanel, BorderLayout.SOUTH);
 
-		//fieldPanel = new FieldPanel();
-		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
 		
+		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
+		opponentPanelNorth = new HorizontalOpponentPanel();
+		deckPanel.add(opponentPanelNorth, BorderLayout.NORTH);
+		
+		opponentPanelWest = new VerticalOpponentPanel("westPlayer");
+		deckPanel.add(opponentPanelWest, BorderLayout.WEST);
+		
+		opponentPanelEast = new VerticalOpponentPanel("eastPlayer");
+		deckPanel.add(opponentPanelEast, BorderLayout.EAST);
 		
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BorderLayout());
