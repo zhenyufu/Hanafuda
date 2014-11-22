@@ -25,6 +25,13 @@ public class Deck {
 		return c;
 	}
 	
+	//DEBUG
+	public void printDeck () {
+		for (Card c : cardDeck) {
+			c.printName();
+		}
+	}
+	
 	private void initializeCards () {
 		cardDeck.add (new Card ("January0_20pts_Ro", Card.Month.January, Card.Yaku.Ro, null, 20));
 		cardDeck.add (new Card ("January1_10pts_Ha", Card.Month.January, Card.Yaku.Ha, null, 10));

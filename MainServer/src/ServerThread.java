@@ -94,7 +94,7 @@ public class ServerThread extends Thread{
 							hs.Field.add(received);
 							//for test
 							System.out.println("Field Card received");
-							received.print();
+							received.printName();
 							System.out.println("I have <"+hs.Field.size()+"> cards in Field");
 							
 						} catch (ClassNotFoundException e) {
@@ -118,7 +118,7 @@ public class ServerThread extends Thread{
 							hs.Collection.add(received);
 							//for test
 							System.out.println("Field Card received");
-							received.print();
+							received.printName();
 							System.out.println("I have <"+hs.Collection.size()+"> cards in Collection");
 							
 						} catch (ClassNotFoundException e) {
