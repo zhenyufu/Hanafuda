@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +16,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,18 +48,31 @@ public class HorizontalOpponentPanel extends JPanel{
 		this.add(Box.createHorizontalGlue());
 		showCapturedCard = new JButton("<html>" + btnText.replaceAll("\\n", "<br>") + "</html>");
 		showCapturedCard.setMaximumSize(new Dimension(40,100));
-		this.add(showCapturedCard);
-		cardPanel = new JPanel();
-		cardPanel.setBackground(Color.LIGHT_GRAY);
-		add(cardPanel);
-		showOpponentHand();
-		
 		capturedCardPane = new JTextPane();
 		capturedCardPane.setEditable(false);
 		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
 		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
 		JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		this.add(showCapturedCard);
+		showCapturedCard.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame popup = new JFrame("Captured Cards");
+				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
+				popup.setSize(500,300);
+				popup.setLocation(400, 200);
+				popup.setVisible(true);
+				popup.setResizable(true);
+				
+				popup.add(jsp);
+			}
+		});
+		cardPanel = new JPanel();
+		cardPanel.setBackground(Color.LIGHT_GRAY);
+		add(cardPanel);
+		showOpponentHand();
+		
+		
 		
 		//this.add(jsp);
 		this.add(Box.createHorizontalGlue());
