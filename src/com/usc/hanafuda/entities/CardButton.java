@@ -18,8 +18,12 @@ public class CardButton extends JButton{
 
 	
 	public void moveUpDown(){
-		if(x == 20) { x = 40; }
-		else if(x == 40) { x = 20; }		
+		if(x == 20) { 
+			x = 40; 
+		}
+		else if(x == 40) {
+			x = 20; 
+		}		
 	}
 	
 
