@@ -6,7 +6,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 import com.usc.hanafuda.screens.MenuScreen;
 
 public class MyGame extends JFrame{
-
+//work!!!
 	public static final boolean DEBUG = true;
 	static JPanel currentPanel;
 
