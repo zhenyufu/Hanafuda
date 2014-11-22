@@ -14,6 +14,10 @@ public class CardButton extends JButton{
 		
 	}
 
+	public CardButton() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getNewX() {
 		return x;
 	}

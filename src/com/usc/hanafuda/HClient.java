@@ -8,8 +8,10 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Deck;
+import com.usc.hanafuda.handlers.MyAssetHandler;
 
 //TODO: How do we notify the GUI of when to change things?
 		// For example, when the server sends a card
@@ -45,6 +47,12 @@ public class HClient extends Thread {
 			e.printStackTrace();
 		}
 	} // End of constructor
+	
+	
+	public ArrayList<Card> getHand(){
+		
+		return Hand;
+	}
 	
 	public void sendScore(){
 
@@ -445,6 +453,10 @@ public class HClient extends Thread {
 	} // End of run() block
 	
 	public static void main (String[] args) {
-		new HClient("localhost",6789);
+		HClient h = new HClient("localhost",6789);
+			MyAssetHandler.load();
+			MyGame g = new MyGame(h);
+		
+		
 	}
 }

@@ -23,7 +23,7 @@ public class Card implements Serializable {
 	private ImageIcon image;
     private int id;
 	public Card (int id, String n, Month m, Yaku y, ImageIcon i, int v) {
-        id=id;
+        this.id=id;
 		name = n;
 		month = m;
 		yaku = y;

@@ -57,7 +57,7 @@ public class MyAssetHandler {
 
 
 	public static ImageIcon getIcon(int i) {
-
+		System.out.println("image at " + i);
 		return cardIconArray[i];
 	}
 	

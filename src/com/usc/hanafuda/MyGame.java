@@ -9,13 +9,13 @@ public class MyGame extends JFrame{
 //work!!!
 	public static final boolean DEBUG = true;
 	static JPanel currentPanel;
-
-	public MyGame() {
+	static HClient client;
+	public MyGame(HClient h) {
 		super("Hanafuda");
 		setSize(1400, 1000);
 		setLocation(150, 30);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		this.client = h;
 		
 		
 		currentPanel = new MenuScreen(this);
@@ -25,12 +25,11 @@ public class MyGame extends JFrame{
 	}
 	
 	
-	
-	
-	public static void main(String[] args) {
-		MyAssetHandler.load();
-		MyGame g = new MyGame();
+	public HClient getHClient(){
+		return client;
 	}
+
+	
 	
 	
 	
