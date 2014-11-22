@@ -156,7 +156,7 @@ public class GameScreen extends JPanel {
 		// temp:
 		//g.setColor(Color.black);
 		//g.drawRect(100, 100, 1000, 700);
-		g.drawImage(MyAssetHandler.deckImage, 300, 300, null);
+		g.drawImage(MyAssetHandler.deckImage, 200, 300, null);
 
 	
 	}

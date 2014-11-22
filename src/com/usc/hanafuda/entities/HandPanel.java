@@ -3,9 +3,11 @@ package com.usc.hanafuda.entities;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import com.usc.hanafuda.handlers.MyAssetHandler;
@@ -13,7 +15,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 public class HandPanel extends JPanel{
 	
 	ArrayList<CardButton> cardButtonList;
-	
+	public final int gap = 110;
 	
 	
 	public HandPanel(){
@@ -29,8 +31,19 @@ public class HandPanel extends JPanel{
 	}
 	
 	public void initialDeal(){
-		for(int i = 0 ; i < 8; i++){
-			cardButtonList.add(new CardButton(MyAssetHandler.cardIconArray[i]));
+		for(int i = 0 ; i < 7; i++){
+			CardButton j = new CardButton(MyAssetHandler.cardIconArray[i]);
+			j.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent aa) {
+					j.moveUpDown();
+					refreshDisplay();
+				}
+			});
+			
+			cardButtonList.add(j);
+		
+			
+			
 		}
 	}
 	
@@ -42,7 +55,7 @@ public class HandPanel extends JPanel{
 			//System.out.println("card " +  40+i*60 );
 			this.add(cardButtonList.get(i));
 			//cardButtonList.get(i).setLocation(40+i*60 ,40);
-			cardButtonList.get(i).setBounds(40+i*130, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
+			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
 			
 			
 			
