@@ -1,9 +1,11 @@
+package com.usc.hanafuda.entities;
+
 
 import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
-public class Card implements Serializable {
+public class Card implements Serializable{
 	enum Month {
 		January, February, March, April, May, June, 
 		July, August, September, October, November, December
@@ -18,8 +20,9 @@ public class Card implements Serializable {
 	private Yaku yaku;
 	private int value;
 	private ImageIcon image;
-	
-	public Card (String n, Month m, Yaku y, ImageIcon i, int v) {
+	private int id;
+	public Card (int id, String n, Month m, Yaku y, ImageIcon i, int v) {
+		this.id = id;
 		name = n;
 		month = m;
 		yaku = y;
@@ -29,13 +32,18 @@ public class Card implements Serializable {
 	
 	//DEBUG
 	//Delete later; this is to be used for testing initial Client/Server
-	//public Card (int randomincrement) {
-	//	value = randomincrement;
-	//}
+	public Card (int randomincrement) {
+		value = randomincrement;
+	}
 
 	//DEBUG
-	public void printName() {
-		System.out.println(name);
+	//Delete later; this is to be used for testing initial Client/Server
+	public void print(){
+		System.out.println("this card has value of "+ value);
+	}
+	
+	public int getId() {
+		return id;
 	}
 	
 	public ImageIcon getImage() {
@@ -58,13 +66,9 @@ public class Card implements Serializable {
 		return name;
 	}
 	
-	public boolean isMatch(Card cd) {
-		if (this.month == cd.getMonth()) {
-				return true;
-		}
-		else {
-			return false;
-		}
+	public boolean isMatch(Card cd){
+		if(this.month ==cd.getMonth()) return true;
+		else return false;
 	}
 	
 }
