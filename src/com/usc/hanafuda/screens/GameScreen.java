@@ -59,7 +59,7 @@ public class GameScreen extends JPanel {
 
 		
 		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
-		opponentPanelNorth = new HorizontalOpponentPanel();
+		opponentPanelNorth = new HorizontalOpponentPanel("northPlayer");
 		deckPanel.add(opponentPanelNorth, BorderLayout.NORTH);
 		
 		opponentPanelWest = new VerticalOpponentPanel("westPlayer");

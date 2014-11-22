@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -24,7 +25,7 @@ public class HandPanel extends JPanel{
 		this.setMinimumSize(new Dimension (1150, 200));
 		this.setMaximumSize(new Dimension (1150, 200));
 		this.setLayout(null);
-		
+		this.setBorder(BorderFactory.createLineBorder(Color.darkGray, 5));
 		cardButtonList = new ArrayList<CardButton>();
 		initialDeal();
 		refreshDisplay();
