@@ -30,10 +30,10 @@ public class GameScreen extends JPanel {
 	private HandPanel handPanel;
 	private HorizontalOpponentPanel opponentPanelNorth;
 	private VerticalOpponentPanel opponentPanelWest, opponentPanelEast;
-	public static Deck deck;
+	//public static Deck deck;
 
 	public GameScreen(MyGame myGame) {
-		deck = new Deck();
+		//deck = new Deck();
 
 		
 		this.setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class GameScreen extends JPanel {
 		//JLabel imageLabel = new JLabel(new ImageIcon(image));
 
 		//deckPanel.add(imageLabel, BorderLayout.SOUTH);
-		handPanel = new HandPanel();
+		handPanel = new HandPanel( myGame.getHClient());
 		deckPanel.add(handPanel, BorderLayout.SOUTH);
 
 		
