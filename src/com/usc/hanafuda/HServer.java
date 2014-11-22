@@ -13,12 +13,19 @@ import com.usc.hanafuda.entities.Deck;
 //TODO: Server must be able to receive messages and objects
 
 public class HServer {
-	private Vector<ServerThread> vServerThread = new Vector<ServerThread> ();
+	public  Vector<ServerThread> vServerThread = new Vector<ServerThread> ();
 	//Field variable
 	private Deck deck;
 	public ArrayList<Card> Field;
 	public ArrayList<Card> Collection;
-	private ServerThread currentPlayer;
+	public ServerThread currentPlayer;
+	
+	public Card currentPlayedCard;
+	
+	public int hostScore=0;
+	public int guestScore=0;
+	
+	
 	
 	public HServer (int port) {
 		try {
@@ -255,6 +262,20 @@ public class HServer {
 		
 		
 	}
+	
+	public Boolean GameIsOver(){
+		
+		
+		if(deck.numCardsLeft()==8) return true;
+		
+		
+		
+		return false;
+		
+		
+		
+	}
+	
 	
 	
 	//This method is called when the client notifies the server of the end of turn

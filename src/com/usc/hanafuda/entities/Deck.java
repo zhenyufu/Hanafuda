@@ -37,6 +37,7 @@ public class Deck {
 			c.printName();
 		}
 	}
+
 	
 	private void initializeCards () {
 		cardDeck.add (new Card (0, "January0_20pts_Ro", Card.Month.January, Card.Yaku.Ro, null, 20));

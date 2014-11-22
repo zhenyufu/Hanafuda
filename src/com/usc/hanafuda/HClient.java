@@ -29,6 +29,9 @@ public class HClient extends Thread {
 	private ArrayList<Card> Collection = new ArrayList<Card>();
 	private boolean Host = false;
 	private boolean MyTurn = false;
+	private int score=0;
+	private int AnotherScore=0;
+	private Card anotherSelectedCard;
 	
 	public HClient (String hostname, int port) {	
 		try {
@@ -42,6 +45,38 @@ public class HClient extends Thread {
 			e.printStackTrace();
 		}
 	} // End of constructor
+	
+	public void sendScore(){
+
+		sendMessage("Signal:SendScore");
+		
+		
+		if(Host)
+			
+		sendMessage("h"+Integer.toString(score));
+		
+		else{
+			
+			sendMessage(Integer.toString(score));
+			
+		}
+		
+		
+		
+	}
+	
+	public void updateScore(){
+		int tempScore=0;
+
+		for(int i=0;i<Collection.size();i++){
+			
+			tempScore+=Collection.get(i).getValue();
+				
+		}
+		
+		score=tempScore;
+		
+	}
 	
 	public void sendMessage (String msg) {
 		pw.println (msg);
@@ -103,6 +138,7 @@ public class HClient extends Thread {
 			Collection.add (cardFromField);
 		}
 		
+		
 		// Remove matched card from hand
 		for(int i=0; i < Hand.size(); i++) {			
 			if (Hand.get(i).equals(cardFromHand)) {
@@ -117,13 +153,34 @@ public class HClient extends Thread {
 			}
 		}
 		// Send new card and field to server
+		
+		
+		updateScore();
+		
+		sendScore();
+		
+		
+		
 		sendField();
 		sendCollection();
+		
 	}
 	
+	public void sendSelectedCard(Card cd){
+		
+		
+		sendMessage("Signal:SendSelectedCard");
+		
+		sendCardToServer(cd);
+		
+		
+		
+		
+	}
+	
+	
 	public void endTurn(){
-		
-		
+
 		sendMessage("Signal:EndTurn");
 		
 		MyTurn=false;
@@ -335,6 +392,35 @@ public class HClient extends Thread {
 		
 				}
 				*/
+				if(line.equals("Signal:ScoreOfAnother")){
+					
+						String nextMessage=br.readLine();
+						
+						AnotherScore=Integer.valueOf(nextMessage);
+						
+					
+					
+					
+				}
+				
+				if(line.equals("Signal:ReceiveSelectedCard")){
+					String nextMessage = br.readLine();
+					
+					if (nextMessage.equals ("Signal:SendCard")) {		
+						try {
+							Card received = (Card) is.readObject();
+
+							//TODO: Add received card to the collection of the correct opponent
+							
+							this.anotherSelectedCard=received;
+							
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+					}
+					
+				}
+				
 				
 				if (line.equals ("Signal:GameEnded")) {  
 					//TODO: print to GUI that the game ended and show final score
@@ -350,6 +436,7 @@ public class HClient extends Thread {
 						// if there is a match at all, then player should draw another card from a deck and system compares that card with the cards on field
 						//repeat steps 1,2,3 once
 				}
+				
 				
 			} // End of while(true) block
 		} catch (IOException e) {

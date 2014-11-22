@@ -17,6 +17,7 @@ public class ServerThread extends Thread{
 	private ObjectOutputStream os;
 	private ObjectInputStream is;
 	
+	
 	public ServerThread(Socket s, HServer hs){
 		this.s=s;
 		this.hs=hs;
@@ -157,10 +158,96 @@ public class ServerThread extends Thread{
 				
 				if(line.equals("Signal:EndTurn")){
 					
+					if(!hs.GameIsOver())
+					hs.nextPlayer();
+					
+					
+					else{
+						
+						
+						
+						
+						
+						
+					}
+					
+					
+				}
+				
+				if(line.equals("Signal:SendScore")){
+					String nextMessage=br.readLine();
+					
+					if(nextMessage.charAt(0)=='h'){
+						
+						
+						
+						int score=Integer.valueOf(nextMessage.substring(1, nextMessage.length()));
+						
+						hs.hostScore=score;
+						
+						ServerThread another=hs.vServerThread.get(1);
+						
+						hs.sendMessage("Signal:ScoreOfAnother", another);
+						
+						hs.sendMessage(Integer.toString(score), another);
+					}
+					
+					else{
+						
+						
+						int score=Integer.valueOf(nextMessage);
+						
+						hs.guestScore=score;
+						
+						ServerThread another=hs.vServerThread.get(0);
+						
+						hs.sendMessage("Signal:ScoreOfAnother", another);
+						
+						hs.sendMessage(Integer.toString(score), another);
+						
+					}
+					
+				
+					
+				}
+				
+				if(line.equals("Signal:SendSelectedCard")){
+					
+					
+					String nextMessage=br.readLine();
+					
+					if(nextMessage.equals("Signal:SendCard")){
+					
+					try {
+						
+						Card received = (Card) is.readObject();
+						
+						hs.currentPlayedCard=received;
+						
+						ServerThread another=null;
+						
+						for(int i=0 ;i<hs.vServerThread.size();i++){
+							
+							if(!hs.vServerThread.get(i).equals(hs.currentPlayer)){
+								
+								another=hs.vServerThread.get(i);
+							}
+						
+						}
+						hs.sendMessage("Signal:ReceiveSelectedCard", another);
+						hs.sendCard(hs.currentPlayedCard, another);
+						
+						
+						
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
 					
 					
 					
 				}
+				
 				
 				
 				System.out.println("received message: "+line);
