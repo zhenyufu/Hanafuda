@@ -1,3 +1,5 @@
+package com.usc.hanafuda;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+import com.usc.hanafuda.entities.Card;
 
 
 public class ServerThread extends Thread{
@@ -94,7 +98,7 @@ public class ServerThread extends Thread{
 							hs.Field.add(received);
 							//for test
 							System.out.println("Field Card received");
-							received.printName();
+							//received.printName();
 							System.out.println("I have <"+hs.Field.size()+"> cards in Field");
 							
 						} catch (ClassNotFoundException e) {
@@ -118,7 +122,7 @@ public class ServerThread extends Thread{
 							hs.Collection.add(received);
 							//for test
 							System.out.println("Field Card received");
-							received.printName();
+							//received.printName();
 							System.out.println("I have <"+hs.Collection.size()+"> cards in Collection");
 							
 						} catch (ClassNotFoundException e) {

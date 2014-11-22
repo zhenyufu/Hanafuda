@@ -1,3 +1,5 @@
+package com.usc.hanafuda;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+
+import com.usc.hanafuda.entities.Card;
 
 //TODO: How do we notify the GUI of when to change things?
 		// For example, when the server sends a card
@@ -244,7 +248,7 @@ public class HClient extends Thread {
 						for (Card c : Hand) {
 							System.out.println ("Matching cards for " + c.getName() + ": ");
 							for (Card match : getMatchingCards(c)) {
-								match.printName();
+								//match.printName();
 							}
 							System.out.println();
 						}

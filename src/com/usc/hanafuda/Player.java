@@ -1,3 +1,5 @@
+package com.usc.hanafuda;
+
 public class Player extends HClient {
 	public Player (String hostname, int port) {
 		super (hostname, port);

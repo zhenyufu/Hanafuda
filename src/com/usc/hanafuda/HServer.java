@@ -1,9 +1,13 @@
+package com.usc.hanafuda;
+
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Vector;
+
+import com.usc.hanafuda.entities.Card;
+import com.usc.hanafuda.entities.Deck;
 
 //TODO: Server must be able to receive messages and objects
 
@@ -57,7 +61,7 @@ public class HServer {
 		//DEBUG
 		System.out.println ("Server: Sending card to client: " + cd.getName());
 		
-		current.sendCard (cd);
+		//current.sendCard (cd);
 	}
 	
 	// Remove disconnected client
@@ -73,7 +77,7 @@ public class HServer {
 		
 		//DEBUG
 		System.out.println ("The initial deck is: ");
-		deck.printDeck();
+		//deck.printDeck();
 		System.out.println();
 		System.out.println();
 		
@@ -104,7 +108,7 @@ public class HServer {
 		//DEBUG
 		System.out.println ("Initial field is: ");
 		for (Card c : Field) {
-			c.printName();
+			//c.printName();
 		}
 		System.out.println();
 		System.out.println();
@@ -148,7 +152,7 @@ public class HServer {
 		
 		//DEBUG
 		System.out.println ("Deck after giving out cards: ");
-		deck.printDeck();
+		//deck.printDeck();
 		System.out.println();
 		System.out.println();
 		
