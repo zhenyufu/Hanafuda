@@ -1,9 +1,10 @@
-package com.usc.hanafuda;
+package com.usc.hanafuda.screens;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.usc.hanafuda.MyGame;
 
 public class MenuScreen extends JPanel {
 	
@@ -57,7 +60,11 @@ public class MenuScreen extends JPanel {
 		});
 		multiPlayButton  = new JButton("Multi Player");
 		howToButton = new JButton("How To Play");
-		
+		howToButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				new HowToScreen();
+			}
+		});
 		singlePlayButton.setPreferredSize(new Dimension(150, 100));
 		multiPlayButton.setPreferredSize(new Dimension(150, 100));
 		howToButton.setPreferredSize(new Dimension(150, 100));
@@ -65,8 +72,6 @@ public class MenuScreen extends JPanel {
 		south.add(singlePlayButton);
 		south.add(multiPlayButton);
 		south.add(howToButton);
-
-		
 
 		
 	}

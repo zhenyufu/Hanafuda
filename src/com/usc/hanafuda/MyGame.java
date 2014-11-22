@@ -2,6 +2,9 @@ package com.usc.hanafuda;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.usc.hanafuda.handlers.MyAssetHandler;
+import com.usc.hanafuda.screens.MenuScreen;
+
 public class MyGame extends JFrame{
 
 	public static final boolean DEBUG = true;
@@ -12,7 +15,7 @@ public class MyGame extends JFrame{
 		setSize(1400, 1000);
 		setLocation(150, 30);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		
 		
 		currentPanel = new MenuScreen(this);
@@ -26,7 +29,7 @@ public class MyGame extends JFrame{
 	
 	public static void main(String[] args) {
 		MyAssetHandler.load();
-		MyGame  g = new MyGame();
+		MyGame g = new MyGame();
 	}
 	
 	
