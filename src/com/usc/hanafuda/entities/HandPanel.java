@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import com.usc.hanafuda.handlers.MyAssetHandler;
+import com.usc.hanafuda.screens.GameScreen;
 
 public class HandPanel extends JPanel{
 	
@@ -34,6 +35,8 @@ public class HandPanel extends JPanel{
 	public void initialDeal(){
 		for(int i = 0 ; i < 7; i++){
 			CardButton j = new CardButton(MyAssetHandler.cardIconArray[i]);
+			j.setCard(GameScreen.deck.drawCard());
+
 			j.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
 					j.moveUpDown();

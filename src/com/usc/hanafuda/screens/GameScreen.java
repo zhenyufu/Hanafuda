@@ -7,17 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.usc.hanafuda.MyGame;
+import com.usc.hanafuda.entities.Deck;
 import com.usc.hanafuda.entities.HandPanel;
 import com.usc.hanafuda.entities.HorizontalOpponentPanel;
 import com.usc.hanafuda.entities.VerticalOpponentPanel;
@@ -33,8 +30,11 @@ public class GameScreen extends JPanel {
 	private HandPanel handPanel;
 	private HorizontalOpponentPanel opponentPanelNorth;
 	private VerticalOpponentPanel opponentPanelWest, opponentPanelEast;
+	public static Deck deck;
+
 	public GameScreen(MyGame myGame) {
-		
+		deck = new Deck();
+
 		
 		this.setLayout(new BorderLayout());
 		JPanel deckPanel = new JPanel();

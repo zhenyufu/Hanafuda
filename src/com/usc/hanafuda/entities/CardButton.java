@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import com.usc.hanafuda.handlers.MyAssetHandler;
+
 public class CardButton extends JButton{
 	private int x =40;
 	public CardButton(ImageIcon cardIconArray){
@@ -25,7 +27,13 @@ public class CardButton extends JButton{
 			x = 20; 
 		}		
 	}
-	
+
+	public void setCard(Card card){
+		ImageIcon icon = MyAssetHandler.getIcon(card.getId());
+		this.setIcon(icon);
+		
+		
+	}
 
 	
 }
