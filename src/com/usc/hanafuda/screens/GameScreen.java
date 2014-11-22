@@ -1,5 +1,6 @@
 package com.usc.hanafuda.screens;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -70,6 +72,7 @@ public class GameScreen extends JPanel {
 		
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BorderLayout());
+		textPanel.setBorder(BorderFactory.createLineBorder(Color.darkGray, 1));
 		add(textPanel, BorderLayout.EAST);
 		textPanel.setPreferredSize(new Dimension(250, 1000));
 

@@ -41,7 +41,7 @@ public class HandPanel extends JPanel{
 		this.setMinimumSize(new Dimension (1150, 200));
 		this.setMaximumSize(new Dimension (1150, 200));
 		this.setLayout(null);
-		this.setBorder(BorderFactory.createLineBorder(Color.darkGray, 5));
+		this.setBorder(BorderFactory.createLineBorder(Color.darkGray, 3));
 		cardButtonList = new ArrayList<CardButton>();
 		initialDeal();
 		refreshDisplay();
