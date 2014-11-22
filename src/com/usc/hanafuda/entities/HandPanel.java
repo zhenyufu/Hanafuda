@@ -1,5 +1,6 @@
 package com.usc.hanafuda.entities;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,7 +9,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.usc.hanafuda.handlers.MyAssetHandler;
@@ -18,10 +21,22 @@ public class HandPanel extends JPanel{
 	
 	ArrayList<CardButton> cardButtonList;
 	public final int gap = 110;
-	
+	private int score = 0;
 	
 	public HandPanel(){
 		this.setBackground(Color.yellow);
+		/*JPanel playerInfoPanel = new JPanel();
+		playerInfoPanel.setLayout(new BoxLayout(playerInfoPanel, BoxLayout.Y_AXIS));
+		playerInfoPanel.setMinimumSize(new Dimension(200,200));
+		playerInfoPanel.setBorder(BorderFactory.createLineBorder(Color.green, 5));
+		JLabel playerName = new JLabel("playerName");
+		JLabel playerScore = new JLabel("Score: " + Integer.toString(score));
+		JButton showCapturedBtn = new JButton("Show Captured Cards");
+		playerInfoPanel.add(playerName);
+		playerInfoPanel.add(playerScore);
+		
+		this.add(new JLabel("test"), BorderLayout.SOUTH);
+		this.add(playerInfoPanel, BorderLayout.EAST);*/
 		this.setPreferredSize(new Dimension (1150, 200));
 		this.setMinimumSize(new Dimension (1150, 200));
 		this.setMaximumSize(new Dimension (1150, 200));
@@ -30,6 +45,7 @@ public class HandPanel extends JPanel{
 		cardButtonList = new ArrayList<CardButton>();
 		initialDeal();
 		refreshDisplay();
+		
 	}
 	
 	public void initialDeal(){
