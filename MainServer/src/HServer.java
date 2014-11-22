@@ -85,14 +85,6 @@ public class HServer {
 			numInitialFieldCard = 8;
 			numInitialHandCard = 8;
 		}
-		else if (vServerThread.size() == 3) {
-			numInitialFieldCard = 6;
-			numInitialHandCard = 7;
-		}
-		else if (vServerThread.size() == 4) {
-			numInitialFieldCard = 8;
-			numInitialHandCard = 5;
-		}
 		
 		Field = new ArrayList (numInitialFieldCard);
 		
@@ -230,34 +222,35 @@ public class HServer {
 		// Inform the player that a card will be sent
 		sendMessage ("Signal:SendCardFromDeck", currentPlayer); 
 		
+		sendCard(drawnCard, currentPlayer);
 		//TODO: If the card has a match in the field, send this card and its match to the client;
 				//If not, add this card to the field
 		
 		//NOTE: Didn't we say we were just going to send the card to the client and have things move on from there
 				// Because the client may have to choose which card if there are multiple matches in the field
 		
-		/*
-		// Check if drawnCard matches 
-		int numMatched = 0;
-		for(int i=0;i<Field.size();i++){
-			if(drawnCard.isMatch(Field.get(i)))numMatched++;	// check for num of matched cards in the field		
-		}
-		//TODO: Send updated field to each client
-		if(numMatched!=0){ // if there is a match,
-			sendMessage("Signal:SendMatchingCardsFromField",currentPlayer); 
-			sendCard(drawnCard,currentPlayer); // send drawn card to client
-			for(int i=0;i<Field.size();i++){
-				if(drawnCard.isMatch(Field.get(i))){ // send all matched card to client
-					sendMessage("Signal:SendMatchingCardsFromField",currentPlayer); 
-					sendCard(Field.get(i),currentPlayer);
-				}
-			}
-		}else{ // if there is no match on the field, add card to field
-			Field.add(drawnCard); // 
-			updateField();
-		}
-		*/
 	}
+	
+	
+	public void nextPlayer(){
+		
+		if(currentPlayer.equals(vServerThread.get(vServerThread.get(0)))){
+			
+			currentPlayer=vServerThread.get(1);
+			
+		}
+		
+		else if(currentPlayer.equals(vServerThread.get(vServerThread.get(1)))){
+			
+			currentPlayer=vServerThread.get(0);
+			
+		}
+		
+		
+		
+		
+	}
+	
 	
 	//This method is called when the client notifies the server of the end of turn
 	/*

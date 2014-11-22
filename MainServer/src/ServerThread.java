@@ -146,6 +146,18 @@ public class ServerThread extends Thread{
 					
 				}
 				
+				if(line.equals("Signal:GetCardFromDeck")){
+					
+					hs.sendCardFromDeck();
+					
+				}
+				
+				if(line.equals("Signal:EndTurn")){
+					
+					
+					
+					
+				}
 				
 				
 				System.out.println("received message: "+line);

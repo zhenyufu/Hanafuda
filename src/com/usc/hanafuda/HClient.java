@@ -8,13 +8,16 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-
 import com.usc.hanafuda.entities.Card;
+import com.usc.hanafuda.entities.Deck;
 
 //TODO: How do we notify the GUI of when to change things?
 		// For example, when the server sends a card
 		// Maybe use enum to represent state
 		// Change the state depending on what we want it to do
+
+
+//TODO: stroe gui inside client 
 
 public class HClient extends Thread {
 	private PrintWriter pw;
@@ -105,8 +108,6 @@ public class HClient extends Thread {
 			if (Hand.get(i).equals(cardFromHand)) {
 				Hand.remove (Hand.get(i));
 			}
-			
-			//TODO: Try using just Hand.remove(cardFromHand)
 		}
 		
 		// Remove matched card from field
@@ -115,10 +116,54 @@ public class HClient extends Thread {
 				Field.remove (Field.get(i));
 			}
 		}
-		
 		// Send new card and field to server
 		sendField();
 		sendCollection();
+	}
+	
+	public void endTurn(){
+		
+		
+		sendMessage("Signal:EndTurn");
+		
+		MyTurn=false;
+		
+		
+	}
+	
+	public void addDrawnCardToField(Card cd){
+		
+	
+		Field.add(cd);
+		
+		sendField();
+		
+		
+		
+		
+	}
+	
+	
+	
+	public void addHandCardToField(Card cd) {//for no match
+		Field.add(cd);
+		
+		Hand.remove(cd);
+		
+		sendField();
+		
+		
+	}
+	
+	public void getCardFromDeck(){
+		
+		
+		sendMessage("Signal:GetCardFromDeck");
+		
+		
+		
+
+		
 	}
 	
 	public void sendField () {
@@ -265,8 +310,12 @@ public class HClient extends Thread {
 					if (nextMessage.equals ("Signal:SendCard")) {
 						try {
 							Card received = (Card) is.readObject();
-							//TODO: Handle card from deck
-						
+							//TODO: notify gui
+							
+							
+							
+							
+							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
 						}
@@ -291,7 +340,8 @@ public class HClient extends Thread {
 					//TODO: print to GUI that the game ended and show final score
 				}
 				
-				if (line.equals ("Signal:YourTurn")) {  
+				if (line.equals ("Signal:YourTurn")) { 
+					
 					//TODO: Enable player's access in GUI
 					// player chooses a card and system checks if there are any matching cards in the field
 					//1. if no match, then put the card in the field

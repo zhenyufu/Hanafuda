@@ -4,6 +4,10 @@ package com.usc.hanafuda.entities;
 import java.util.ArrayList;
 import java.util.Collections;
 
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Deck {
 	private ArrayList<Card> cardDeck;
 	
@@ -25,6 +29,13 @@ public class Deck {
 		Card c = cardDeck.get(0);
 		cardDeck.remove(0);
 		return c;
+	}
+	
+	//DEBUG
+	public void printDeck () {
+		for (Card c : cardDeck) {
+			c.printName();
+		}
 	}
 	
 	private void initializeCards () {

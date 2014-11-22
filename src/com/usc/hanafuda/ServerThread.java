@@ -7,9 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-
 import com.usc.hanafuda.entities.Card;
-
+import com.usc.hanafuda.entities.Deck;
 
 public class ServerThread extends Thread{
 	private Socket s;
@@ -98,7 +97,7 @@ public class ServerThread extends Thread{
 							hs.Field.add(received);
 							//for test
 							System.out.println("Field Card received");
-							//received.printName();
+							received.printName();
 							System.out.println("I have <"+hs.Field.size()+"> cards in Field");
 							
 						} catch (ClassNotFoundException e) {
@@ -122,7 +121,7 @@ public class ServerThread extends Thread{
 							hs.Collection.add(received);
 							//for test
 							System.out.println("Field Card received");
-							//received.printName();
+							received.printName();
 							System.out.println("I have <"+hs.Collection.size()+"> cards in Collection");
 							
 						} catch (ClassNotFoundException e) {
@@ -150,6 +149,18 @@ public class ServerThread extends Thread{
 					
 				}
 				
+				if(line.equals("Signal:GetCardFromDeck")){
+					
+					hs.sendCardFromDeck();
+					
+				}
+				
+				if(line.equals("Signal:EndTurn")){
+					
+					
+					
+					
+				}
 				
 				
 				System.out.println("received message: "+line);

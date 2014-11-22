@@ -7,10 +7,15 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.smartcardio.Card;
+
 //TODO: How do we notify the GUI of when to change things?
 		// For example, when the server sends a card
 		// Maybe use enum to represent state
 		// Change the state depending on what we want it to do
+
+
+//TODO: stroe gui inside client 
 
 public class HClient extends Thread {
 	private PrintWriter pw;
@@ -101,8 +106,6 @@ public class HClient extends Thread {
 			if (Hand.get(i).equals(cardFromHand)) {
 				Hand.remove (Hand.get(i));
 			}
-			
-			//TODO: Try using just Hand.remove(cardFromHand)
 		}
 		
 		// Remove matched card from field
@@ -111,10 +114,54 @@ public class HClient extends Thread {
 				Field.remove (Field.get(i));
 			}
 		}
-		
 		// Send new card and field to server
 		sendField();
 		sendCollection();
+	}
+	
+	public void endTurn(){
+		
+		
+		sendMessage("Signal:EndTurn");
+		
+		MyTurn=false;
+		
+		
+	}
+	
+	public void addDrawnCardToField(Card cd){
+		
+	
+		Field.add(cd);
+		
+		sendField();
+		
+		
+		
+		
+	}
+	
+	
+	
+	public void addHandCardToField(Card cd) {//for no match
+		Field.add(cd);
+		
+		Hand.remove(cd);
+		
+		sendField();
+		
+		
+	}
+	
+	public void getCardFromDeck(){
+		
+		
+		sendMessage("Signal:GetCardFromDeck");
+		
+		
+		
+
+		
 	}
 	
 	public void sendField () {
@@ -261,8 +308,12 @@ public class HClient extends Thread {
 					if (nextMessage.equals ("Signal:SendCard")) {
 						try {
 							Card received = (Card) is.readObject();
-							//TODO: Handle card from deck
-						
+							//TODO: notify gui
+							
+							
+							
+							
+							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
 						}
