@@ -25,7 +25,7 @@ public class MenuScreen extends JPanel {
 	
 	
 	private JButton singlePlayButton;
-	private JButton multiPlayButton;
+	//private JButton multiPlayButton;
 	private JButton howToButton;
 	
 	public MenuScreen(MyGame myGame) {
@@ -50,7 +50,7 @@ public class MenuScreen extends JPanel {
 		center.add(south);
 		
 		south.setOpaque(false);
-		singlePlayButton = new JButton("Single Player"); 
+		singlePlayButton = new JButton("Play"); 
 		singlePlayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent aa) {
 
@@ -58,7 +58,8 @@ public class MenuScreen extends JPanel {
 				
 			}
 		});
-		multiPlayButton  = new JButton("Multi Player");
+
+		
 		howToButton = new JButton("How To Play");
 		howToButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
@@ -66,11 +67,11 @@ public class MenuScreen extends JPanel {
 			}
 		});
 		singlePlayButton.setPreferredSize(new Dimension(150, 100));
-		multiPlayButton.setPreferredSize(new Dimension(150, 100));
+		//multiPlayButton.setPreferredSize(new Dimension(150, 100));
 		howToButton.setPreferredSize(new Dimension(150, 100));
 		
 		south.add(singlePlayButton);
-		south.add(multiPlayButton);
+		//south.add(multiPlayButton);
 		south.add(howToButton);
 
 		
