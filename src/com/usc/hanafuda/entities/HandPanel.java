@@ -45,7 +45,7 @@ public class HandPanel extends JPanel{
 		this.setMaximumSize(new Dimension (1150, 200));
 		this.setLayout(null);
 		this.setBorder(BorderFactory.createLineBorder(Color.darkGray, 3));
-		this.add(new JLabel("test"));
+		
 		cardButtonList = new ArrayList<CardButton>();
 		initialDeal();
 		refreshDisplay();
@@ -97,7 +97,7 @@ public class HandPanel extends JPanel{
 	
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
+		//g.drawString("hello", 10, 50);
 //		g.drawImage(MyAssetHandler.cardImageArray[0], 40, 40, null);
 //		g.drawImage(MyAssetHandler.cardImageArray[1], 400, 40, null);
 //		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 40, null);

@@ -1,4 +1,6 @@
 package com.usc.hanafuda;
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -14,6 +16,7 @@ public class MyGame extends JFrame{
 		super("Hanafuda");
 		setSize(1400, 1000);
 		setLocation(150, 30);
+		setMinimumSize(new Dimension(1300, 650));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.client = h;
 		

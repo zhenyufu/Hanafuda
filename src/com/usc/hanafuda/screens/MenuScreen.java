@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -27,6 +29,9 @@ public class MenuScreen extends JPanel {
 	private JButton singlePlayButton;
 	//private JButton multiPlayButton;
 	private JButton howToButton;
+	ImageIcon icon;
+	Image scaledImage;
+	BufferedImage originalImage = null;
 	
 	public MenuScreen(MyGame myGame) {
 		
@@ -36,14 +41,18 @@ public class MenuScreen extends JPanel {
 		center.setOpaque(false);
 		add(center);
 		BufferedImage image = null;
+		
+		//Image scaledImage = originalImage.getScaledInstance(this.getWidth(),this.getHeight(),Image.SCALE_SMOOTH);
 		try {
 			image = ImageIO.read(new File("ha.png"));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		JLabel imageLabel = new JLabel(new ImageIcon(image));
 		
+		JLabel imageLabel = new JLabel(new ImageIcon(image));
+		JLabel backgroundLabel = new JLabel();
+		backgroundLabel.setIcon(icon);
 		center.add(imageLabel);
 		
 		JPanel south = new JPanel();
@@ -80,6 +89,13 @@ public class MenuScreen extends JPanel {
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
 		
+		try {
+			originalImage = ImageIO.read(new File("hanafudaBG.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		scaledImage = originalImage.getScaledInstance(this.getWidth(),this.getHeight(),Image.SCALE_SMOOTH);
+		g.drawImage(scaledImage, 0, 0, this.getWidth(), this.getHeight(), this);
 		//g.setColor(new Color(246, 244, 186));
 		
 		//g.fillRect(0, 0, 1400, 1000);
