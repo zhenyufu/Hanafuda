@@ -25,10 +25,12 @@ public class CardButton extends JButton{
 	
 	public void moveUpDown(){
 		if(x == 20) { 
-			x = 40; 
+			x = 40;
+			HandPanel.aCardIsUp = false;
 		}
-		else if(x == 40) {
+		else if(x == 40 && 	!HandPanel.aCardIsUp) {
 			x = 20; 
+			HandPanel.aCardIsUp = true;
 		}		
 	}
 
@@ -36,6 +38,13 @@ public class CardButton extends JButton{
 		ImageIcon icon = MyAssetHandler.getIcon(card.getId());
 		this.setIcon(icon);
 		
+		
+	}
+	
+	
+	
+	
+	public void setGlow(){
 		
 	}
 

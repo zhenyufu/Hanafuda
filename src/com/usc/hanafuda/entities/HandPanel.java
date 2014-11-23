@@ -20,7 +20,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 import com.usc.hanafuda.screens.GameScreen;
 
 public class HandPanel extends JPanel{
-	
+	static boolean aCardIsUp = false;
 	ArrayList<CardButton> cardButtonList;
 	public final int gap = 110;
 	private int score = 0;
