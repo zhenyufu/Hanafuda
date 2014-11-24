@@ -3,6 +3,7 @@ package com.usc.hanafuda.entities;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +11,14 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 
 import com.usc.hanafuda.HClient;
 import com.usc.hanafuda.MyGame;
@@ -22,23 +28,14 @@ import com.usc.hanafuda.screens.GameScreen;
 public class HandPanel extends JPanel{
 	static boolean aCardIsUp = false;
 	ArrayList<CardButton> cardButtonList;
-	public final int gap = 110;
+	public final int gap = 100;
 	private int score = 0;
+	private JLabel playerScore;
+	private JTextPane capturedCardPane;
 	HClient hClient;
 	public HandPanel(HClient hClient){
 		this.setBackground(Color.yellow);
-		/*JPanel playerInfoPanel = new JPanel();
-		playerInfoPanel.setLayout(new BoxLayout(playerInfoPanel, BoxLayout.Y_AXIS));
-		playerInfoPanel.setMinimumSize(new Dimension(200,200));
-		playerInfoPanel.setBorder(BorderFactory.createLineBorder(Color.green, 5));
-		JLabel playerName = new JLabel("playerName");
-		JLabel playerScore = new JLabel("Score: " + Integer.toString(score));
-		JButton showCapturedBtn = new JButton("Show Captured Cards");
-		playerInfoPanel.add(playerName);
-		playerInfoPanel.add(playerScore);
-		
-		this.add(new JLabel("test"), BorderLayout.SOUTH);
-		this.add(playerInfoPanel, BorderLayout.EAST);*/
+	
 		this.hClient =  hClient;
 		this.setPreferredSize(new Dimension (1150, 200));
 		this.setMinimumSize(new Dimension (1150, 200));
@@ -46,6 +43,37 @@ public class HandPanel extends JPanel{
 		this.setLayout(null);
 		this.setBorder(BorderFactory.createLineBorder(Color.darkGray, 3));
 		
+		
+		JLabel playerName = new JLabel("playerName");
+		playerName.setBounds(860, 10, 200, 50);
+		playerName.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
+		this.add(playerName);
+		playerScore = new JLabel("Score: " + Integer.toString(score));
+		playerScore.setBounds(860, 35, 250, 100);
+		playerScore.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
+		this.add(playerScore);
+		JButton showCapturedBtn = new JButton("Show Captured Cards");
+		showCapturedBtn.setBounds(860,110,160,40);
+		this.add(showCapturedBtn);
+		capturedCardPane = new JTextPane();
+		capturedCardPane.setEditable(false);
+		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
+		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
+		JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		showCapturedBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				JFrame popup = new JFrame("Your Captured Cards");
+				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
+				popup.setSize(500,300);
+				popup.setLocation(400, 200);
+				popup.setVisible(true);
+				popup.setResizable(true);
+				
+				popup.add(jsp);
+			}
+		});
+
 		cardButtonList = new ArrayList<CardButton>();
 		initialDeal();
 		refreshDisplay();
@@ -103,5 +131,13 @@ public class HandPanel extends JPanel{
 //		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 40, null);
 
 	}	
+	public void addToCapturedCard(String imagePath){
+		capturedCardPane.insertIcon(new ImageIcon(imagePath));
+		
+	}
+	public void incScore(int incBy){
+		score = score + incBy;
+		playerScore.setText(Integer.toString(score) + " ");
+	}
 		
 }

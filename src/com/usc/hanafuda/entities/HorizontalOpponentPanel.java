@@ -57,7 +57,7 @@ public class HorizontalOpponentPanel extends JPanel{
 		this.add(showCapturedCard);
 		showCapturedCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				JFrame popup = new JFrame("Captured Cards");
+				JFrame popup = new JFrame("Opponent's Captured Cards");
 				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
 				popup.setSize(500,300);
 				popup.setLocation(400, 200);
