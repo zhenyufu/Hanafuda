@@ -97,7 +97,7 @@ public class HorizontalOpponentPanel extends JPanel{
 		this.setMaximumSize(new Dimension (1150, 200));
 		
 		addToCapturedCard("deck.png");//function test out
-		throwCard();//function test out
+		//throwCard();//function test out
 	}
 	public void incScore(int incBy){
 		score = score + incBy;

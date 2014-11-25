@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import test.TestClient;
 
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Deck;
@@ -651,7 +650,6 @@ public class HClient extends Thread {
 			count++;
 		}
 		System.out.println ();
-		
 		endTurn();
 	}
 //////////////////////////////////////////////////

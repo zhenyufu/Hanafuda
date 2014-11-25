@@ -39,17 +39,17 @@ public class FieldPanel extends JPanel {
 		}
 		
 		public void initialDeal(){
-			ArrayList<Card> hand = hClient.getHand();
+			ArrayList<Card> field = hClient.getField();
 			ImageIcon deckImage = new ImageIcon("deck.png");
 			CardButton deck = new CardButton(deckImage);
 			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
 			this.add(deck);
 			
-			for(int i = 0 ; i < hand.size(); i++){
+			for(int i = 0 ; i < field.size(); i++){
 				CardButton j = new CardButton();
 
 				
-				j.setCard(hand.get(i));
+				j.setCard(field.get(i));
 				
 				j.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent aa) {
