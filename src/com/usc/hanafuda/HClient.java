@@ -8,6 +8,9 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import test.TestClient;
 
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Deck;
@@ -19,7 +22,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 		// Change the state depending on what we want it to do
 
 
-//TODO: stroe gui inside client 
+//TODO: store gui inside client 
 
 public class HClient extends Thread {
 	private PrintWriter pw;
@@ -34,9 +37,37 @@ public class HClient extends Thread {
 	private int score=0;
 	private int AnotherScore=0;
 	private Card anotherSelectedCard;
+
+//////////////////////////////////////////////////
+	//DEBUG
+	// JENNY-NOV24
+	private Scanner scan;
+	
+	/*
+	private TestClient myTest;
+	public HClient (String hostname, int port, TestClient t) {	
+		try {
+			myTest = t;
+			Socket s = new Socket (hostname, port);
+			this.pw = new PrintWriter (s.getOutputStream());
+			this.os = new ObjectOutputStream (s.getOutputStream());
+			this.br = new BufferedReader (new InputStreamReader(s.getInputStream()));
+			this.is = new ObjectInputStream (s.getInputStream());
+			this.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	*/
+//////////////////////////////////////////////////
 	
 	public HClient (String hostname, int port) {	
 		try {
+			//DEBUG
+			// JENNY-NOV24
+			scan = new Scanner (System.in);
+			
+			
 			Socket s = new Socket (hostname, port);
 			this.pw = new PrintWriter (s.getOutputStream());
 			this.os = new ObjectOutputStream (s.getOutputStream());
@@ -329,7 +360,6 @@ public class HClient extends Thread {
 								
 								//DEBUG
 								System.out.println ("Collection Card received: " + received.getName());
-								//System.out.println ("I have <" + Collection.size() + "> cards in Collection");
 								
 							} catch (ClassNotFoundException e) {
 								e.printStackTrace();
@@ -352,19 +382,90 @@ public class HClient extends Thread {
 						MyTurn = true;
 						
 						//DEBUG
+						System.out.println();
 						System.out.println ();
 						System.out.println ("It is now my turn.");
 						System.out.println ();
+						System.out.println ();
+						/*
 						for (Card c : Hand) {
 							System.out.println ("Matching cards for " + c.getName() + ": ");
 							for (Card match : getMatchingCards(c)) {
-								//match.printName();
+								match.printName();
 							}
 							System.out.println();
 						}
 						
 						//DEBUG
 						System.out.println();
+						System.out.println();
+						*/
+						
+						
+						
+				//////////////////////////////////////////////////
+						//DEBUG
+						// JENNY-NOV24
+						
+						// Print hand
+						System.out.println ("My hand has the following cards: ");
+						int count = 0;
+						for (Card c : Hand) {
+							System.out.print (count + ": ");
+							c.printName();
+							count++;
+						}
+						System.out.println ();
+						
+						// Print collection
+						System.out.println ("My collection has the following cards: ");
+						count = 0;
+						for (Card c : Collection) {
+							System.out.print (count + ": ");
+							c.printName();
+							count++;
+						}
+						System.out.println ();
+						
+						// Print field
+						System.out.println ("The field has the following cards: ");
+						count = 0;
+						for (Card c : Field) {
+							System.out.print (count + ": ");
+							c.printName();
+							count++;
+						}
+						System.out.println ();
+						
+						// Print out matches for each card in hand
+						System.out.println ("The field has the following matches: ");
+						for (Card c : Hand) {
+							System.out.println ("Matching cards for " + c.getName() + ": ");
+							for (Card match : getMatchingCards(c)) {
+								match.printName();
+							}
+							System.out.println();
+						}
+						
+						// Prompt for card in hand
+						System.out.println ("What hand card would you like to select?");
+						int handChoice = scan.nextInt();
+						
+						// Prompt for match in field; if no match enter -1
+						System.out.println ("What field card would you like to select?");
+						int fieldChoice = scan.nextInt();
+						
+						// Process choices
+						if (fieldChoice >= 0) {
+							processMatchAndRemoveCards (Hand.get(handChoice), Field.get(fieldChoice));
+						}
+						else {
+							addHandCardToField (Hand.get(handChoice));
+						}
+				//////////////////////////////////////////////////
+						
+						
+						
 						
 				}
 				
@@ -374,12 +475,15 @@ public class HClient extends Thread {
 					
 					if (nextMessage.equals ("Signal:SendCard")) {
 						try {
-							Card received = (Card) is.readObject();
-							//TODO: notify gui
+							Card received = (Card) is.readObject();				
 							
+							//TODO: Notify GUI
 							
-							
-							
+					//////////////////////////////////////////////////
+							//DEBUG
+							// JENNY-NOV24
+							receiveDeckCard(received);
+					//////////////////////////////////////////////////
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
@@ -434,7 +538,11 @@ public class HClient extends Thread {
 					//TODO: print to GUI that the game ended and show final score
 				}
 				
-				if (line.equals ("Signal:YourTurn")) { 
+				if (line.equals ("Signal:YourTurn")) {
+					// JENNY-NOV24
+					MyTurn = true;
+					
+					// What does this do? Is it different from Signal:Turn
 					
 					//TODO: Enable player's access in GUI
 					// player chooses a card and system checks if there are any matching cards in the field
@@ -451,6 +559,102 @@ public class HClient extends Thread {
 			e.printStackTrace();
 		}
 	} // End of run() block
+	
+//////////////////////////////////////////////////
+	//JENNY-NOV24
+	//DEBUG METHODS
+	public ArrayList<Card> getField () {
+		return Field;
+	}
+	public ArrayList<Card> getCollection () {
+		return Collection;
+	}
+	public boolean isMyTurn () {
+		return MyTurn;
+	}
+	public void receiveDeckCard (Card cd) {		
+		// Print hand
+		System.out.println ("My hand has the following cards: ");
+		int count = 0;
+		for (Card c : Hand) {
+			System.out.print (count + ": ");
+			c.printName();
+			count++;
+		}
+		System.out.println ();
+		
+		// Print field
+		System.out.println ("The field has the following cards: ");
+		count = 0;
+		for (Card c : Field) {
+			System.out.print (count + ": ");
+			c.printName();
+			count++;
+		}
+		System.out.println ();
+		
+		// Print out matches for each card in hand
+		System.out.println ("The field has the following matches: ");
+		System.out.println ("Matching cards for " + cd.getName() + ": ");
+		for (Card match : getMatchingCards(cd)) {
+			match.printName();
+		}
+		System.out.println();
+		
+		// Prompt for card in hand
+		System.out.println ("What hand card would you like to select?");
+		int handChoice = scan.nextInt();
+		
+		// Prompt for match in field; if no match enter -1
+		System.out.println ("What field card would you like to select?");
+		int fieldChoice = scan.nextInt();
+		
+		// Process choices
+		if (fieldChoice >= 0) {
+			processMatchAndRemoveCards (Hand.get(handChoice), Field.get(fieldChoice));
+		}
+		else {
+			addDrawnCardToField (Hand.get(handChoice));
+		}
+		
+		// End of turn
+		System.out.println ();
+		System.out.println ();
+		System.out.println ("End of turn.");
+		
+		// Print hand
+		System.out.println ("My hand has the following cards: ");
+		count = 0;
+		for (Card c : Hand) {
+			System.out.print (count + ": ");
+			c.printName();
+			count++;
+		}
+		System.out.println ();
+		
+		// Print collection
+		System.out.println ("My collection has the following cards: ");
+		count = 0;
+		for (Card c : Collection) {
+			System.out.print (count + ": ");
+			c.printName();
+			count++;
+		}
+		System.out.println ();
+		
+		// Print field
+		System.out.println ("The field has the following cards: ");
+		count = 0;
+		for (Card c : Field) {
+			System.out.print (count + ": ");
+			c.printName();
+			count++;
+		}
+		System.out.println ();
+		
+		endTurn();
+	}
+//////////////////////////////////////////////////
 	
 	public static void main (String[] args) {
 		HClient h = new HClient("localhost",6789);
