@@ -165,7 +165,8 @@ public class ServerThread extends Thread{
 					else{
 						
 						
-						
+						//TODO: Final scoring
+						//TODO: End of game
 						
 						
 						
