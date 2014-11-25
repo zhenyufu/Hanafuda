@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -19,7 +20,7 @@ public class FieldPanel extends JPanel {
 	
 		static boolean aCardIsUp = false;
 		ArrayList<CardButton> cardButtonList;
-		public final int gap = 110;
+		public final int gap = 100;
 		private int score = 0;
 		HClient hClient;
 		public FieldPanel(HClient hClient){
@@ -39,6 +40,10 @@ public class FieldPanel extends JPanel {
 		
 		public void initialDeal(){
 			ArrayList<Card> hand = hClient.getHand();
+			ImageIcon deckImage = new ImageIcon("deck.png");
+			CardButton deck = new CardButton(deckImage);
+			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
+			this.add(deck);
 			
 			for(int i = 0 ; i < hand.size(); i++){
 				CardButton j = new CardButton();
@@ -68,7 +73,7 @@ public class FieldPanel extends JPanel {
 				//System.out.println("card " +  40+i*60 );
 				this.add(cardButtonList.get(i));
 				//cardButtonList.get(i).setLocation(40+i*60 ,40);
-				cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
+				cardButtonList.get(i).setBounds(140+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
 				
 				
 				

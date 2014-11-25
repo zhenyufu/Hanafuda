@@ -9,6 +9,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 
 public class CardButton extends JButton{
 	private int x =40;
+	
 	public CardButton(ImageIcon cardIconArray){
 		this.setIcon(cardIconArray);
 		

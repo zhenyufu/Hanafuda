@@ -66,7 +66,7 @@ public class HandPanel extends JPanel{
 				JFrame popup = new JFrame("Your Captured Cards");
 				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
 				popup.setSize(500,300);
-				popup.setLocation(400, 200);
+				popup.setLocation(700,400);
 				popup.setVisible(true);
 				popup.setResizable(true);
 				

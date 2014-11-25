@@ -60,11 +60,12 @@ public class HorizontalOpponentPanel extends JPanel{
 				JFrame popup = new JFrame("Opponent's Captured Cards");
 				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
 				popup.setSize(500,300);
-				popup.setLocation(400, 200);
+				popup.setLocation(100, 100);
 				popup.setVisible(true);
 				popup.setResizable(true);
 				
 				popup.add(jsp);
+				
 			}
 		});
 		cardPanel = new JPanel();
