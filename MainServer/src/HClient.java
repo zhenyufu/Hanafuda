@@ -15,7 +15,7 @@ import javax.smartcardio.Card;
 		// Change the state depending on what we want it to do
 
 
-//TODO: stroe gui inside client 
+//TODO: Store client inside of GUI
 
 public class HClient extends Thread {
 	private PrintWriter pw;

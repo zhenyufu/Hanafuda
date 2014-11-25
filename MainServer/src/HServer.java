@@ -279,7 +279,7 @@ public class HServer {
 	}
 	*/
 	
-	public static void main(String [] args){
+	public static void main (String [] args) {
 		new HServer(6789);
 	}	
 }
