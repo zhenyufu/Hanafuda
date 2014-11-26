@@ -34,8 +34,10 @@ public class HandPanel extends JPanel{
 	private JTextPane capturedCardPane;
 	private String myName;
 	private String opponentName;
+	private GameScreen gameScreen;
 	HClient hClient;
-	public HandPanel(HClient hClient){
+	public HandPanel(HClient hClient, GameScreen gs){
+		this.gameScreen = gs;
 		this.setBackground(Color.yellow);
 		this.myName = hClient.getUserName();
 		this.hClient =  hClient;
@@ -117,9 +119,9 @@ public class HandPanel extends JPanel{
 			}
 
 		}
-		
-		FieldPanel.refreshDisplay();
-		
+		gameScreen.getFieldPanel().refreshDisplay();
+		//FieldPanel.refreshDisplay();
+		//TODO: this line above
 		
 	}
 	
