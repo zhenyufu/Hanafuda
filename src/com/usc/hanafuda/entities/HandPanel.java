@@ -87,23 +87,24 @@ public class HandPanel extends JPanel{
 		
 		for(int i = 0 ; i < hand.size(); i++){
 			final CardButton j = new CardButton();
-
 			
 			j.setCard(hand.get(i));
 			
 			j.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
-					j.moveUpDown();
-					
+					j.moveUpDown();										
 					refreshDisplay();
 				}
 			});
 			
-			cardButtonList.add(j);
-		
-			
+			cardButtonList.add(j);			
 			
 		}
+	}
+	
+	public void findMatchingCards(Card c){
+		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
+		
 	}
 	
 	
@@ -115,10 +116,7 @@ public class HandPanel extends JPanel{
 			this.add(cardButtonList.get(i));
 			//cardButtonList.get(i).setLocation(40+i*60 ,40);
 			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
-			
-			
-			
-			
+		
 		}
 		//cardButtonList.get(0).setLocation(40, 40);
 		this.validate();

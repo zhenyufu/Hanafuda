@@ -47,13 +47,18 @@ public class FieldPanel extends JPanel {
 			
 			for(int i = 0 ; i < field.size(); i++){
 				final CardButton j = new CardButton();
-
 				
-				j.setCard(field.get(i));
-				
+				j.setCard(field.get(i));				
 				j.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent aa) {
-						j.moveUpDown();
+						if(!j.isGlowSet()) {
+							j.setGlow();
+							j.repaint();
+						}
+						else{
+							j.unsetGlow();
+							j.repaint();
+						}
 						refreshDisplay();
 					}
 				});

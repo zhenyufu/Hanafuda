@@ -134,6 +134,7 @@ public class GameScreen extends JPanel {
 		textPanel.add(chatBottomPanel, BorderLayout.SOUTH);
 		textArea = new JTextArea("", 7, 20);
 		textArea.setEditable(false);
+		textArea.setLineWrap(true);
 		textPanel.add(textArea, BorderLayout.CENTER);
 
 		

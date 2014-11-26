@@ -662,8 +662,8 @@ public class HClient extends Thread {
 		System.out.print("what is your username: ");
 		String playerName = scan.nextLine();
 		HClient h = new HClient("localhost",6789, playerName);
-			MyAssetHandler.load();
-			MyGame g = new MyGame(h);
+		MyAssetHandler.load();
+		MyGame g = new MyGame(h);
 		
 		
 	}
