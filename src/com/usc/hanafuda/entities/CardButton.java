@@ -16,10 +16,11 @@ public class CardButton extends JButton{
 	private int x =40;
 	private boolean setGlow = false;
 	private Card card;
+	private boolean cardUp;
 	
 	public CardButton(ImageIcon cardIconArray){
 		this.setIcon(cardIconArray);
-		
+		this.cardUp = false;
 	}
 
 	public CardButton() {
@@ -34,15 +35,19 @@ public class CardButton extends JButton{
 		return card;
 	}
 
-	
+	public boolean isCardUp() {
+		return cardUp;
+	}
 	public void moveUpDown(){
 		if(x == 20) { 
 			x = 40;
 			HandPanel.aCardIsUp = false;
+			cardUp = false;
 		}
 		else if(x == 40 && 	!HandPanel.aCardIsUp) {
 			x = 20; 
 			HandPanel.aCardIsUp = true;
+			cardUp = true;
 		}		
 	}
 
