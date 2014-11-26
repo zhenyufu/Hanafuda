@@ -94,8 +94,7 @@ public class HandPanel extends JPanel{
 				public void actionPerformed(ActionEvent aa) {
 					
 					Card c = ((CardButton) aa.getSource()).getCard();					
-					highlightMatchingCards(c);
-					
+					highlightMatchingCards(c);					
 					j.moveUpDown();										
 					refreshDisplay();
 				}
@@ -108,17 +107,20 @@ public class HandPanel extends JPanel{
 	
 	public void highlightMatchingCards(Card c){
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
+		System.out.println("Matching Card size: " +matchingCards.size());
 		for(int i = 0 ; i <matchingCards.size(); i++){
-			if(c.isMatch(FieldPanel.cardButtonList.get(i).getCard())){
-				FieldPanel.cardButtonList.get(i).setGlow();
-				FieldPanel.cardButtonList.get(i).repaint();
-				
-				//make it glow
+			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+//					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
+					FieldPanel.cardButtonList.get(j).setGlow();
+					FieldPanel.cardButtonList.get(j).repaint();
+
+				}
 			}
+
 
 		}
 		
-		FieldPanel.refreshDisplay();
 		
 		
 	}
