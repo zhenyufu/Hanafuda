@@ -32,7 +32,6 @@ public class GameScreen extends JPanel {
 	private JButton sendMessage;
 	private HandPanel handPanel;
 	private HorizontalOpponentPanel opponentPanelNorth;
-	//private VerticalOpponentPanel opponentPanelWest, opponentPanelEast;
 	//public static Deck deck;
 	private FieldPanel fieldPanel;
 	

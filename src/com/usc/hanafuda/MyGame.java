@@ -12,6 +12,8 @@ public class MyGame extends JFrame{
 	public static final boolean DEBUG = true;
 	static JPanel currentPanel;
 	static HClient client;
+	static String playerName;
+	
 	public MyGame(HClient h) {
 		super("Hanafuda");
 		setSize(1400, 1000);
@@ -19,7 +21,7 @@ public class MyGame extends JFrame{
 		setMinimumSize(new Dimension(1350, 650));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.client = h;
-		
+		this.playerName = h.getUserName();
 		
 		currentPanel = new MenuScreen(this);
 		add(currentPanel);

@@ -32,10 +32,12 @@ public class HandPanel extends JPanel{
 	private int score = 0;
 	private JLabel playerScore;
 	private JTextPane capturedCardPane;
+	private String myName;
+	private String opponentName;
 	HClient hClient;
 	public HandPanel(HClient hClient){
 		this.setBackground(Color.yellow);
-	
+		this.myName = hClient.getUserName();
 		this.hClient =  hClient;
 		this.setPreferredSize(new Dimension (1150, 200));
 		this.setMinimumSize(new Dimension (1150, 200));
@@ -44,7 +46,7 @@ public class HandPanel extends JPanel{
 		this.setBorder(BorderFactory.createLineBorder(Color.darkGray, 3));
 		
 		
-		JLabel playerName = new JLabel("playerName");
+		JLabel playerName = new JLabel(myName);
 		playerName.setBounds(860, 10, 200, 50);
 		playerName.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
 		this.add(playerName);
@@ -92,6 +94,7 @@ public class HandPanel extends JPanel{
 			j.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
 					j.moveUpDown();
+					
 					refreshDisplay();
 				}
 			});
