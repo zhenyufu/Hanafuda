@@ -6,11 +6,12 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import com.usc.hanafuda.entities.Card;
+import com.usc.hanafuda.entities.Card.Yaku;
 import com.usc.hanafuda.entities.Deck;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
@@ -20,7 +21,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 		// Change the state depending on what we want it to do
 
 
-//TODO: store gui inside client 
+//TODO: Store GUI inside client 
 
 public class HClient extends Thread {
 	private PrintWriter pw;
@@ -169,13 +170,16 @@ public class HClient extends Thread {
 	// They will collect the card from the field; discard any cards whose value is 0
 	public void processMatchAndRemoveCards (Card cardFromHand, Card cardFromField) {
 		// Add card to collection if value > 0
-		if (cardFromHand.getValue() > 0) {		
+		if (cardFromHand.getValue() > 0 || cardFromHand.isGaji()) {
+			if (cardFromHand.isGaji()) {
+				cardFromHand.setGajiMonth (cardFromField.getMonth());
+			}
 			Collection.add(cardFromHand);
 			//TODO: Update score 
 		}
 		
 		// Add card to collection if value > 0
-		if (cardFromField.getValue() > 0) {		
+		if (cardFromField.getValue() > 0) {
 			Collection.add (cardFromField);
 		}
 		
@@ -291,6 +295,111 @@ public class HClient extends Thread {
 	}
 	
 	
+	public int calculateFinalScore () {
+		int finalScore = 0;
+		
+		// Check for gaji in collection
+		for (Card cc : Collection) {
+			if (cc.isGaji()) {
+				// Check if field has any cards from gaji month
+				for (Card fc : Field) {
+					//TODO: May want to show cards being added to hand
+					if (fc.getMonth() == cc.getGajiMonth()) {
+						Collection.add(fc);
+					}
+				}
+			}
+		}
+		
+		// Count value of all cards in collection
+		for (Card cd : Collection) {
+			finalScore += cd.getValue();
+		}
+		
+		// Check for yakus
+		int I = 0;
+		int Ro = 0;
+		int Ha = 0;
+		int Ni = 0;
+		int Ho = 0;
+		int He = 0;
+		int To = 0;
+		int Chi = 0;
+		
+		for (Card cd : Collection) {
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.I) {
+				I++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.I) {
+				I++;
+			}
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.Ro) {
+				Ro++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.Ro) {
+				Ro++;
+			}
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.Ha) {
+				Ha++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.Ha) {
+				Ha++;
+			}
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.Ni) {
+				Ni++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.Ni) {
+				Ni++;
+			}
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.Ho) {
+				Ho++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.Ho) {
+				Ho++;
+			}
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.To) {
+				To++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.To) {
+				To++;
+			}
+			if (cd.getYaku1() != null && cd.getYaku1() == Yaku.Chi) {
+				Chi++;
+			}
+			if (cd.getYaku2() != null && cd.getYaku2() == Yaku.Chi) {
+				Chi++;
+			}
+		}
+		
+		if (I == 3) {
+			finalScore += 50;
+		}
+		if (Ro == 3) {
+			finalScore += 50;
+		}
+		if (Ha == 3) {
+			finalScore += 50;
+		}
+		if (Ni == 3) {
+			finalScore += 50;
+		}
+		if (Ho == 3) {
+			finalScore += 50;
+		}
+		if (He == 3) {
+			finalScore += 50;
+		}
+		if (To == 3) {
+			finalScore += 50;
+		}
+		if (Chi == 3) {
+			finalScore += 50;
+		}
+		
+		return finalScore;
+	}
+	
+	
 	public void run() {
 		try {	
 			while (true) {
@@ -322,6 +431,8 @@ public class HClient extends Thread {
 							System.out.println ("I have <" + Hand.size() + "> cards in Hand.");
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
+						} catch (StreamCorruptedException sce) {
+							System.out.println ("sce.getMessage() = " + sce.getMessage());
 						}
 					}
 						
@@ -345,6 +456,8 @@ public class HClient extends Thread {
 						
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
+						} catch (StreamCorruptedException sce) {
+							System.out.println ("sce.getMessage() = " + sce.getMessage());
 						}
 					}
 				} // End of receive field block
@@ -365,6 +478,8 @@ public class HClient extends Thread {
 								
 							} catch (ClassNotFoundException e) {
 								e.printStackTrace();
+							} catch (StreamCorruptedException sce) {
+								System.out.println ("sce.getMessage() = " + sce.getMessage());
 							}
 						}
 				}
@@ -489,6 +604,8 @@ public class HClient extends Thread {
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
+						} catch (StreamCorruptedException sce) {
+							System.out.println ("sce.getMessage() = " + sce.getMessage());
 						}
 					}
 				}
@@ -530,6 +647,8 @@ public class HClient extends Thread {
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
+						} catch (StreamCorruptedException sce) {
+							System.out.println ("sce.getMessage() = " + sce.getMessage());
 						}
 					}
 					
@@ -664,7 +783,6 @@ public class HClient extends Thread {
 		HClient h = new HClient("localhost",6789, playerName);
 		MyAssetHandler.load();
 		MyGame g = new MyGame(h);
-		
 		
 	}
 }

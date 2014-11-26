@@ -12,30 +12,28 @@ public class Card implements Serializable {
 		July, August, September, October, November, December
 	}
 	
-	enum Yaku {
+	public enum Yaku {
 		I, Ro, Ha, Ni, Ho, He, To, Chi
 	}
 	
 	private String name;
 	private Month month;
-	private Yaku yaku;
+	private Yaku yaku1, yaku2;
 	private int value;
+	private boolean gaji;
+	private Month gajiMonth;
 	private ImageIcon image;
     private int id;
-	public Card (int id, String n, Month m, Yaku y, ImageIcon i, int v) {
-        this.id=id;
-		name = n;
-		month = m;
-		yaku = y;
-		image = i;
-		value = v;
+	public Card (int id, String n, Month m, Yaku y1, Yaku y2, boolean g, ImageIcon i, int v) {
+        this.id = id;
+		this.name = n;
+		this.month = m;
+		this.yaku1 = y1;
+		this.yaku2 = y2;
+		this.gaji = g;
+		this.image = i;
+		this.value = v;
 	}
-	
-	//DEBUG
-	//Delete later; this is to be used for testing initial Client/Server
-	//public Card (int randomincrement) {
-	//	value = randomincrement;
-	//}
 
 	//DEBUG
 	public void printName() {
@@ -58,16 +56,32 @@ public class Card implements Serializable {
 		return month;
 	}
 	
-	public Yaku getYaku() {
-		return yaku;
+	public Yaku getYaku1() {
+		return yaku1;
+	}
+	
+	public Yaku getYaku2() {
+		return yaku2;
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
+	public boolean isGaji() {
+		return gaji;
+	}
+	
+	public void setGajiMonth (Month m) {
+		gajiMonth = m;
+	}
+	
+	public Month getGajiMonth () {
+		return gajiMonth;
+	}
+	
 	public boolean isMatch(Card cd) {
-		if (this.month == cd.getMonth()) {
+		if (this.month == cd.getMonth() || this.gaji == true) {
 				return true;
 		}
 		else {
