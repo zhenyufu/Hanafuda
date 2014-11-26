@@ -17,14 +17,14 @@ public class HServer {
 	//Field variable
 	private Deck deck;
 	public ArrayList<Card> Field;
-	public ArrayList<Card> Collection;
+	public ArrayList<Card> Collection=new ArrayList<Card>();
 	public ServerThread currentPlayer;
 	
 	public Card currentPlayedCard;
 	
 	public int hostScore=0;
 	public int guestScore=0;
-	
+	public boolean close=false;
 	
 	
 	public HServer (int port) {
@@ -33,8 +33,9 @@ public class HServer {
 
 			while (true) {
 				//DEBUG
-				if (vServerThread.size() == 2) {
+				if (vServerThread.size() == 2 && !close) {
 					onStartOfGame();
+					close=true;
 				}
 				
 				Socket s = ss.accept();
@@ -57,7 +58,7 @@ public class HServer {
 	}
 	
 	// Send a message to a specific client
-	public void sendMessage (String msg, ServerThread current) {
+	public synchronized void  sendMessage (String msg, ServerThread current) {
 		//DEBUG
 		System.out.println ("Server: Sending message to client: " + msg);
 		
@@ -67,9 +68,10 @@ public class HServer {
 	// Send a card to a specific client 
 	public void sendCard (Card cd, ServerThread current) {
 		//DEBUG
-		System.out.println ("Server: Sending card to client: " + cd.getName());
+		//System.out.println ("Server: Sending card to client: " + cd.getName());
 		
 		current.sendCard (cd);
+		
 	}
 	
 	// Remove disconnected client
@@ -84,10 +86,10 @@ public class HServer {
 		deck = new Deck();
 		
 		//DEBUG
-		System.out.println ("The initial deck is: ");
+		//System.out.println ("The initial deck is: ");
 		//deck.printDeck();
-		System.out.println();
-		System.out.println();
+		//System.out.println();
+		//System.out.println();
 		
 		// Initialize field
 		int numInitialFieldCard = 0;
@@ -106,10 +108,10 @@ public class HServer {
 		}
 		
 		//DEBUG
-		System.out.println ("Initial field is: ");
-		for (Card c : Field) {
+		//System.out.println ("Initial field is: ");
+		//for (Card c : Field) {
 			//c.printName();
-		}
+		//}
 		System.out.println();
 		System.out.println();
 		
@@ -122,7 +124,7 @@ public class HServer {
 			
 				// Make sure the messages are not sent to clients at the same time as the cards 
 				try {
-					Thread.sleep (100);
+					Thread.sleep (10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -141,7 +143,7 @@ public class HServer {
 				
 				// Make sure the messages are not sent to clients at the same time as the cards 
 				try {
-					Thread.sleep (100);
+					Thread.sleep (10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -151,10 +153,11 @@ public class HServer {
 		}
 		
 		//DEBUG
-		System.out.println ("Deck after giving out cards: ");
-		deck.printDeck();
-		System.out.println();
-		System.out.println();
+		//System.out.println ("Deck after giving out cards: ");
+		//deck.printDeck();
+		System.out.println("deck num: "+ deck.numCardsLeft());
+		//System.out.println();
+		//System.out.println();
 		
 		// Notify first player of his/her turn; as default, the host is the first one to act
 		ServerThread host = vServerThread.get (0);
@@ -164,32 +167,55 @@ public class HServer {
 	} //End of OnStartOfGame() block
 	
 	// This method will update the field based on the card sent by the client 
-	public void updateField () {
+	public synchronized void updateField (ServerThread oppo) {
 		//TODO: Update field
 		
 		// Send the updated field to each client
-		for (int i = 0; i < vServerThread.size(); i++) {
-			ServerThread current = vServerThread.get (i);
+		//send to not current player
 			
-			sendMessage ("Signal:UpdateField", current);
-		
-			// Make sure the messages are not sent to clients at the same time as the cards 
+			sendMessage("123",oppo);
+			sendMessage ("Signal:UpdateField", oppo);
+
 			for(int j=0; j < Field.size(); j++) {
 				// Signal clients that the next few cards will be the field.
-				sendMessage ("Signal:SendField", current);
+				sendMessage ("Signal:SendField", oppo);
+				
+				// Make sure the messages are not sent to clients at the same time as the cards 
+			/*	try {
+					Thread.sleep (10);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}*/
+				
+				sendCard (Field.get (j), oppo);
+			}			
+		
+	} // End of updateField() block
+	
+	public synchronized void updateOpponentCollection (ServerThread oppo) {
+		//TODO: Update field
+		
+		// Send the updated field to each client
+			
+			sendMessage ("Signal:UpdateOpponentCollection", oppo);
+		
+			// Make sure the messages are not sent to clients at the same time as the cards 
+			for(int j=0; j < Collection.size(); j++) {
+				// Signal clients that the next few cards will be the field.
+				sendMessage ("Signal:SendOpponentCollection", oppo);
 				
 				// Make sure the messages are not sent to clients at the same time as the cards 
 				try {
-					Thread.sleep (100);
+					Thread.sleep (10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				
-				sendCard (Field.get (j), current);
+				sendCard (Collection.get (j), oppo);
 			}			
 		}
 		
-	} // End of updateField() block
+	 // End of updateField() block
 	
 	//TODO: When will this be called? Is this called when a player's collections is updated?
 			// We need to keep track of the current player's collection
@@ -266,7 +292,10 @@ public class HServer {
 	public Boolean GameIsOver(){
 		
 		
-		if(deck.numCardsLeft()==8) return true;
+		if(deck.numCardsLeft()==8) {
+			System.out.println("Game is over");
+			return true;
+		}
 		
 		
 		

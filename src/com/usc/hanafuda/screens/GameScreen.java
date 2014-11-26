@@ -58,12 +58,12 @@ public class GameScreen extends JPanel {
 		//JLabel imageLabel = new JLabel(new ImageIcon(image));
 
 		//deckPanel.add(imageLabel, BorderLayout.SOUTH);
-		handPanel = new HandPanel( myGame.getHClient());
+		handPanel = new HandPanel( myGame.getHClient(), this);
 		deckPanel.add(handPanel, BorderLayout.SOUTH);
 
 		
 		
-		fieldPanel = new FieldPanel(myGame.getHClient());
+		fieldPanel = new FieldPanel(myGame.getHClient(), this);
 		deckPanel.add(fieldPanel, BorderLayout.CENTER);
 		
 		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
@@ -166,6 +166,10 @@ public class GameScreen extends JPanel {
 
 	}
 
+	public FieldPanel getFieldPanel () {
+		return fieldPanel;
+	}
+	
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 

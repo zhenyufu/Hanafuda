@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import com.usc.hanafuda.HClient;
 import com.usc.hanafuda.handlers.MyAssetHandler;
+import com.usc.hanafuda.screens.GameScreen;
 
 public class FieldPanel extends JPanel {
 
@@ -22,10 +23,11 @@ public class FieldPanel extends JPanel {
 		static ArrayList<CardButton> cardButtonList;
 		public final int gap = 100;
 		private int score = 0;
+		private GameScreen gameScreen;
 		HClient hClient;
-		public FieldPanel(HClient hClient){
+		public FieldPanel(HClient hClient, GameScreen gs){
 			this.setBackground(Color.GRAY);
-			
+			this.gameScreen = gs;
 			this.hClient =  hClient;
 			this.setPreferredSize(new Dimension (1150, 200));
 			this.setMinimumSize(new Dimension (1150, 200));
