@@ -59,7 +59,7 @@ public class ServerThread extends Thread{
 	}
 	
 	
-	public synchronized void send(String message){
+	public void send(String message){
 		pw.println(message);
 		pw.flush();
 		
