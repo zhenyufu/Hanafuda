@@ -23,7 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
-public class HorizontalOpponentPanel extends JPanel{
+public class OpponentPanel extends JPanel{
 
 	private JButton showCapturedCard;
 	private JLabel nameLabel;
@@ -37,7 +37,7 @@ public class HorizontalOpponentPanel extends JPanel{
 	private BufferedImage cardFaceDown;
 	private JPanel cardPanel;
 	
-	public HorizontalOpponentPanel(String playerName){
+	public OpponentPanel(String playerName){
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.playerName = playerName;

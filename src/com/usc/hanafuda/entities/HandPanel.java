@@ -95,11 +95,17 @@ public class HandPanel extends JPanel{
 			j.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
 					
-					Card c = ((CardButton) aa.getSource()).getCard();					
-					highlightMatchingCards(c);
-					
-					j.moveUpDown();										
-					refreshDisplay();
+					Card c = ((CardButton) aa.getSource()).getCard();
+					if(!j.isCardUp()) {
+						highlightMatchingCards(c);					
+						j.moveUpDown();										
+						refreshDisplay();
+					}
+					else {
+						unhighlightMatchingCards(c);					
+						j.moveUpDown();										
+						refreshDisplay();
+					}
 				}
 			});
 			
@@ -110,18 +116,34 @@ public class HandPanel extends JPanel{
 	
 	public void highlightMatchingCards(Card c){
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
+		System.out.println("Matching Card size: " +matchingCards.size());
 		for(int i = 0 ; i <matchingCards.size(); i++){
-			if(c.isMatch(FieldPanel.cardButtonList.get(i).getCard())){
-				FieldPanel.cardButtonList.get(i).setGlow();
-				FieldPanel.cardButtonList.get(i).repaint();
-				
-				//make it glow
+			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+//					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
+					FieldPanel.cardButtonList.get(j).setGlow();
+					FieldPanel.cardButtonList.get(j).repaint();
+				}
 			}
 
+
 		}
-		gameScreen.getFieldPanel().refreshDisplay();
-		//FieldPanel.refreshDisplay();
-		//TODO: this line above
+		
+	}
+	public void unhighlightMatchingCards(Card c){
+		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
+		System.out.println("Matching Card size: " +matchingCards.size());
+		for(int i = 0 ; i <matchingCards.size(); i++){
+			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+//					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
+					FieldPanel.cardButtonList.get(j).unsetGlow();
+					FieldPanel.cardButtonList.get(j).repaint();
+				}
+			}
+
+
+		}
 		
 	}
 	
