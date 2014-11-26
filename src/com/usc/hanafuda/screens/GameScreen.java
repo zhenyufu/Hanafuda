@@ -19,8 +19,7 @@ import com.usc.hanafuda.MyGame;
 import com.usc.hanafuda.entities.Deck;
 import com.usc.hanafuda.entities.FieldPanel;
 import com.usc.hanafuda.entities.HandPanel;
-import com.usc.hanafuda.entities.HorizontalOpponentPanel;
-import com.usc.hanafuda.entities.VerticalOpponentPanel;
+import com.usc.hanafuda.entities.OpponentPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 public class GameScreen extends JPanel {
@@ -31,7 +30,7 @@ public class GameScreen extends JPanel {
 	private JTextArea textArea;
 	private JButton sendMessage;
 	private HandPanel handPanel;
-	private HorizontalOpponentPanel opponentPanelNorth;
+	private OpponentPanel opponentPanelNorth;
 	//public static Deck deck;
 	private FieldPanel fieldPanel;
 	
@@ -67,7 +66,7 @@ public class GameScreen extends JPanel {
 		deckPanel.add(fieldPanel, BorderLayout.CENTER);
 		
 		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
-		opponentPanelNorth = new HorizontalOpponentPanel("northPlayer");
+		opponentPanelNorth = new OpponentPanel("northPlayer");
 		deckPanel.add(opponentPanelNorth, BorderLayout.NORTH);
 		
 		//opponentPanelWest = new VerticalOpponentPanel("westPlayer");
