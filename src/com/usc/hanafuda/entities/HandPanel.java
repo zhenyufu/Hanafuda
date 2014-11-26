@@ -117,6 +117,7 @@ public class HandPanel extends JPanel{
 					FieldPanel.cardButtonList.get(j).setGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
 
+					
 				}
 			}
 
