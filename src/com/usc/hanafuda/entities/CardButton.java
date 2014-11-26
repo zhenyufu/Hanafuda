@@ -15,6 +15,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 public class CardButton extends JButton{
 	private int x =40;
 	private boolean setGlow = false;
+	private Card card;
 	
 	public CardButton(ImageIcon cardIconArray){
 		this.setIcon(cardIconArray);
@@ -27,6 +28,10 @@ public class CardButton extends JButton{
 
 	public int getNewX() {
 		return x;
+	}
+	
+	public Card getCard(){
+		return card;
 	}
 
 	
@@ -41,9 +46,12 @@ public class CardButton extends JButton{
 		}		
 	}
 
-	public void setCard(Card card){
+	public void setCardImage(Card card){
 		ImageIcon icon = MyAssetHandler.getIcon(card.getId());
-		this.setIcon(icon);		
+		this.setIcon(icon);	
+		this.card = card;
+		
+		
 	}
 	
 	
