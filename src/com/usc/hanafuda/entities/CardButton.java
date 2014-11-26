@@ -1,5 +1,10 @@
 package com.usc.hanafuda.entities;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -9,6 +14,8 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 
 public class CardButton extends JButton{
 	private int x =40;
+	private boolean setGlow = false;
+	private Card card;
 	
 	public CardButton(ImageIcon cardIconArray){
 		this.setIcon(cardIconArray);
@@ -21,6 +28,10 @@ public class CardButton extends JButton{
 
 	public int getNewX() {
 		return x;
+	}
+	
+	public Card getCard(){
+		return card;
 	}
 
 	
@@ -35,17 +46,37 @@ public class CardButton extends JButton{
 		}		
 	}
 
-	public void setCard(Card card){
+	public void setCardImage(Card card){
 		ImageIcon icon = MyAssetHandler.getIcon(card.getId());
-		this.setIcon(icon);
+		this.setIcon(icon);	
+		this.card = card;
 		
 		
 	}
 	
 	
 	
-	
 	public void setGlow(){
+		setGlow = true;
+	}
+	
+	public void unsetGlow() {
+		setGlow = false;
+	}
+	
+	public boolean isGlowSet() {
+		return setGlow;
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		if(setGlow == true) { 
+			g2.setStroke(new BasicStroke(5));
+			g2.setFont(new Font("Arial", Font.BOLD, 20)); 
+			g2.setColor(Color.green);
+			g2.drawRect(5, 5, 75, 130);
+		}
 		
 	}
 

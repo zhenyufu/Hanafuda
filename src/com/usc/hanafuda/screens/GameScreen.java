@@ -32,12 +32,11 @@ public class GameScreen extends JPanel {
 	private JButton sendMessage;
 	private HandPanel handPanel;
 	private HorizontalOpponentPanel opponentPanelNorth;
-	//private VerticalOpponentPanel opponentPanelWest, opponentPanelEast;
 	//public static Deck deck;
 	private FieldPanel fieldPanel;
 	
 	
-	public GameScreen(MyGame myGame) {
+	public GameScreen(final MyGame myGame) {
 		//deck = new Deck();
 
 		
@@ -135,6 +134,7 @@ public class GameScreen extends JPanel {
 		textPanel.add(chatBottomPanel, BorderLayout.SOUTH);
 		textArea = new JTextArea("", 7, 20);
 		textArea.setEditable(false);
+		textArea.setLineWrap(true);
 		textPanel.add(textArea, BorderLayout.CENTER);
 
 		

@@ -19,7 +19,7 @@ public class FieldPanel extends JPanel {
 
 	
 		static boolean aCardIsUp = false;
-		ArrayList<CardButton> cardButtonList;
+		static ArrayList<CardButton> cardButtonList;
 		public final int gap = 100;
 		private int score = 0;
 		HClient hClient;
@@ -46,14 +46,21 @@ public class FieldPanel extends JPanel {
 			this.add(deck);
 			
 			for(int i = 0 ; i < field.size(); i++){
-				CardButton j = new CardButton();
-
+				final CardButton j = new CardButton();
 				
-				j.setCard(field.get(i));
-				
+				j.setCardImage(field.get(i));				
 				j.addActionListener(new ActionListener() {
+					
 					public void actionPerformed(ActionEvent aa) {
-						j.moveUpDown();
+						if(!j.isGlowSet()) {
+							j.setGlow();
+							j.repaint();
+						}
+						
+						else{
+							j.unsetGlow();
+							j.repaint();
+						}
 						refreshDisplay();
 					}
 				});

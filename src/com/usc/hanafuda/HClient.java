@@ -10,10 +10,6 @@ import java.io.StreamCorruptedException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-
-
-
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Card.Yaku;
 import com.usc.hanafuda.entities.Deck;
@@ -40,6 +36,7 @@ public class HClient extends Thread {
 	private int score=0;
 	private int AnotherScore=0;
 	private Card anotherSelectedCard;
+	private String userName;
 
 //////////////////////////////////////////////////
 	//DEBUG
@@ -64,13 +61,13 @@ public class HClient extends Thread {
 	*/
 //////////////////////////////////////////////////
 	
-	public HClient (String hostname, int port) {	
+	public HClient (String hostname, int port, String userName) {	
 		try {
 			//DEBUG
 			// JENNY-NOV24
 			scan = new Scanner (System.in);
 			
-			
+			this.userName = userName;
 			Socket s = new Socket (hostname, port);
 			this.pw = new PrintWriter (s.getOutputStream());
 			this.os = new ObjectOutputStream (s.getOutputStream());
@@ -82,6 +79,9 @@ public class HClient extends Thread {
 		}
 	} // End of constructor
 	
+	public String getUserName() {
+		return userName;
+	}
 	
 	public ArrayList<Card> getHand(){
 		
@@ -777,10 +777,12 @@ public class HClient extends Thread {
 //////////////////////////////////////////////////
 	
 	public static void main (String[] args) {
-		HClient h = new HClient("10.120.2.252",6789);
-			MyAssetHandler.load();
-			MyGame g = new MyGame(h);
-		
+		Scanner scan = new Scanner(System.in);
+		System.out.print("what is your username: ");
+		String playerName = scan.nextLine();
+		HClient h = new HClient("localhost",6789, playerName);
+		MyAssetHandler.load();
+		MyGame g = new MyGame(h);
 		
 	}
 }

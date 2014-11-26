@@ -53,7 +53,7 @@ public class HorizontalOpponentPanel extends JPanel{
 		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
 		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-		JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		final JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
 		this.add(showCapturedCard);
 		showCapturedCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
