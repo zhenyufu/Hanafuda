@@ -62,7 +62,7 @@ public class HandPanel extends JPanel{
 		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
 		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-		JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		final JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
 		showCapturedBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				JFrame popup = new JFrame("Your Captured Cards");
@@ -86,7 +86,7 @@ public class HandPanel extends JPanel{
 		ArrayList<Card> hand = hClient.getHand();
 		
 		for(int i = 0 ; i < hand.size(); i++){
-			CardButton j = new CardButton();
+			final CardButton j = new CardButton();
 
 			
 			j.setCard(hand.get(i));

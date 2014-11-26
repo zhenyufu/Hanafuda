@@ -36,7 +36,7 @@ public class GameScreen extends JPanel {
 	private FieldPanel fieldPanel;
 	
 	
-	public GameScreen(MyGame myGame) {
+	public GameScreen(final MyGame myGame) {
 		//deck = new Deck();
 
 		

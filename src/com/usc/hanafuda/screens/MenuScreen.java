@@ -33,7 +33,7 @@ public class MenuScreen extends JPanel {
 	Image scaledImage;
 	BufferedImage originalImage = null;
 	
-	public MenuScreen(MyGame myGame) {
+	public MenuScreen(final MyGame myGame) {
 		
 		this.setLayout(new GridBagLayout());
 		JPanel center = new JPanel(new GridLayout(2,1));

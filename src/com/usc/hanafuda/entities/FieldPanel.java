@@ -46,7 +46,7 @@ public class FieldPanel extends JPanel {
 			this.add(deck);
 			
 			for(int i = 0 ; i < field.size(); i++){
-				CardButton j = new CardButton();
+				final CardButton j = new CardButton();
 
 				
 				j.setCard(field.get(i));
