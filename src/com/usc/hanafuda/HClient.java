@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Card.Yaku;
 import com.usc.hanafuda.handlers.MyAssetHandler;
@@ -19,11 +20,11 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 		// Change the state depending on what we want it to do
 
 
-//TODO: store gui inside client 
+//TODO: Store GUI inside client 
 
 public class HClient extends Thread {
-	private PrintWriter pw;
-	private BufferedReader br;
+	//private PrintWriter pw;
+	//private BufferedReader br;
 	private ObjectOutputStream os;
 	private ObjectInputStream is;
 	private ArrayList<Card> Hand = new ArrayList<Card>();
@@ -49,9 +50,9 @@ public class HClient extends Thread {
 			
 			this.userName = userName;
 			Socket s = new Socket (hostname, port);
-			this.pw = new PrintWriter (s.getOutputStream());
+			//this.pw = new PrintWriter (s.getOutputStream());
 			this.os = new ObjectOutputStream (s.getOutputStream());
-			this.br = new BufferedReader (new InputStreamReader(s.getInputStream()));
+			//this.br = new BufferedReader (new InputStreamReader(s.getInputStream()));
 			this.is = new ObjectInputStream (s.getInputStream());
 			this.start();
 		} catch (IOException e) {
@@ -60,55 +61,59 @@ public class HClient extends Thread {
 		
 	} // End of constructor
 	
+	
 	public String getUserName() {
-		
 		return userName;
 		
 	}
 	
+	
 	public ArrayList<Card> getHand(){
-		
 		return Hand;
 		
 	}
 	
-	public void sendScore(){
-
-		sendMessage("Signal:SendScore");
+	
+	public void sendScore() {
+		sendMessage ("Signal:SendScore");
 		
-		
-		if(Host) {
-			sendMessage("h"+Integer.toString(score));
+		// Add an h to the front of Host's score to differentiate between them
+		if (Host) {
+			sendMessage ("h"+Integer.toString(score));
 		}
-		
 		else {
-			sendMessage(Integer.toString(score));
+			sendMessage (Integer.toString(score));
 		}
+	}
+	
+	
+	public void updateScore() {
+		int tempScore = 0;
+
+		for (int i = 0; i <Collection.size(); i++) {
+			tempScore += Collection.get(i).getValue();
+		}
+		
+		score = tempScore;
 		
 	}
 	
-	public void updateScore(){
-		int tempScore=0;
-
-		for (int i=0;  i<Collection.size(); i++){
-			
-			tempScore+=Collection.get(i).getValue();
-				
-		}
-		
-		score=tempScore;
-		
-	}
 	
 	public void sendMessage (String msg) {
-		pw.println (msg);
-		pw.flush();
+		try {
+			os.writeObject (msg);
+			os.flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
+	
 	
 	public void sendCardToServer (Card cd) {
 		try {
 			// Inform server that client will be sending card
-			sendMessage("Signal:SendCard");
+			sendMessage ("Signal:SendCard");
 			
 			// Make sure card and message are not sent at the same time
 			try {
@@ -131,51 +136,57 @@ public class HClient extends Thread {
 	// This method checks for matches with the given card and all cards from the field 
 	public ArrayList<Card> getMatchingCards (Card currentCard) { 
 		ArrayList<Card> potentialMatch = new ArrayList<Card>();
-		if(currentCard!=null){
-		// Iterate through field
-		for (int i = 0; i < Field.size(); i++) {
-			// Check if card from the field is a match
-			//System.out.println("Match "+currentCard.getName()+" with "+Field.get(i).getName());
-			if (currentCard.isMatch (Field.get(i))) {
-				potentialMatch.add (Field.get(i));
+		
+		if (currentCard!=null) {
+			// Iterate through field
+			for (int i = 0; i < Field.size(); i++) {
+				// Check if card from the field is a match
+				
+				// DEBUG
+				//System.out.println("Match "+currentCard.getName()+" with "+Field.get(i).getName());
+				
+				if (currentCard.isMatch (Field.get(i))) {
+					potentialMatch.add (Field.get(i));
+				}
 			}
 		}
-		}
+		
 		return potentialMatch;
 	}
 	
-	//TODO: Need method to process turn when there is no match
 	
 	// This method is called when a player wants to match a card from the hand with one from the field
+	// This can also be called for when you want to match a card drawn from the deck with one from the field
 	// They will collect the card from the field; discard any cards whose value is 0
 	public void processMatchAndRemoveCards (Card cardFromHand, Card cardFromField) {
-		// Add card to collection if value > 0
+		// Add card to collection if value > 0 or it is a gaji
 		if (cardFromHand.getValue() > 0 || cardFromHand.isGaji()) {
 			if (cardFromHand.isGaji()) {
 				cardFromHand.setGajiMonth (cardFromField.getMonth());
+				
 			}
+			
 			Collection.add(cardFromHand);
-			//TODO: Update score 
+			
 		}
 		
 		// Add card to collection if value > 0
 		if (cardFromField.getValue() > 0) {		
 			Collection.add (cardFromField);
-		}
-		//test
-		for(int i=0;i<Collection.size();i++){
-			
-			
-			System.out.println("Process: "+Collection.get(i).getName());
-			
 			
 		}
 		
+		//DEBUG
+		for (int i = 0; i < Collection.size(); i++) {			
+			System.out.println ("Process: " + Collection.get(i).getName());
+			
+		}
 		
 		// Remove matched card from hand
-		for(int i=0; i < Hand.size(); i++) {			
+		for (int i = 0; i < Hand.size(); i++) {			
 			if (Hand.get(i).equals(cardFromHand)) {
 				Hand.remove (Hand.get(i));
+				
 			}
 		}
 		
@@ -183,16 +194,15 @@ public class HClient extends Thread {
 		for (int i = 0; i < Field.size(); i++) {			
 			if (Field.get(i).equals(cardFromField)) {
 				Field.remove (Field.get(i));
+				
 			}
 		}
-		// Send new card and field to server
 		
+		// Send new card and field to server
 		
 		updateScore();
 		
 		sendScore();
-		
-		
 		
 		sendField();
 		
@@ -200,48 +210,44 @@ public class HClient extends Thread {
 		
 	}
 	
-	public void sendSelectedCard(Card cd){
+	
+	// Sends the card selected from hand to server
+	public void sendSelectedCard (Card cd) {		
+		sendMessage ("Signal:SendSelectedCard");
 		
-		
-		sendMessage("Signal:SendSelectedCard");
-		
-		sendCardToServer(cd);
-		
-		
-		
-		
+		sendCardToServer (cd);
+				
 	}
 	
 	
+	// Call on the end of the player's turn
 	public void endTurn(){
-
+		MyTurn = false;
+		
 		sendMessage("Signal:EndTurn");
 		
-		MyTurn=false;
-		
-		
 	}
 	
-	public void addDrawnCardToField(Card cd){
-		
 	
+	// Call when you want to add the card drawn from the deck to the field
+	// This is done when there is no match
+	public void addDrawnCardToField (Card cd) {
 		Field.add(cd);
 		
 		sendField();
 		sendMessage ("Signal:UpdateFieldFinished");
 		
-		
 	}
 	
 	
-	
-	public void addHandCardToField(Card cd) {//for no match
+	// Call when you want to add a card from the hand to the field
+	// This happens when there is no match in the player's hand
+	public void addHandCardToField (Card cd) {
 		Field.add(cd);
 		
-		for(int i=0;i<Hand.size();i++){
-			
-			if(Hand.get(i).equals(cd))
-			Hand.remove(cd);
+		for (int i = 0; i < Hand.size(); i++){
+			if (Hand.get(i).equals(cd))
+				Hand.remove(cd);
 			
 		}
 		
@@ -250,58 +256,62 @@ public class HClient extends Thread {
 		
 	}
 	
-	public void getCardFromDeck(){
-		
-		
-		sendMessage("Signal:GetCardFromDeck");
-		
-		
-		
-
+	
+	// Requests a card from the deck from the server
+	public void getCardFromDeck(){		
+		sendMessage ("Signal:GetCardFromDeck");
 		
 	}
-	public ArrayList<Card> getField(){
-		
-		
+	
+	
+	public ArrayList<Card> getField() {	
 		return Field;
 		
 	}
+	
+	
 	public synchronized void sendField () {
-		sendMessage("Signal:UpdateField");
+		sendMessage ("Signal:UpdateField");
 		
 		for (int i = 0; i < Field.size(); i++) {
-			System.out.println("send field "+i);
+			//DEBUG
+			System.out.println ("Send field card " + i);
+			
 			sendMessage ("Signal:SendField");
 			sendCardToServer (Field.get (i));
+			
 		}
 		
 		
-		// What happens in the server when the first and last messages are sent?
 	}
+	
 	
 	public synchronized void sendCollection () {
 		sendMessage ("Signal:UpdateCollection");
+		
 		for (int i=0; i < Collection.size(); i++) {
-			System.out.println("sending "+i+" collection");
+			//DEBUG
+			System.out.println ("Sending card " + i + " of collection");
+			
 			sendMessage ("Signal:SendCollection");
 			sendCardToServer (Collection.get (i));
+			
 		}
 		
 		sendMessage ("Signal:UpdateCollectionFinished");
 
-		// What happens in the server when the first and last messages are sent?
 	}
-	public void waitForResponse(){
-		
+	
+	
+	public void waitForResponse() {
 		try {
 			this.sleep(400);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
 	}
+	
 	
 	public int calculateFinalScore () {
 		int finalScore = 0;
@@ -411,22 +421,27 @@ public class HClient extends Thread {
 	public void run() {
 		try {	
 			while (true) {
+				//DEBUG
 				//System.out.println(1);
-				String line = br.readLine();
+				
+				String line = (String) is.readObject();
+				
+				//DEBUG
 				//System.out.println(2);
 				System.out.println ("Client: Received message from Server: "+ line);
 				
 				// Host has the "start game" button while others have "prepared" button
-				// NOTE: What does prepared do?
 				
 				if (line.equals ("Signal:Host")) {
 					Host = true;
+					
 				}
+				
 				
 				// Receive hand
 				if (line.equals ("Signal:SendHand")) {
 					// Read one more line message to confirm the receiving card process
-					String nextMessage=br.readLine();
+					String nextMessage = (String) is.readObject();
 						
 					if (nextMessage.equals ("Signal:SendCard")) {
 						try {
@@ -447,10 +462,11 @@ public class HClient extends Thread {
 						
 				} // End of receive hand block
 				
+				
 				// Receive field
 				if (line.equals ("Signal:SendField")) {
 					// Read one more line message to confirm the receiving card process
-					String nextMessage = br.readLine();
+					String nextMessage = (String) is.readObject();
 					
 					if (nextMessage.equals ("Signal:SendCard")) {
 						try {
@@ -469,35 +485,16 @@ public class HClient extends Thread {
 					}
 				} // End of receive field block
 				
-				//TODO: Collections that are sent should be from other players
-				if (line.equals ("Signal:SendCollection")) {
-					// Read one more line message to confirm the receiving card process
-						String nextMessage = br.readLine();
-						
-						if (nextMessage.equals ("Signal:SendCard")) {		
-							try {
-								Card received = (Card) is.readObject();
-	
-								//TODO: Add received card to the collection of the correct opponent
-								
-								//DEBUG
-								System.out.println ("Collection Card received: " + received.getName());
-								
-							} catch (ClassNotFoundException e) {
-								e.printStackTrace();
-							}
-						}
-				}
-				//update opponent collection
-				
+
+				// Opponent's collection must be updated				
 				if (line.equals ("Signal:SendOpponentCollection")) {
-					String nextMessage = br.readLine();
+					String nextMessage = (String) is.readObject();
 					
 					if (nextMessage.equals ("Signal:SendCard")) {		
 						try {
 							Card received = (Card) is.readObject();
+							
 							OpponentCollection.add(received);
-							//TODO: Add received card to the collection of the correct opponent
 							
 							//DEBUG
 							System.out.println ("Collection Card received: " + received.getName());
@@ -506,85 +503,80 @@ public class HClient extends Thread {
 							e.printStackTrace();
 						}
 					}
-					
 				}
-				// Update field
+				
+				
+				// Field is about to be updated; prepare by clearing
 				if (line.equals ("Signal:UpdateField")) {
 					Field.clear();
 					
 				}
 				
-				// Update collection of opponent
+				
+				// Opponent collection is about to be updated; prepare by clearing
 				if (line.equals ("Signal:UpdateOpponentCollection")) {
 					OpponentCollection.clear();
 					
-					//TODO: Clear collection of correct opponent
 				}
 				
-				// Determine the player's ability to act
+				
+				// Receive signal that it is this client's turn
 				if (line.equals ("Signal:Turn")) {
 						MyTurn = true;
-						System.out.println("my turn");
-						System.out.println("My Hand cards now:");
-						for(int i=0;i<Hand.size();i++){
-						System.out.println("<"+i+">"+Hand.get(i).getName());		
+						
+						//DEBUG
+						System.out.println ("My turn");
+						System.out.println ("My Hand cards now:");
+						for (int i = 0; i < Hand.size(); i++) {
+							System.out.println ("<" + i + ">" + Hand.get(i).getName());		
 						}
 						System.out.println();
-						System.out.println("Field cards now:");
-						for(int i=0;i<Field.size();i++){
-						System.out.println("<"+i+">"+Field.get(i).getName());		
+						System.out.println ("Field cards now: ");
+						for (int i = 0; i < Field.size(); i++) {
+							System.out.println ("<" + i + ">" + Field.get(i).getName());		
 						}
 						
-						
-						System.out.println("Select a card to play");
-						Scanner scan=new Scanner(System.in);
-						int choice=scan.nextInt();
-						Card playing=Hand.get(choice);
-						ArrayList<Card> temp=getMatchingCards(playing);
-						System.out.println("Choose "+playing.getName());
+						System.out.println ("Select a card to play: ");
+						int choice = scan.nextInt();
+						Card playing = Hand.get(choice);
+						ArrayList<Card> temp = getMatchingCards (playing);
+						System.out.println ("You chose " + playing.getName());
 
 						
-						if(temp.size()==0){//no match need put the card onto the field and draw new one
-							
+						if (temp.size() == 0){ // If there is no match, need put the card onto the field
+							System.out.println ("Because there are no matches, the card will be placed in the field");
 							addHandCardToField(playing);
-							this.waitForResponse();				
-							
+							this.waitForResponse();
 							
 						}
 						
-						else{//match! need process
-							System.out.println("possible matches for this card:");
-							for(int i=0;i<temp.size();i++){
-								
-								System.out.println("<"+i+">"+temp.get(i).getName());
-								
+						else { // There is a match! It needs to be processed
+							System.out.println ("There are possible matches for this card: ");
+							for (int i = 0; i < temp.size(); i++){
+								System.out.println ("<" + i + ">" + temp.get(i).getName());
+							
 							}
 							
+							System.out.println ("Select a card from field to match: ");
+							int selectMatchedCard = scan.nextInt();
 							
-							System.out.println("Select a card from deck to match");
-							Scanner scan2=new Scanner(System.in);
-							
-							int selectMatchedCard=scan2.nextInt();
-
-							this.processMatchAndRemoveCards(playing, temp.get(selectMatchedCard));
-							
+							this.processMatchAndRemoveCards(playing, temp.get(selectMatchedCard));							
 							this.waitForResponse();	
 						}
 						
-
+						// Get card from deck
 						getCardFromDeck();
 						
-						line=br.readLine();
+						line = (String) is.readObject();
+						
 						if (line.equals ("Signal:SendCardFromDeck")) {
-							String nextMessage = br.readLine();
+							String nextMessage = (String) is.readObject();
 							
 							if (nextMessage.equals ("Signal:SendCard")) {
 								try {
 									Card received = (Card) is.readObject();				
 									
-									//TODO: Notify GUI
-									
-									this.receivedDeckCard=received;
+									this.receivedDeckCard = received;
 									
 								} catch (ClassNotFoundException e) {
 									e.printStackTrace();
@@ -592,36 +584,29 @@ public class HClient extends Thread {
 							}
 						}
 						
-						System.out.println("I draw "+receivedDeckCard.getName()+" from deck");
-						
+						System.out.println("I drew " + receivedDeckCard.getName() + " from deck");
 						this.waitForResponse();
-						ArrayList<Card> temp2=getMatchingCards(receivedDeckCard);
 						
-						if(temp2.size()==0){//still no match
-							
-							
+						ArrayList<Card> temp2 = getMatchingCards(receivedDeckCard);
+						
+						if (temp2.size()==0) { // No match to drawn card							
 							this.addDrawnCardToField(receivedDeckCard);
 							
-							this.waitForResponse();
-							
+							this.waitForResponse();							
 							
 						}
 						
-						else{
-							System.out.println("possible matches for this card:");
-							for(int i=0;i<temp2.size();i++){
-								
-								System.out.println("<"+i+">"+temp2.get(i).getName());
+						else {
+							System.out.println ("There are possible matches for this card:");
+							for (int i=0; i < temp2.size(); i++) {
+								System.out.println ("<" + i + ">" + temp2.get(i).getName());
 								
 							}
 							
+							System.out.println ("Select a card from deck to match");
 							
-							System.out.println("Select a card from deck to match");
-							Scanner scan2=new Scanner(System.in);
-							
-							int selectMatchedCard=scan2.nextInt();
-
-							this.processMatchAndRemoveCards(receivedDeckCard, temp2.get(selectMatchedCard));
+							int selectMatchedCard = scan.nextInt();
+							this.processMatchAndRemoveCards (receivedDeckCard, temp2.get(selectMatchedCard));
 							
 							this.waitForResponse();
 							
@@ -630,29 +615,30 @@ public class HClient extends Thread {
 						System.out.println("My turn is over!!!!!!!!!!");
 						System.out.println();
 						System.out.println("My Hand cards now:");
-						for(int k=0;k<Hand.size();k++){
-						System.out.println("<"+k+">"+Hand.get(k).getName());		
+						for (int k=0; k< Hand.size(); k++) {
+							System.out.println ("<" + k + ">" + Hand.get(k).getName());		
 						}
 						System.out.println();
-						System.out.println("Field cards now:");
-						for(int k=0;k<Field.size();k++){
-						System.out.println("<"+k+">"+Field.get(k).getName());		
+						System.out.println ("Field cards now:");
+						for (int k = 0;k < Field.size(); k++) {
+							System.out.println("<"+k+">"+Field.get(k).getName());		
 						}
 						System.out.println();
-						System.out.println("Collection cards now:");
-						for(int k=0;k<Collection.size();k++){
-						System.out.println("<"+k+">"+Collection.get(k).getName());		
+						System.out.println ("Collection cards now:");
+						for (int k = 0; k < Collection.size(); k++) {
+							System.out.println ("<" + k + ">" + Collection.get(k).getName());		
 						}
 						
 						System.out.println();
-						System.out.println("My Score now:"+score);
+						System.out.println ("My Score now: " + score);
 						endTurn();
-						System.out.println("My turn is ended");			
+						System.out.println ("My turn is ended");			
 				}
+				
 				
 				// Receive card from deck
 				if (line.equals ("Signal:SendCardFromDeck")) {
-					String nextMessage = br.readLine();
+					String nextMessage = (String) is.readObject();
 					
 					if (nextMessage.equals ("Signal:SendCard")) {
 						try {
@@ -668,28 +654,31 @@ public class HClient extends Thread {
 					}
 				}
 				
-				if(line.equals("Signal:ScoreOfAnother")){
-					
-						String nextMessage=br.readLine();
+				
+				// Receive opponent's score
+				if (line.equals ("Signal:ScoreOfAnother")) {
+						String nextMessage = (String) is.readObject();
 						
-						AnotherScore=Integer.valueOf(nextMessage);
+						AnotherScore = Integer.valueOf(nextMessage);
 						
-						System.out.println("Opponent Score is: "+AnotherScore);
-					
+						//DEBUG
+						System.out.println ("Opponent Score is: " + AnotherScore);
 					
 				}
 				
+				
+				// Receive opponent's selected card
 				if(line.equals("Signal:ReceiveSelectedCard")){
-					String nextMessage = br.readLine();
+					String nextMessage = (String) is.readObject();
 					
 					if (nextMessage.equals ("Signal:SendCard")) {		
 						try {
 							Card received = (Card) is.readObject();
-
-							//TODO: Add received card to the collection of the correct opponent
 							
-							this.anotherSelectedCard=received;
-							System.out.println("Opponent is currently playing card :"+anotherSelectedCard.getName());
+							this.anotherSelectedCard = received;
+							
+							//DEBUG
+							System.out.println ("Opponent is currently playing card :" + anotherSelectedCard.getName());
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
@@ -702,26 +691,13 @@ public class HClient extends Thread {
 				if (line.equals ("Signal:GameEnded")) {  
 					//TODO: print to GUI that the game ended and show final score
 				}
-				
-				if (line.equals ("Signal:YourTurn")) {
-					// JENNY-NOV24
-					MyTurn = true;
-					
-					// What does this do? Is it different from Signal:Turn
-					
-					//TODO: Enable player's access in GUI
-					// player chooses a card and system checks if there are any matching cards in the field
-					//1. if no match, then put the card in the field
-					//2. if there is one match, add both of these cards to collection
-					//3. if there is more than one match, let the player choose which card, along with the card chosen, should be added to collection
-						// if there is a match at all, then player should draw another card from a deck and system compares that card with the cards on field
-						//repeat steps 1,2,3 once
-				}
-				
-				
+
+			
 			} // End of while(true) block
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
 		}
 	} // End of run() block
 	
