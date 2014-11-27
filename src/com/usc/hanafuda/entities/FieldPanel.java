@@ -48,26 +48,26 @@ public class FieldPanel extends JPanel {
 			this.add(deck);
 			
 			for(int i = 0 ; i < field.size(); i++){
-				final CardButton j = new CardButton();
+				final CardButton cb = new CardButton();
 				
-				j.setCardImage(field.get(i));				
-				j.addActionListener(new ActionListener() {
+				cb.setCardImage(field.get(i));				
+				cb.addActionListener(new ActionListener() {
 					
 					public void actionPerformed(ActionEvent aa) {
-						if(!j.isGlowSet()) {
-							j.setGlow();
-							j.repaint();
+						if(!cb.isGlowSet()) {
+							cb.setGlow();
+							cb.repaint();
 						}
 						
 						else{
-							j.unsetGlow();
-							j.repaint();
+							cb.unsetGlow();
+							cb.repaint();
 						}
 						refreshDisplay();
 					}
 				});
 				
-				cardButtonList.add(j);
+				cardButtonList.add(cb);
 			
 				
 				
