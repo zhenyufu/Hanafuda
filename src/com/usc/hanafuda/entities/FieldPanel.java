@@ -44,7 +44,7 @@ public class FieldPanel extends JPanel implements Runnable{
 			cardButtonList = new ArrayList<CardButton>();
 			initialDeal();
 			refreshDisplay();
-			Thread t = new Thread (this);
+			Thread t = new Thread (this); //added by x
 			t.start();
 			
 		}

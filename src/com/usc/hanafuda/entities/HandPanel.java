@@ -46,6 +46,7 @@ public class HandPanel extends JPanel implements Runnable{
 	private static boolean removeAllCardButtons = false;
 	
 	public HandPanel(HClient hClient, GameScreen gs){
+		
 		this.gameScreen = gs;
 		this.setBackground(Color.yellow);
 		this.myName = hClient.getUserName();
@@ -91,26 +92,28 @@ public class HandPanel extends JPanel implements Runnable{
 		initialDeal();
 		refreshDisplay();
 		
+		Thread t = new Thread (this); // added by X
+		t.start();
+		
 	}
 	public void run(){
 		while(true){
 //			System.out.println("panel thread running");
 			repaint();
 			this.revalidate();
+			
+			lock.lock();
 			if(removeAllCardButtons == true){
-//				lock.lock();
-				System.out.println("removing all card buttons");
+				
 				removeAllCardButtons();
 				removeAllCardButtons = false;
-//				lock.unlock();
 			}
 			
 			if(refreshFlag ==true){
-//				lock.lock();
 				refreshDisplay();
 				refreshFlag=false;
-//				lock.unlock();
 			}
+			lock.unlock();
 
 		
 			
@@ -155,7 +158,11 @@ public class HandPanel extends JPanel implements Runnable{
 		System.out.println("refreshing hand");
 		ArrayList<Card> hand = hClient.getHand();
 		removeAllCardButtons = true;
+		while (removeAllCardButtons==true){
+			System.out.println("waiting for card buttons to be removed");
+		}
 		cardButtonList.clear();
+		System.out.println("cleared card Buttons");
 		for(int i = 0 ; i < hand.size(); i++){
 			final CardButton cb = new CardButton();			
 			cb.setCardImage(hand.get(i));			
@@ -220,6 +227,7 @@ public class HandPanel extends JPanel implements Runnable{
 	}
 	
 	public synchronized void removeAllCardButtons(){
+		System.out.println("removing all card buttons");
 		for(int i = 0 ; i < cardButtonList.size(); i++){
 			//System.out.println("card " +  40+i*60 );
 			this.remove(cardButtonList.get(i));
