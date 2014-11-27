@@ -88,28 +88,28 @@ public class HandPanel extends JPanel{
 		ArrayList<Card> hand = hClient.getHand();
 		
 		for(int i = 0 ; i < hand.size(); i++){
-			final CardButton j = new CardButton();
+			final CardButton cb = new CardButton();
 			
-			j.setCardImage(hand.get(i));
+			cb.setCardImage(hand.get(i));
 			
-			j.addActionListener(new ActionListener() {
+			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
 					
 					Card c = ((CardButton) aa.getSource()).getCard();
-					if(!j.isCardUp()) {
+					if(!cb.isCardUp()) {
 						highlightMatchingCards(c);					
-						j.moveUpDown();										
+						cb.moveUpDown();										
 						refreshDisplay();
 					}
 					else {
 						unhighlightMatchingCards(c);					
-						j.moveUpDown();										
+						cb.moveUpDown();										
 						refreshDisplay();
 					}
 				}
 			});
 			
-			cardButtonList.add(j);			
+			cardButtonList.add(cb);			
 			
 		}
 	}
