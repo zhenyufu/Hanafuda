@@ -63,7 +63,6 @@ public class OpponentPanel extends JPanel{
 				popup.setLocation(100, 100);
 				popup.setVisible(true);
 				popup.setResizable(true);
-				
 				popup.add(jsp);
 				
 			}
@@ -103,7 +102,7 @@ public class OpponentPanel extends JPanel{
 		score = score + incBy;
 		userScore.setText(Integer.toString(score) + " ");
 	}
-	public void throwCard(){
+	public void discardCard(){
 		cardLeft--;
 		numCards.setText("Cards left: " + cardLeft + " ");
 		cardPanel.removeAll();

@@ -19,6 +19,7 @@ public class HServer {
 	public ArrayList<Card> Field;
 	public ArrayList<Card> Collection=new ArrayList<Card>();
 	public ServerThread currentPlayer;
+	public String hostName, clientName;
 	
 	public Card currentPlayedCard;
 	
@@ -46,6 +47,7 @@ public class HServer {
 				if (vServerThread.size() == 1) {
 					//The first one connected is default to be the host
 					sendMessage ("Signal:Host", st);
+					
 				}
 				
 				//DEBUG
