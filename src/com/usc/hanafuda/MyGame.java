@@ -34,11 +34,7 @@ public class MyGame extends JFrame{
 		return client;
 	}
 
-	
-	
-	
-	
-	
+
 	public void setPanel(JPanel panel) {
 		this.remove(currentPanel);
 		currentPanel = panel;

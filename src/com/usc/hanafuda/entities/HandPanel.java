@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,9 +27,9 @@ import com.usc.hanafuda.MyGame;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 import com.usc.hanafuda.screens.GameScreen;
 
-public class HandPanel extends JPanel{
+public class HandPanel extends JPanel implements Runnable{
 	static boolean aCardIsUp = false;
-	ArrayList<CardButton> cardButtonList;
+	static ArrayList<CardButton> cardButtonList;
 	public final int gap = 100;
 	private int score = 0;
 	private JLabel playerScore;
@@ -35,7 +37,14 @@ public class HandPanel extends JPanel{
 	private String myName;
 	private String opponentName;
 	private GameScreen gameScreen;
-	HClient hClient;
+	static HClient hClient;
+	
+	private static int numMatchingCards =-1;
+	private static Card currentSelectedHandCard =null;
+	Lock lock = new ReentrantLock();
+	private  static boolean refreshFlag = false;
+	private static boolean removeAllCardButtons = false;
+	
 	public HandPanel(HClient hClient, GameScreen gs){
 		this.gameScreen = gs;
 		this.setBackground(Color.yellow);
@@ -83,46 +92,109 @@ public class HandPanel extends JPanel{
 		refreshDisplay();
 		
 	}
-	
-	public void initialDeal(){
-		ArrayList<Card> hand = hClient.getHand();
+	public void run(){
+		while(true){
+//			System.out.println("panel thread running");
+			repaint();
+			this.revalidate();
+			if(removeAllCardButtons == true){
+//				lock.lock();
+				System.out.println("removing all card buttons");
+				removeAllCardButtons();
+				removeAllCardButtons = false;
+//				lock.unlock();
+			}
+			
+			if(refreshFlag ==true){
+//				lock.lock();
+				refreshDisplay();
+				refreshFlag=false;
+//				lock.unlock();
+			}
+
 		
-		for(int i = 0 ; i < hand.size(); i++){
-			final CardButton j = new CardButton();
-			
-			j.setCardImage(hand.get(i));
-			
-			j.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent aa) {
-					
-					Card c = ((CardButton) aa.getSource()).getCard();
-					if(!j.isCardUp()) {
-						highlightMatchingCards(c);					
-						j.moveUpDown();										
-						refreshDisplay();
-					}
-					else {
-						unhighlightMatchingCards(c);					
-						j.moveUpDown();										
-						refreshDisplay();
-					}
-				}
-			});
-			
-			cardButtonList.add(j);			
 			
 		}
 	}
+	public static void resetNumMatchingCards(){
+		numMatchingCards =-1;
+	}
 	
-	public void highlightMatchingCards(Card c){
+	public static int returnNumMatchingCards(){
+		return numMatchingCards;
+	}
+	
+	public void initialDeal(){
+		ArrayList<Card> hand = hClient.getHand();		
+		for(int i = 0 ; i < hand.size(); i++){
+			final CardButton cb = new CardButton();			
+			cb.setCardImage(hand.get(i));			
+			cb.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent aa) {
+					
+					Card c = ((CardButton) aa.getSource()).returnCard();
+//					if(!cb.isCardUp()) {
+						highlightMatchingCards(c);
+						currentSelectedHandCard =c;
+						
+						cb.moveUpDown();										
+						refreshDisplay();
+//					}
+//					else {
+//						unhighlightMatchingCards(c);					
+//						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+				}
+			});			
+			cardButtonList.add(cb);					
+		}
+	}
+	
+	public  synchronized static void refreshHand(){
+		System.out.println("refreshing hand");
+		ArrayList<Card> hand = hClient.getHand();
+		removeAllCardButtons = true;
+		cardButtonList.clear();
+		for(int i = 0 ; i < hand.size(); i++){
+			final CardButton cb = new CardButton();			
+			cb.setCardImage(hand.get(i));			
+			cb.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent aa) {
+					
+					Card c = ((CardButton) aa.getSource()).returnCard();
+//					if(!cb.isCardUp()) {
+						highlightMatchingCards(c);
+						currentSelectedHandCard =c;						
+						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+//					else {
+//						unhighlightMatchingCards(c);					
+//						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+				}
+			});			
+			cardButtonList.add(cb);					
+		}
+		refreshFlag = true;
+	}
+	public static synchronized Card returnCurrentSelectedHandCard(){
+		return currentSelectedHandCard;
+	}
+	
+	public static void highlightMatchingCards(Card c){
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
 		System.out.println("Matching Card size: " +matchingCards.size());
+		numMatchingCards = matchingCards.size();
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).setGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
+					
 				}
 			}
 
@@ -135,7 +207,7 @@ public class HandPanel extends JPanel{
 		System.out.println("Matching Card size: " +matchingCards.size());
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).unsetGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
@@ -147,19 +219,25 @@ public class HandPanel extends JPanel{
 		
 	}
 	
+	public synchronized void removeAllCardButtons(){
+		for(int i = 0 ; i < cardButtonList.size(); i++){
+			//System.out.println("card " +  40+i*60 );
+			this.remove(cardButtonList.get(i));
+			//cardButtonList.get(i).setLocation(40+i*60 ,40);	
+		}
+		this.revalidate();
+	}
 	
-	
-	public void refreshDisplay(){
+	public synchronized void refreshDisplay(){
 		
 		for(int i = 0 ; i < cardButtonList.size(); i++){
 			//System.out.println("card " +  40+i*60 );
 			this.add(cardButtonList.get(i));
 			//cardButtonList.get(i).setLocation(40+i*60 ,40);
-			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
-		
+			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );		
 		}
 		//cardButtonList.get(0).setLocation(40, 40);
-		this.validate();
+		this.revalidate();
 	}
 	
 	

@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Card.Yaku;
+import com.usc.hanafuda.entities.FieldPanel;
+import com.usc.hanafuda.entities.HandPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 //TODO: How do we notify the GUI of when to change things?
@@ -41,6 +43,8 @@ public class HClient extends Thread {
 	private String userName;
 	private Scanner scan;
 	
+	private boolean deckButtonClicked = false; // added by X
+	
 	
 	public HClient (String hostname, int port, String userName) {	
 		
@@ -61,7 +65,12 @@ public class HClient extends Thread {
 		
 	} // End of constructor
 	
-	
+
+	public void setDeckButtonStatus(boolean b){ // added by X
+		deckButtonClicked = b;
+	}
+
+
 	public String getUserName() {
 		return userName;
 		
@@ -158,7 +167,8 @@ public class HClient extends Thread {
 	// This method is called when a player wants to match a card from the hand with one from the field
 	// This can also be called for when you want to match a card drawn from the deck with one from the field
 	// They will collect the card from the field; discard any cards whose value is 0
-	public void processMatchAndRemoveCards (Card cardFromHand, Card cardFromField) {
+	public synchronized void processMatchAndRemoveCards (Card cardFromHand, Card cardFromField) {
+		System.out.println ("In process match and remove cards");
 		// Add card to collection if value > 0 or it is a gaji
 		if (cardFromHand.getValue() > 0 || cardFromHand.isGaji()) {
 			if (cardFromHand.isGaji()) {
@@ -167,7 +177,9 @@ public class HClient extends Thread {
 			}
 			
 			Collection.add(cardFromHand);
-			
+
+			//TODO: Update Collection Panel
+
 		}
 		
 		// Add card to collection if value > 0
@@ -198,15 +210,14 @@ public class HClient extends Thread {
 			}
 		}
 		
+		HandPanel.refreshHand(); // added by X refresh after field and hand updated
+		FieldPanel.refreshField();
 		// Send new card and field to server
-		
-		updateScore();
-		
-		sendScore();
-		
-		sendField();
-		
-		sendCollection();
+			
+		updateScore();	
+		sendScore();		
+		sendField();	
+		sendCollection();		
 		
 	}
 	
@@ -252,13 +263,15 @@ public class HClient extends Thread {
 		}
 		
 		sendField();
+		FieldPanel.refreshField(); // added to refresh GUI
+		HandPanel.refreshHand();
 		sendMessage ("Signal:UpdateFieldFinished");
 		
 	}
 	
 	
 	// Requests a card from the deck from the server
-	public void getCardFromDeck(){		
+	public void getCardFromDeck() {		
 		sendMessage ("Signal:GetCardFromDeck");
 		
 	}
@@ -536,21 +549,43 @@ public class HClient extends Thread {
 							System.out.println ("<" + i + ">" + Field.get(i).getName());		
 						}
 						
-						System.out.println ("Select a card to play: ");
-						int choice = scan.nextInt();
-						Card playing = Hand.get(choice);
-						ArrayList<Card> temp = getMatchingCards (playing);
-						System.out.println ("You chose " + playing.getName());
-
+						System.out.println("Select a hand card to play");
+						//int choice=scan.nextInt();
+						//Card playing=Hand.get(choice);
 						
-						if (temp.size() == 0){ // If there is no match, need put the card onto the field
+						while (HandPanel.returnCurrentSelectedHandCard() == null) {
+							//System.out.println("waiting for a hand card to be selected");
+						}
+						
+						Card playing = HandPanel.returnCurrentSelectedHandCard();
+
+						ArrayList<Card> temp = getMatchingCards (playing);
+						System.out.println ("Player chose: "+ playing.getName());
+
+						/*
+						if (temp.size() == 0) { // If there is no match, need put the card onto the field
 							System.out.println ("Because there are no matches, the card will be placed in the field");
 							addHandCardToField(playing);
+							this.waitForResponse();
+	
+						}
+						*/
+						
+						while (HandPanel.returnNumMatchingCards() == -1) { // changes by X. Wait for Gui to return num mathicng cards
+							System.out.println("waiting to receive number of matching cards" +HandPanel.returnNumMatchingCards() );
+						}
+						
+						System.out.println("Number of Matching Cards:" +HandPanel.returnNumMatchingCards());
+						
+						if (HandPanel.returnNumMatchingCards() == 0) { // No match; need put the card onto the field
+							System.out.println ("Going to refresh GUI");
+							addHandCardToField (playing); // changed this function a little bit to resend field to GUI - Xiaohan
 							this.waitForResponse();
 							
 						}
 						
 						else { // There is a match! It needs to be processed
+							/*
 							System.out.println ("There are possible matches for this card: ");
 							for (int i = 0; i < temp.size(); i++){
 								System.out.println ("<" + i + ">" + temp.get(i).getName());
@@ -559,8 +594,18 @@ public class HClient extends Thread {
 							
 							System.out.println ("Select a card from field to match: ");
 							int selectMatchedCard = scan.nextInt();
+							*/
 							
-							this.processMatchAndRemoveCards(playing, temp.get(selectMatchedCard));							
+							Card selectedMatchedCard = null;
+							while (FieldPanel.returnSelectedFieldCard() == null) {
+								//System.out.println("waiting for matched field card to be selected");
+							}
+							
+							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();
+							System.out.println ("Selected matched card: " + selectedMatchedCard.getName());
+							//this.processMatchAndRemoveCards(playing, temp.get(selectMatchedCard));
+							this.processMatchAndRemoveCards(playing, selectedMatchedCard); // function changed a little 
+													
 							this.waitForResponse();	
 						}
 						
@@ -574,9 +619,14 @@ public class HClient extends Thread {
 							
 							if (nextMessage.equals ("Signal:SendCard")) {
 								try {
-									Card received = (Card) is.readObject();				
+									Card received = (Card) is.readObject();	
+									// wait for deck button to be clicked
+									while(!deckButtonClicked){	
+										//System.out.println("waiting for deck to be clicked");
+									}									
+									//TODO: Notify GUI
 									
-									this.receivedDeckCard = received;
+									this.receivedDeckCard=received;
 									
 								} catch (ClassNotFoundException e) {
 									e.printStackTrace();
@@ -590,6 +640,7 @@ public class HClient extends Thread {
 						ArrayList<Card> temp2 = getMatchingCards(receivedDeckCard);
 						
 						if (temp2.size()==0) { // No match to drawn card							
+
 							this.addDrawnCardToField(receivedDeckCard);
 							
 							this.waitForResponse();							
@@ -632,7 +683,11 @@ public class HClient extends Thread {
 						System.out.println();
 						System.out.println ("My Score now: " + score);
 						endTurn();
-						System.out.println ("My turn is ended");			
+
+						System.out.println("My turn is ended");	
+						
+						HandPanel.resetNumMatchingCards(); // added by X
+						deckButtonClicked = false;
 				}
 				
 				
