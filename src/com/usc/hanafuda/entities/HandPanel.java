@@ -8,6 +8,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,9 +27,9 @@ import com.usc.hanafuda.MyGame;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 import com.usc.hanafuda.screens.GameScreen;
 
-public class HandPanel extends JPanel{
+public class HandPanel extends JPanel implements Runnable{
 	static boolean aCardIsUp = false;
-	ArrayList<CardButton> cardButtonList;
+	static ArrayList<CardButton> cardButtonList;
 	public final int gap = 100;
 	private int score = 0;
 	private JLabel playerScore;
@@ -35,10 +37,12 @@ public class HandPanel extends JPanel{
 	private String myName;
 	private String opponentName;
 	private GameScreen gameScreen;
-	HClient hClient;
+	static HClient hClient;
 	
 	private static int numMatchingCards =-1;
 	private static Card currentSelectedHandCard =null;
+	Lock lock = new ReentrantLock();
+	private  static boolean refreshFlag = false;
 	
 	public HandPanel(HClient hClient, GameScreen gs){
 		this.gameScreen = gs;
@@ -87,6 +91,18 @@ public class HandPanel extends JPanel{
 		refreshDisplay();
 		
 	}
+	public void run(){
+		while(true){
+//			System.out.println("panel thread running");
+			lock.lock();
+			if(refreshFlag ==true){
+				refreshDisplay();
+				refreshFlag=false;
+			}
+			lock.unlock();
+			
+		}
+	}
 	public static void resetNumMatchingCards(){
 		numMatchingCards =-1;
 	}
@@ -94,14 +110,12 @@ public class HandPanel extends JPanel{
 	public static int returnNumMatchingCards(){
 		return numMatchingCards;
 	}
+	
 	public void initialDeal(){
-		ArrayList<Card> hand = hClient.getHand();
-		
+		ArrayList<Card> hand = hClient.getHand();		
 		for(int i = 0 ; i < hand.size(); i++){
-			final CardButton cb = new CardButton();
-			
-			cb.setCardImage(hand.get(i));
-			
+			final CardButton cb = new CardButton();			
+			cb.setCardImage(hand.get(i));			
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
 					
@@ -109,8 +123,6 @@ public class HandPanel extends JPanel{
 //					if(!cb.isCardUp()) {
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;
-
-						
 						
 						cb.moveUpDown();										
 						refreshDisplay();
@@ -121,26 +133,52 @@ public class HandPanel extends JPanel{
 //						refreshDisplay();
 //					}
 				}
-			});
-			
-			cardButtonList.add(cb);			
-			
+			});			
+			cardButtonList.add(cb);					
 		}
 	}
-	public static Card returnCurrentSelectedHandCard(){
+	
+	public  synchronized static void refreshHand(){
+		ArrayList<Card> hand = hClient.getHand();		
+		for(int i = 0 ; i < hand.size(); i++){
+			final CardButton cb = new CardButton();			
+			cb.setCardImage(hand.get(i));			
+			cb.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent aa) {
+					
+					Card c = ((CardButton) aa.getSource()).returnCard();
+//					if(!cb.isCardUp()) {
+						highlightMatchingCards(c);
+						currentSelectedHandCard =c;						
+						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+//					else {
+//						unhighlightMatchingCards(c);					
+//						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+				}
+			});			
+			cardButtonList.add(cb);					
+		}
+		refreshFlag = true;
+	}
+	public static synchronized Card returnCurrentSelectedHandCard(){
 		return currentSelectedHandCard;
 	}
 	
-	public void highlightMatchingCards(Card c){
+	public static void highlightMatchingCards(Card c){
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
 		System.out.println("Matching Card size: " +matchingCards.size());
+		numMatchingCards = matchingCards.size();
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
 				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).setGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
-					numMatchingCards++;
+					
 				}
 			}
 

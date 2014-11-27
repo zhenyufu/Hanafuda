@@ -156,7 +156,8 @@ public class HClient extends Thread {
 	
 	// This method is called when a player wants to match a card from the hand with one from the field
 	// They will collect the card from the field; discard any cards whose value is 0
-	public void processMatchAndRemoveCards (Card cardFromHand, Card cardFromField) {
+	public synchronized void processMatchAndRemoveCards (Card cardFromHand, Card cardFromField) {
+		System.out.println("In process match and remove cards");
 		// Add card to collection if value > 0
 		if (cardFromHand.getValue() > 0 || cardFromHand.isGaji()) {
 			if (cardFromHand.isGaji()) {
@@ -195,17 +196,15 @@ public class HClient extends Thread {
 			}
 		}
 		// Send new card and field to server
-		
-		
-		updateScore();
-		
-		sendScore();
-		
-		
-		
-		sendField();
-		
+			
+		updateScore();	
+		sendScore();		
+		sendField();	
 		sendCollection();
+		
+		HandPanel.refreshHand(); // added by X refresh after field and hand updated
+		FieldPanel.refreshField();
+		
 		
 	}
 	
@@ -549,7 +548,7 @@ public class HClient extends Thread {
 //						Card playing=Hand.get(choice);
 						
 						while(HandPanel.returnCurrentSelectedHandCard() ==null){
-							System.out.println("waiting for a hand card to be selected");
+//							System.out.println("waiting for a hand card to be selected");
 						}
 						
 						Card playing = HandPanel.returnCurrentSelectedHandCard();
@@ -566,9 +565,11 @@ public class HClient extends Thread {
 //							
 //							
 //						}
-						while(HandPanel.returnNumMatchingCards()==-1){
+						
+						while(HandPanel.returnNumMatchingCards()==-1){ // changes by X. Wait for Gui to return num mathicng cards
 							System.out.println("waiting to receive number of matching cards");
 						}
+						System.out.println("Number of Matching Cards:" +HandPanel.returnNumMatchingCards());
 						if(HandPanel.returnNumMatchingCards()==0){//no match need put the card onto the field and draw new one
 							System.out.println("Going to refresh GUI");
 							addHandCardToField(playing); // changed this function a little bit to resend field to GUI - Xiaohan
@@ -592,12 +593,13 @@ public class HClient extends Thread {
 							
 							Card selectedMatchedCard = null;
 							while(FieldPanel.returnSelectedFieldCard() ==null){
-								System.out.println("waiting for matched field card to be selected");
+//								System.out.println("waiting for matched field card to be selected");
 							}
+							
 							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();
-
+							System.out.println("selected matched card: " +selectedMatchedCard.getName());
 //							this.processMatchAndRemoveCards(playing, temp.get(selectMatchedCard));
-							this.processMatchAndRemoveCards(playing, selectedMatchedCard);
+							this.processMatchAndRemoveCards(playing, selectedMatchedCard); // function changed a little 
 							
 							this.waitForResponse();	
 						}
@@ -614,7 +616,7 @@ public class HClient extends Thread {
 									Card received = (Card) is.readObject();	
 									// wait for deck button to be clicked
 									while(!deckButtonClicked){	
-										System.out.println("waiting for deck to be cliecked");
+//										System.out.println("waiting for deck to be clicked");
 									}									
 									//TODO: Notify GUI
 									

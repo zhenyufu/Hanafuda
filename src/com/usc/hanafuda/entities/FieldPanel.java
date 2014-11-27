@@ -51,7 +51,7 @@ public class FieldPanel extends JPanel implements Runnable{
 		
 		public void run(){
 			while(true){
-				System.out.println("panel thread running");
+//				System.out.println("panel thread running");
 				lock.lock();
 				if(refreshFlag ==true){
 					refreshDisplay();
@@ -80,7 +80,7 @@ public class FieldPanel extends JPanel implements Runnable{
 				}
 				
 			});
-			deck.setEnabled(false);
+//			deck.setEnabled(false);
 			this.add(deck);
 			
 			for(int i = 0 ; i < field.size(); i++){
@@ -113,6 +113,18 @@ public class FieldPanel extends JPanel implements Runnable{
 		}
 		
 		public static synchronized void refreshField(){
+			ImageIcon deckImage = new ImageIcon("deck.png");
+			CardButton deck = new CardButton(deckImage);
+			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
+			
+			deck.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					hClient.setDeckButtonStatus(true);					
+				}
+				
+			});
 			ArrayList<Card> field = hClient.getField();
 			cardButtonList.clear();
 			
@@ -125,20 +137,8 @@ public class FieldPanel extends JPanel implements Runnable{
 						Card c = ((CardButton) aa.getSource()).returnCard();
 						if(cb.isGlowSet())selectedFieldCard =c;
 						else selectedFieldCard = null;
-
-//						if(!cb.isGlowSet()) {
-//							cb.setGlow();
-//							cb.repaint();
-//						}
-//						
-//						else{
-//							cb.unsetGlow();
-//							cb.repaint();
-//						}
-//						refreshDisplay();
 					}
 				});				
-//				cardButtonList.set(i,cb);
 				cardButtonList.add(cb);
 			
 			}
