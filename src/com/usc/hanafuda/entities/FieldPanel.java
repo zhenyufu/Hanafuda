@@ -24,7 +24,10 @@ public class FieldPanel extends JPanel {
 		public final int gap = 100;
 		private int score = 0;
 		private GameScreen gameScreen;
-		HClient hClient;
+		static HClient hClient;
+		
+		private static Card selectedCard = null;
+		
 		public FieldPanel(HClient hClient, GameScreen gs){
 			this.setBackground(Color.GRAY);
 			this.gameScreen = gs;
@@ -45,6 +48,17 @@ public class FieldPanel extends JPanel {
 			ImageIcon deckImage = new ImageIcon("deck.png");
 			CardButton deck = new CardButton(deckImage);
 			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
+			
+			deck.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+			deck.setEnabled(false);
 			this.add(deck);
 			
 			for(int i = 0 ; i < field.size(); i++){
@@ -54,16 +68,20 @@ public class FieldPanel extends JPanel {
 				cb.addActionListener(new ActionListener() {
 					
 					public void actionPerformed(ActionEvent aa) {
-						if(!cb.isGlowSet()) {
-							cb.setGlow();
-							cb.repaint();
-						}
-						
-						else{
-							cb.unsetGlow();
-							cb.repaint();
-						}
-						refreshDisplay();
+						Card c = ((CardButton) aa.getSource()).returnCard();
+						if(cb.isGlowSet())selectedCard =c;
+						else selectedCard = null;
+
+//						if(!cb.isGlowSet()) {
+//							cb.setGlow();
+//							cb.repaint();
+//						}
+//						
+//						else{
+//							cb.unsetGlow();
+//							cb.repaint();
+//						}
+//						refreshDisplay();
 					}
 				});
 				
@@ -74,6 +92,40 @@ public class FieldPanel extends JPanel {
 			}
 		}
 		
+		public static void refreshField(){
+			ArrayList<Card> field = hClient.getField();
+			
+			for(int i = 0 ; i < field.size(); i++){
+				final CardButton cb = new CardButton();
+				
+				cb.setCardImage(field.get(i));				
+				cb.addActionListener(new ActionListener() {
+					
+					public void actionPerformed(ActionEvent aa) {
+						Card c = ((CardButton) aa.getSource()).returnCard();
+						if(cb.isGlowSet())selectedCard =c;
+						else selectedCard = null;
+
+//						if(!cb.isGlowSet()) {
+//							cb.setGlow();
+//							cb.repaint();
+//						}
+//						
+//						else{
+//							cb.unsetGlow();
+//							cb.repaint();
+//						}
+//						refreshDisplay();
+					}
+				});
+				
+				cardButtonList.add(cb);
+			
+				
+				
+			}
+//			refreshDisplay();
+		}
 		
 		
 		public void refreshDisplay(){
@@ -90,6 +142,10 @@ public class FieldPanel extends JPanel {
 			}
 			//cardButtonList.get(0).setLocation(40, 40);
 			this.validate();
+		}
+		
+		public Card returnSelectedCard(){
+			return this.selectedCard;
 		}
 		
 		

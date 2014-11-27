@@ -9,8 +9,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Card.Yaku;
+import com.usc.hanafuda.entities.FieldPanel;
+import com.usc.hanafuda.entities.HandPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 //TODO: How do we notify the GUI of when to change things?
@@ -246,6 +249,7 @@ public class HClient extends Thread {
 		}
 		
 		sendField();
+		FieldPanel.refreshField(); // added to refresh GUI
 		sendMessage ("Signal:UpdateFieldFinished");
 		
 	}
@@ -536,17 +540,36 @@ public class HClient extends Thread {
 						}
 						
 						
-						System.out.println("Select a card to play");
-						Scanner scan=new Scanner(System.in);
-						int choice=scan.nextInt();
-						Card playing=Hand.get(choice);
+						System.out.println("Select a hand card to play");
+						//
+//						Scanner scan=new Scanner(System.in);
+//						int choice=scan.nextInt();
+//						Card playing=Hand.get(choice);
+						
+						while(HandPanel.returnCurrentSelectedHandCard() ==null){
+							System.out.println("waiting for a hand card to be selected");
+						}
+						
+						Card playing = HandPanel.returnCurrentSelectedHandCard();
+						//
+
 						ArrayList<Card> temp=getMatchingCards(playing);
 						System.out.println("Choose "+playing.getName());
 
 						
-						if(temp.size()==0){//no match need put the card onto the field and draw new one
+//						if(temp.size()==0){//no match need put the card onto the field and draw new one
+//							
+//							addHandCardToField(playing);
+//							this.waitForResponse();				
+//							
+//							
+//						}
+						while(HandPanel.returnNumMatchingCards()==-1){
+							System.out.println("waiting to receive number of matching cards");
+						}
+						if(HandPanel.returnNumMatchingCards()==0){//no match need put the card onto the field and draw new one
 							
-							addHandCardToField(playing);
+							addHandCardToField(playing); // changed this function a little bit to resend field to GUI - Xiaohan
 							this.waitForResponse();				
 							
 							
@@ -647,8 +670,12 @@ public class HClient extends Thread {
 						System.out.println();
 						System.out.println("My Score now:"+score);
 						endTurn();
-						System.out.println("My turn is ended");			
+						System.out.println("My turn is ended");	
+						
+						HandPanel.resetNumMatchingCards(); // added by X
 				}
+				
+				
 				
 				// Receive card from deck
 				if (line.equals ("Signal:SendCardFromDeck")) {

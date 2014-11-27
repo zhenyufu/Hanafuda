@@ -31,7 +31,7 @@ public class CardButton extends JButton{
 		return x;
 	}
 	
-	public Card getCard(){
+	public Card returnCard(){
 		return card;
 	}
 

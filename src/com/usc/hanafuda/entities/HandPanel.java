@@ -36,6 +36,10 @@ public class HandPanel extends JPanel{
 	private String opponentName;
 	private GameScreen gameScreen;
 	HClient hClient;
+	
+	private static int numMatchingCards =-1;
+	private static Card currentSelectedHandCard =null;
+	
 	public HandPanel(HClient hClient, GameScreen gs){
 		this.gameScreen = gs;
 		this.setBackground(Color.yellow);
@@ -83,7 +87,13 @@ public class HandPanel extends JPanel{
 		refreshDisplay();
 		
 	}
+	public static void resetNumMatchingCards(){
+		numMatchingCards =-1;
+	}
 	
+	public static int returnNumMatchingCards(){
+		return numMatchingCards;
+	}
 	public void initialDeal(){
 		ArrayList<Card> hand = hClient.getHand();
 		
@@ -95,17 +105,21 @@ public class HandPanel extends JPanel{
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
 					
-					Card c = ((CardButton) aa.getSource()).getCard();
-					if(!cb.isCardUp()) {
-						highlightMatchingCards(c);					
+					Card c = ((CardButton) aa.getSource()).returnCard();
+//					if(!cb.isCardUp()) {
+						highlightMatchingCards(c);
+						currentSelectedHandCard =c;
+
+						
+						
 						cb.moveUpDown();										
 						refreshDisplay();
-					}
-					else {
-						unhighlightMatchingCards(c);					
-						cb.moveUpDown();										
-						refreshDisplay();
-					}
+//					}
+//					else {
+//						unhighlightMatchingCards(c);					
+//						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
 				}
 			});
 			
@@ -113,16 +127,20 @@ public class HandPanel extends JPanel{
 			
 		}
 	}
+	public static Card returnCurrentSelectedHandCard(){
+		return currentSelectedHandCard;
+	}
 	
 	public void highlightMatchingCards(Card c){
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
 		System.out.println("Matching Card size: " +matchingCards.size());
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).setGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
+					numMatchingCards++;
 				}
 			}
 
@@ -135,7 +153,7 @@ public class HandPanel extends JPanel{
 		System.out.println("Matching Card size: " +matchingCards.size());
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).unsetGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
