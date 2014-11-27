@@ -43,6 +43,7 @@ public class HandPanel extends JPanel implements Runnable{
 	private static Card currentSelectedHandCard =null;
 	Lock lock = new ReentrantLock();
 	private  static boolean refreshFlag = false;
+	private static boolean removeAllCardButtons = false;
 	
 	public HandPanel(HClient hClient, GameScreen gs){
 		this.gameScreen = gs;
@@ -94,12 +95,24 @@ public class HandPanel extends JPanel implements Runnable{
 	public void run(){
 		while(true){
 //			System.out.println("panel thread running");
-			lock.lock();
+			repaint();
+			this.revalidate();
+			if(removeAllCardButtons == true){
+//				lock.lock();
+				System.out.println("removing all card buttons");
+				removeAllCardButtons();
+				removeAllCardButtons = false;
+//				lock.unlock();
+			}
+			
 			if(refreshFlag ==true){
+//				lock.lock();
 				refreshDisplay();
 				refreshFlag=false;
+//				lock.unlock();
 			}
-			lock.unlock();
+
+		
 			
 		}
 	}
@@ -139,7 +152,10 @@ public class HandPanel extends JPanel implements Runnable{
 	}
 	
 	public  synchronized static void refreshHand(){
-		ArrayList<Card> hand = hClient.getHand();		
+		System.out.println("refreshing hand");
+		ArrayList<Card> hand = hClient.getHand();
+		removeAllCardButtons = true;
+		cardButtonList.clear();
 		for(int i = 0 ; i < hand.size(); i++){
 			final CardButton cb = new CardButton();			
 			cb.setCardImage(hand.get(i));			
@@ -203,19 +219,25 @@ public class HandPanel extends JPanel implements Runnable{
 		
 	}
 	
+	public synchronized void removeAllCardButtons(){
+		for(int i = 0 ; i < cardButtonList.size(); i++){
+			//System.out.println("card " +  40+i*60 );
+			this.remove(cardButtonList.get(i));
+			//cardButtonList.get(i).setLocation(40+i*60 ,40);	
+		}
+		this.revalidate();
+	}
 	
-	
-	public void refreshDisplay(){
+	public synchronized void refreshDisplay(){
 		
 		for(int i = 0 ; i < cardButtonList.size(); i++){
 			//System.out.println("card " +  40+i*60 );
 			this.add(cardButtonList.get(i));
 			//cardButtonList.get(i).setLocation(40+i*60 ,40);
-			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
-		
+			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );		
 		}
 		//cardButtonList.get(0).setLocation(40, 40);
-		this.validate();
+		this.revalidate();
 	}
 	
 	

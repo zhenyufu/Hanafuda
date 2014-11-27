@@ -113,6 +113,7 @@ public class FieldPanel extends JPanel implements Runnable{
 		}
 		
 		public static synchronized void refreshField(){
+			System.out.println("refreshing field");
 			ImageIcon deckImage = new ImageIcon("deck.png");
 			CardButton deck = new CardButton(deckImage);
 			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);

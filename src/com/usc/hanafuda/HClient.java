@@ -195,6 +195,9 @@ public class HClient extends Thread {
 				Field.remove (Field.get(i));
 			}
 		}
+		
+		HandPanel.refreshHand(); // added by X refresh after field and hand updated
+		FieldPanel.refreshField();
 		// Send new card and field to server
 			
 		updateScore();	
@@ -202,8 +205,7 @@ public class HClient extends Thread {
 		sendField();	
 		sendCollection();
 		
-		HandPanel.refreshHand(); // added by X refresh after field and hand updated
-		FieldPanel.refreshField();
+
 		
 		
 	}
@@ -255,6 +257,7 @@ public class HClient extends Thread {
 		
 		sendField();
 		FieldPanel.refreshField(); // added to refresh GUI
+		HandPanel.refreshHand();
 		sendMessage ("Signal:UpdateFieldFinished");
 		
 	}
@@ -555,7 +558,7 @@ public class HClient extends Thread {
 						//
 
 						ArrayList<Card> temp=getMatchingCards(playing);
-						System.out.println("Choose "+playing.getName());
+						System.out.println("Player chose: "+playing.getName());
 
 						
 //						if(temp.size()==0){//no match need put the card onto the field and draw new one
@@ -565,9 +568,10 @@ public class HClient extends Thread {
 //							
 //							
 //						}
+//						System.out.println("nummatchingcards: "+HandPanel.returnNumMatchingCards());
 						
 						while(HandPanel.returnNumMatchingCards()==-1){ // changes by X. Wait for Gui to return num mathicng cards
-							System.out.println("waiting to receive number of matching cards");
+							System.out.println("waiting to receive number of matching cards" +HandPanel.returnNumMatchingCards() );
 						}
 						System.out.println("Number of Matching Cards:" +HandPanel.returnNumMatchingCards());
 						if(HandPanel.returnNumMatchingCards()==0){//no match need put the card onto the field and draw new one
