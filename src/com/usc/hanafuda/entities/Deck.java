@@ -8,12 +8,15 @@ import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.usc.hanafuda.handlers.MyAssetHandler;
+
 public class Deck {
 	private ArrayList<Card> cardDeck;
 	
 	public Deck () {
 		cardDeck = new ArrayList<Card> ();
 		initializeCards();
+		initializeCardImages();
 		shuffleDeck();
 	}
 	
@@ -88,6 +91,12 @@ public class Deck {
 		cardDeck.add (new Card (45, "December1_10pts", Card.Month.December, null, null, false, null, 10));
 		cardDeck.add (new Card (46, "December2_0pts", Card.Month.December, null, null, false, null, 0));
 		cardDeck.add (new Card (47, "December3_0pts", Card.Month.December, null, null, false, null, 0));
+	}
+	private void initializeCardImages(){ // added by me to initialize images
+		for(int i=0;i<cardDeck.size();i++){
+			(cardDeck.get(i)).setImage(MyAssetHandler.getIcon(i));
+		}
+		
 	}
 	
 }

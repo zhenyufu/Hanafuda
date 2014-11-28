@@ -216,7 +216,7 @@ public class HClient extends Thread {
 			}
 		}
 		
-		HandPanel.refreshHand(); // added by X refresh after field and hand updated
+		HandPanel.refreshHand(); // added by X refresh after field and hand and collection updated
 		FieldPanel.refreshField();
 		(HandPanel.returnCollectionPanel()).updateCollection();
 		// Send new card and field to server

@@ -40,6 +40,9 @@ public class Card implements Serializable {
 		System.out.println(name);
 	}
 	
+	public void setImage(ImageIcon i){
+		this.image =i;
+	}
 	public ImageIcon getImage() {
 		return image;
 	}
