@@ -33,7 +33,7 @@ public class HandPanel extends JPanel implements Runnable{
 	public final int gap = 100;
 	private int score = 0;
 	private JLabel playerScore;
-	private JTextPane capturedCardPane;
+	private static  CollectionPanel collectionPanel;
 	private String myName;
 	private String opponentName;
 	private GameScreen gameScreen;
@@ -66,18 +66,20 @@ public class HandPanel extends JPanel implements Runnable{
 		playerScore.setBounds(860, 35, 250, 100);
 		playerScore.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
 		this.add(playerScore);
+		
+		// collection panel
 		JButton showCapturedBtn = new JButton("Show Captured Cards");
 		showCapturedBtn.setBounds(860,110,160,40);
 		this.add(showCapturedBtn);
-		capturedCardPane = new JTextPane();
-		capturedCardPane.setEditable(false);
-		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
+		collectionPanel = new CollectionPanel();
+		
 		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-		final JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		final JScrollPane jsp = new JScrollPane(collectionPanel, v , h);
+		
 		showCapturedBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				JFrame popup = new JFrame("Your Captured Cards");
+				JFrame popup = new JFrame("Your Collection Cards");
 				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
 				popup.setSize(500,300);
 				popup.setLocation(700,400);
@@ -118,6 +120,10 @@ public class HandPanel extends JPanel implements Runnable{
 		
 			
 		}
+	}
+	
+	public static CollectionPanel returnCollectionPanel(){
+		return collectionPanel;
 	}
 	public static void resetNumMatchingCards(){
 		numMatchingCards =-1;
@@ -260,10 +266,10 @@ public class HandPanel extends JPanel implements Runnable{
 //		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 40, null);
 
 	}	
-	public void addToCapturedCard(String imagePath){
-		capturedCardPane.insertIcon(new ImageIcon(imagePath));
-		
-	}
+//	public void addToCapturedCard(String imagePath){
+//		collectionPanel.insertIcon(new ImageIcon(imagePath));
+//		
+//	}
 	public void incScore(int incBy){
 		score = score + incBy;
 		playerScore.setText(Integer.toString(score) + " ");

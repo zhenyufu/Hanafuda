@@ -121,7 +121,7 @@ public class FieldPanel extends JPanel implements Runnable{
 		}
 		
 		public synchronized void removeAllCardButtons(){
-			System.out.println("removing all card buttons");
+			System.out.println("removing all field card buttons");
 			for(int i = 0 ; i < cardButtonList.size(); i++){
 				//System.out.println("card " +  40+i*60 );
 				this.remove(cardButtonList.get(i));

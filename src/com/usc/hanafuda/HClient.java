@@ -81,6 +81,12 @@ public class HClient extends Thread {
 		return Hand;
 		
 	}
+	public ArrayList<Card> getCollection(){ // newly added
+		return Collection;		
+	}
+	public ArrayList<Card> getOpponentCollection(){ // newly added
+		return OpponentCollection;		
+	}
 	
 	
 	public void sendScore() {
@@ -189,10 +195,10 @@ public class HClient extends Thread {
 		}
 		
 		//DEBUG
-		for (int i = 0; i < Collection.size(); i++) {			
-			System.out.println ("Process: " + Collection.get(i).getName());
-			
-		}
+//		for (int i = 0; i < Collection.size(); i++) {			
+//			System.out.println ("Process: " + Collection.get(i).getName());
+//			
+//		}
 		
 		// Remove matched card from hand
 		for (int i = 0; i < Hand.size(); i++) {			
@@ -212,6 +218,7 @@ public class HClient extends Thread {
 		
 		HandPanel.refreshHand(); // added by X refresh after field and hand updated
 		FieldPanel.refreshField();
+		(HandPanel.returnCollectionPanel()).updateCollection();
 		// Send new card and field to server
 			
 		updateScore();	
