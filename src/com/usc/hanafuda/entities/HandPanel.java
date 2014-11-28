@@ -31,8 +31,8 @@ public class HandPanel extends JPanel implements Runnable{
 	static boolean aCardIsUp = false;
 	static ArrayList<CardButton> cardButtonList;
 	public final int gap = 100;
-	private int score = 0;
-	private JLabel playerScore;
+	private static int score = 0;
+	private static JLabel playerScore;
 	private static  CollectionPanel collectionPanel;
 	private String myName;
 	private String opponentName;
@@ -234,6 +234,10 @@ public class HandPanel extends JPanel implements Runnable{
 
 		}
 		
+	}
+	public static void setScore(int i){
+		score = i;
+		playerScore.setText("Score: " + Integer.toString(score));
 	}
 	
 	public synchronized void removeAllCardButtons(){

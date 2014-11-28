@@ -73,6 +73,9 @@ public class FieldPanel extends JPanel implements Runnable{
 		public static Card returnSelectedFieldCard(){
 			return selectedFieldCard;
 		}
+		public static void resetSelectedFieldCard(){
+			selectedFieldCard = null;
+		}
 		
 		public void initialDeal(){
 			ArrayList<Card> field = hClient.getField();

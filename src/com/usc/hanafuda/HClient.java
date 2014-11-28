@@ -251,7 +251,7 @@ public class HClient extends Thread {
 	// This is done when there is no match
 	public void addDrawnCardToField (Card cd) {
 		Field.add(cd);
-		
+		FieldPanel.refreshField();
 		sendField();
 		sendMessage ("Signal:UpdateFieldFinished");
 		
@@ -577,9 +577,9 @@ public class HClient extends Thread {
 	
 						}
 						*/
-						
+//						HandPanel.highlightMatchingCards(playing);
 						while (HandPanel.returnNumMatchingCards() == -1) { // changes by X. Wait for Gui to return num mathicng cards
-							System.out.println("waiting to receive number of matching cards" +HandPanel.returnNumMatchingCards() );
+							System.out.println("waiting to receive number of matching cards:" + HandPanel.returnNumMatchingCards() );
 						}
 						
 						System.out.println("Number of Matching Cards:" +HandPanel.returnNumMatchingCards());
@@ -609,6 +609,8 @@ public class HClient extends Thread {
 							}
 							
 							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();
+							
+							FieldPanel.resetSelectedFieldCard(); // reset after receive
 							System.out.println ("Selected matched card: " + selectedMatchedCard.getName());
 							//this.processMatchAndRemoveCards(playing, temp.get(selectMatchedCard));
 							this.processMatchAndRemoveCards(playing, selectedMatchedCard); // function changed a little 
@@ -617,6 +619,7 @@ public class HClient extends Thread {
 						}
 						
 						// Get card from deck
+						HandPanel.resetNumMatchingCards();// reset mathcing cards after use
 						getCardFromDeck();
 						
 						line = (String) is.readObject();
@@ -629,11 +632,12 @@ public class HClient extends Thread {
 									Card received = (Card) is.readObject();	
 									// wait for deck button to be clicked
 									while(!deckButtonClicked){	
-										//System.out.println("waiting for deck to be clicked");
+										System.out.println("waiting for deck to be clicked");
 									}									
 									//TODO: Notify GUI
 									
 									this.receivedDeckCard=received;
+									deckButtonClicked = false; // reset to false
 									
 								} catch (ClassNotFoundException e) {
 									e.printStackTrace();
@@ -644,27 +648,37 @@ public class HClient extends Thread {
 						System.out.println("I drew " + receivedDeckCard.getName() + " from deck");
 						this.waitForResponse();
 						
+						
 						ArrayList<Card> temp2 = getMatchingCards(receivedDeckCard);
 						
 						if (temp2.size()==0) { // No match to drawn card							
 
-							this.addDrawnCardToField(receivedDeckCard);
+							this.addDrawnCardToField(receivedDeckCard); // modified by x to refresh GUI
 							
 							this.waitForResponse();							
 							
 						}
 						
 						else {
-							System.out.println ("There are possible matches for this card:");
-							for (int i=0; i < temp2.size(); i++) {
-								System.out.println ("<" + i + ">" + temp2.get(i).getName());
-								
+//							System.out.println ("There are possible matches for this card:");
+//							for (int i=0; i < temp2.size(); i++) {
+//								System.out.println ("<" + i + ">" + temp2.get(i).getName());
+//								
+//							}
+							HandPanel.highlightMatchingCards(receivedDeckCard); 
+							Card selectedMatchedCard = null;
+							while (FieldPanel.returnSelectedFieldCard() == null) {
+								System.out.println("waiting for matched field card to be selected");
 							}
 							
-							System.out.println ("Select a card from deck to match");
+							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();
 							
-							int selectMatchedCard = scan.nextInt();
-							this.processMatchAndRemoveCards (receivedDeckCard, temp2.get(selectMatchedCard));
+							FieldPanel.resetSelectedFieldCard(); // reset after receive to prevent errors
+//							
+//							System.out.println ("Select a card from field to match");
+//							
+//							int selectMatchedCard = scan.nextInt();
+							this.processMatchAndRemoveCards (receivedDeckCard, selectedMatchedCard);
 							
 							this.waitForResponse();
 							
@@ -689,6 +703,7 @@ public class HClient extends Thread {
 						
 						System.out.println();
 						System.out.println ("My Score now: " + score);
+						HandPanel.setScore(score);
 						endTurn();
 
 						System.out.println("My turn is ended");	
