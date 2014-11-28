@@ -598,7 +598,7 @@ public class HClient extends Thread {
 							
 							Card selectedMatchedCard = null;
 							while (FieldPanel.returnSelectedFieldCard() == null) {
-								//System.out.println("waiting for matched field card to be selected");
+								System.out.println("waiting for matched field card to be selected");
 							}
 							
 							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();

@@ -157,12 +157,14 @@ public class HandPanel extends JPanel implements Runnable{
 	public  synchronized static void refreshHand(){
 		System.out.println("refreshing hand");
 		ArrayList<Card> hand = hClient.getHand();
+		
 		removeAllCardButtons = true;
 		while (removeAllCardButtons==true){
-			System.out.println("waiting for card buttons to be removed");
+			System.out.println("waiting for hand card buttons to be removed");
 		}
+		
 		cardButtonList.clear();
-		System.out.println("cleared card Buttons");
+		System.out.println("cleared hand card Buttons");
 		for(int i = 0 ; i < hand.size(); i++){
 			final CardButton cb = new CardButton();			
 			cb.setCardImage(hand.get(i));			

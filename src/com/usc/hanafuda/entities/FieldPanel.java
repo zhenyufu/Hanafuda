@@ -30,6 +30,7 @@ public class FieldPanel extends JPanel implements Runnable{
 		
 		private static Card selectedFieldCard = null; // add by X
 		private  static boolean refreshFlag = false;
+		private static boolean removeAllCardButtons = false;
 		Lock lock = new ReentrantLock();
 		
 		public FieldPanel(HClient hClient, GameScreen gs){
@@ -51,8 +52,15 @@ public class FieldPanel extends JPanel implements Runnable{
 		
 		public void run(){
 			while(true){
-//				System.out.println("panel thread running");
+				repaint();
+				this.revalidate();
+				
 				lock.lock();
+				if(removeAllCardButtons == true){
+					
+					removeAllCardButtons();
+					removeAllCardButtons = false;
+				}
 				if(refreshFlag ==true){
 					refreshDisplay();
 					refreshFlag=false;
@@ -112,6 +120,16 @@ public class FieldPanel extends JPanel implements Runnable{
 			}
 		}
 		
+		public synchronized void removeAllCardButtons(){
+			System.out.println("removing all card buttons");
+			for(int i = 0 ; i < cardButtonList.size(); i++){
+				//System.out.println("card " +  40+i*60 );
+				this.remove(cardButtonList.get(i));
+				//cardButtonList.get(i).setLocation(40+i*60 ,40);	
+			}
+			this.revalidate();
+		}
+		
 		public static synchronized void refreshField(){
 			System.out.println("refreshing field");
 			ImageIcon deckImage = new ImageIcon("deck.png");
@@ -127,7 +145,13 @@ public class FieldPanel extends JPanel implements Runnable{
 				
 			});
 			ArrayList<Card> field = hClient.getField();
+			removeAllCardButtons = true;
+			while (removeAllCardButtons==true){
+				System.out.println("waiting for field card buttons to be removed");
+			}
+			
 			cardButtonList.clear();
+			System.out.println("cleared field card Buttons");
 			
 			for(int i = 0 ; i < field.size(); i++){
 				final CardButton cb = new CardButton();
