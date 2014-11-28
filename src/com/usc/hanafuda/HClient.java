@@ -555,16 +555,21 @@ public class HClient extends Thread {
 						for (int i = 0; i < Field.size(); i++) {
 							System.out.println ("<" + i + ">" + Field.get(i).getName());		
 						}
+						//refresh field and hand for current player
+
+						
 						
 						System.out.println("Select a hand card to play");
 						//int choice=scan.nextInt();
 						//Card playing=Hand.get(choice);
+//						
 						
 						while (HandPanel.returnCurrentSelectedHandCard() == null) {
 							//System.out.println("waiting for a hand card to be selected");
 						}
 						
 						Card playing = HandPanel.returnCurrentSelectedHandCard();
+
 
 						ArrayList<Card> temp = getMatchingCards (playing);
 						System.out.println ("Player chose: "+ playing.getName());
@@ -577,7 +582,7 @@ public class HClient extends Thread {
 	
 						}
 						*/
-//						HandPanel.highlightMatchingCards(playing);
+						HandPanel.highlightMatchingCards(playing);
 						while (HandPanel.returnNumMatchingCards() == -1) { // changes by X. Wait for Gui to return num mathicng cards
 							System.out.println("waiting to receive number of matching cards:" + HandPanel.returnNumMatchingCards() );
 						}
@@ -637,7 +642,7 @@ public class HClient extends Thread {
 									//TODO: Notify GUI
 									
 									this.receivedDeckCard=received;
-									deckButtonClicked = false; // reset to false
+									
 									
 								} catch (ClassNotFoundException e) {
 									e.printStackTrace();
@@ -704,12 +709,16 @@ public class HClient extends Thread {
 						System.out.println();
 						System.out.println ("My Score now: " + score);
 						HandPanel.setScore(score);
+						
+						HandPanel.resetNumMatchingCards(); // added by X
+						deckButtonClicked =false;
+						
+						//update opponent GUI
 						endTurn();
 
 						System.out.println("My turn is ended");	
 						
-						HandPanel.resetNumMatchingCards(); // added by X
-						deckButtonClicked = false;
+						
 				}
 				
 				
