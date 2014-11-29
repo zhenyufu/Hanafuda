@@ -74,7 +74,7 @@ public class CollectionPanel extends JPanel implements Runnable{
 //			JLabel imageLabel = new JLabel(ic);
 //			imageLabel.setBounds(40+i*5, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
 			this.add(iconLabel1);
-			System.out.println("readding captured image to collection:");
+			System.out.println("reading captured image to collection:");
 			String n  = collection.get(i).getName();
 			System.out.println("Adding " + n + " to Collection Panel");
 			this.validate();

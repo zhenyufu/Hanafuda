@@ -42,7 +42,7 @@ public class HClient extends Thread {
 	private Socket s;
 	private String userName;
 	private Scanner scan;
-	
+	private boolean hostSet = false;
 	private boolean deckButtonClicked = false; // added by X
 	
 	
@@ -65,7 +65,7 @@ public class HClient extends Thread {
 		
 	} // End of constructor
 	
-
+	
 	public void setDeckButtonStatus(boolean b){ // added by X
 		deckButtonClicked = b;
 	}
@@ -456,7 +456,17 @@ public class HClient extends Thread {
 					Host = true;
 					
 				}
-				
+				if(!Host && !hostSet){
+					this.userName = userName + "(Client)";
+					System.out.println("I am Client");
+					hostSet = true;
+				}
+				else if(Host & !hostSet){
+					this.userName = userName + "(Host)";
+					//HServer.hostExist = true;
+					System.out.println("I am Host");
+					hostSet = true;
+				}
 				
 				// Receive hand
 				if (line.equals ("Signal:SendHand")) {
