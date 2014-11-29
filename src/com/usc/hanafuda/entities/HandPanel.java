@@ -106,8 +106,8 @@ public class HandPanel extends JPanel implements Runnable{
 //			System.out.println("panel thread running");
 			repaint();
 			this.revalidate();
-			collectionPanel.repaint();
-			collectionPanel.revalidate();
+//			collectionPanel.repaint();
+//			collectionPanel.revalidate();
 			
 			lock.lock();
 			if(removeAllCardButtons == true){
