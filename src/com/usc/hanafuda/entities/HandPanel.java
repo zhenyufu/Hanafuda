@@ -87,8 +87,7 @@ public class HandPanel extends JPanel implements Runnable{
 				popup.setSize(500,300);
 				popup.setLocation(700,400);
 				popup.setVisible(true);
-				popup.setResizable(true);
-				
+				popup.setResizable(true);				
 				popup.add(jsp);
 			}
 		});
@@ -165,7 +164,7 @@ public class HandPanel extends JPanel implements Runnable{
 		}
 	}
 	
-	public  synchronized static void refreshHand(){
+	public synchronized static void refreshHand(){
 		System.out.println("refreshing hand");
 		ArrayList<Card> hand = hClient.getHand();
 		
