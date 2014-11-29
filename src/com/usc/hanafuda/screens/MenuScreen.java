@@ -44,7 +44,7 @@ public class MenuScreen extends JPanel {
 		
 		//Image scaledImage = originalImage.getScaledInstance(this.getWidth(),this.getHeight(),Image.SCALE_SMOOTH);
 		try {
-			image = ImageIO.read(new File("ha.png"));
+			image = ImageIO.read(new File("haha.png"));
 			
 		} catch (IOException e) {
 			e.printStackTrace();
