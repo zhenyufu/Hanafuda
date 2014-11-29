@@ -69,12 +69,6 @@ public class GameScreen extends JPanel {
 		opponentPanelNorth = new OpponentPanel("northPlayer");
 		deckPanel.add(opponentPanelNorth, BorderLayout.NORTH);
 		
-		//opponentPanelWest = new VerticalOpponentPanel("westPlayer");
-		//deckPanel.add(opponentPanelWest, BorderLayout.WEST);
-		
-		//opponentPanelEast = new VerticalOpponentPanel("eastPlayer");
-		//deckPanel.add(opponentPanelEast, BorderLayout.EAST);
-		
 		JPanel textPanel = new JPanel();
 		textPanel.setLayout(new BorderLayout());
 		textPanel.setBorder(BorderFactory.createLineBorder(Color.darkGray, 1));

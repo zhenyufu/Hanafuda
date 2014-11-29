@@ -5,46 +5,44 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import com.usc.hanafuda.entities.Card;
-import com.usc.hanafuda.entities.Deck;
 
-public class ServerThread extends Thread{
+public class ServerThread extends Thread {
 	private Socket s;
 	private HServer hs;
-	private PrintWriter pw;
+	//private PrintWriter pw;
 	private ObjectOutputStream os;
 	private ObjectInputStream is;
-	private int Pendingscore;
+	private int PendingScore;
 	private ServerThread PendingTarget;
-	public ServerThread(Socket s, HServer hs){
-		this.s=s;
-		this.hs=hs;
-		try {
-			
-			this.pw=new PrintWriter(s.getOutputStream());
-			this.os=new ObjectOutputStream(s.getOutputStream());
-			this.is=new ObjectInputStream(s.getInputStream());
+	
+	public ServerThread (Socket s, HServer hs) {
+		this.s = s;
+		this.hs = hs;
+		
+		try {	
+			//this.pw=new PrintWriter(s.getOutputStream());
+			this.os = new ObjectOutputStream(s.getOutputStream());
+			this.is = new ObjectInputStream(s.getInputStream());
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	
-	public void sendCard(Card cd){
+	// This method sends a card to the client
+	public void sendCard (Card cd){
 		try {
-			
-			pw.println("Signal:SendCard");
-			pw.flush();
+			// Send as object instead of using printwriter
+			os.writeObject ("Signal:SendCard");
+			os.flush();
 			
 			try {
 				this.sleep(10);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -59,44 +57,52 @@ public class ServerThread extends Thread{
 	}
 	
 	
-	public void send(String message){
-		pw.println(message);
-		pw.flush();
-		
+	// This method sends a String to the client
+	public void send (String message) {
+		try {
+			os.writeObject (message);
+			os.flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void run (){
+	
+	public void run () {
 		try {
-			BufferedReader br=new BufferedReader(new InputStreamReader(s.getInputStream()));
+			//BufferedReader br=new BufferedReader(new InputStreamReader(s.getInputStream()));
+			
 			while(true){
-				String line=br.readLine();
-				//nothing more to read, close the socket
-				if(line==null){
+				// Receive String from client
+				String line = (String) is.readObject();
+				
+				// Nothing more to read, close the socket
+				if (line==null) {
 					s.close();
 					hs.removeDisconnection(this);
 					break;
-				}
-				//
-				if(line.equals("Signal:StartGame")){
 					
+				}
+
+				if (line.equals ("Signal:StartGame")) {
 					hs.onStartOfGame();
 					
 				}
 				
-				
-				if(line.equals("Signal:SendField")){
+				// Client is sending Field to server
+				if (line.equals ("Signal:SendField")) {
+					// Read one more line message to confirm the receiving card process
+					String nextMessage = (String) is.readObject();
 					
-					//read one more line message to confirm the receiving card process
-					
-						String nextMessage=br.readLine();
-						if(nextMessage.equals("Signal:SendCard")){
-						
-						try {
-							
+					if (nextMessage.equals ("Signal:SendCard")) {
+						try {							
 							Card received = (Card) is.readObject();
-							//add to field
+							
+							// Add received card to field
 							hs.Field.add(received);
-							//for test
+							
+							//DEBUG
 							//System.out.println("Field Card received");
 							received.printName();
 							System.out.println("I have <"+hs.Field.size()+"> cards in Field");
@@ -107,219 +113,208 @@ public class ServerThread extends Thread{
 					}
 				}
 				
-				if(line.equals("Signal:SendCollection")){
+				// Client is sending his/her collection
+				if (line.equals ("Signal:SendCollection")) {
+					// Read one more line message to confirm the receiving card process
+					String nextMessage = (String) is.readObject();
 					
-					//read one more line message to confirm the receiving card process
-					
-						String nextMessage=br.readLine();
-						System.out.println("next Message: "+nextMessage);
-						
-						if(nextMessage.equals("Signal:SendCard")){
-						
-						try {
-							
+					if (nextMessage.equals ("Signal:SendCard")) {
+						try {	
 							Card received = (Card) is.readObject();
-							//add to field
-							hs.Collection.add(received);
-							//for test
+							
+							// Add received card to collection
+							hs.Collection.add (received);
+							
+							//DEBUG
 							//System.out.println("Field Card received");
 							received.printName();
-							System.out.println("I have <"+hs.Collection.size()+"> cards in Collection");
+							System.out.println ("I have <"+hs.Collection.size()+"> cards in Collection");
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
 						}
 					}
+					
+					
 				}
 				
-				
-				if(line.equals("Signal:UpdateField")){
-					
+				// Client wants to update the Field; clear the field to prepare
+				if (line.equals ("Signal:UpdateField")) {
 					hs.Field.clear();
 					
 				}
 				
-				if(line.equals("Signal:UpdateCollection")){
-					
+				// Client wants to update the Collection; clear the collection to prepare
+				if (line.equals ("Signal:UpdateCollection")) {
 					hs.Collection.clear();
 					
 				}
 				
-				if(line.equals("Signal:UpdateFieldFinished")){
-					ServerThread oppo=null;
-					for(int i=0;i<hs.vServerThread.size();i++){
-						if(!hs.vServerThread.get(i).equals(this)){
-							
-							oppo=hs.vServerThread.get(i);
-							
-							
-						}
-						
-						
-					}
-					hs.updateField(oppo);
+				// The update of the field has finished
+				if (line.equals ("Signal:UpdateFieldFinished")) {
+					ServerThread oppo = null;
 					
-					/*try {
-						this.sleep(400);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					for (int i=0; i < hs.vServerThread.size(); i++) {
+						if (!hs.vServerThread.get(i).equals(this)) {		
+							// Set opponent thread to the thread which is not this one
+							oppo = hs.vServerThread.get(i);
+							
+						}						
 					}
-					*/
+					
+					// Send opponent the updated field
+					hs.updateField (oppo);
+				
 				}
 				
-				if(line.equals("Signal:UpdateCollectionFinished")){
-					//find opponent 
-					ServerThread oppo=null;
-					for(int i=0;i<hs.vServerThread.size();i++){
-						if(!hs.vServerThread.get(i).equals(this)){
-							
+				if (line.equals ("Signal:UpdateCollectionFinished")) {
+					// Find opponent
+					ServerThread oppo = null;
+					
+					for (int i = 0; i < hs.vServerThread.size(); i++) {
+						if (!hs.vServerThread.get(i).equals(this)) {
 							oppo=hs.vServerThread.get(i);
-							
-							
-						}
-						
-						
+								
+						}						
 					}
+					
+					// Update opponent's Field //TODO: Why update the field here?
 					hs.updateField(oppo);
+					
 					try {
 						this.sleep(400);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+					// Update opponent's collection
 					hs.updateOpponentCollection(oppo);
+					
 					try {
 						this.sleep(400);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					hs.sendMessage("Signal:ScoreOfAnother", PendingTarget);
+					
+					// Signal opponent of incoming score //TODO: Where does PendingTarget get set?
+					hs.sendMessage ("Signal:ScoreOfAnother", PendingTarget);
+					
 					try {
 						this.sleep(400);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					hs.sendMessage(Integer.toString(Pendingscore), PendingTarget);
+					
+					// Send opponent this client's score
+					hs.sendMessage (Integer.toString(PendingScore), PendingTarget);
 					
 				}
-				if(line.equals("Signal:GetCardFromDeck")){
-					
+				
+				// Send top card from deck
+				if (line.equals ("Signal:GetCardFromDeck")) {
 					hs.sendCardFromDeck();
 					
 				}
 				
-				if(line.equals("Signal:EndTurn")){
-					
-					if(!hs.GameIsOver()){
+				// Signal received when player has finished his/her turn
+				if (line.equals ("Signal:EndTurn")) {
+					// If the game is not over, signal the next player of his/her turn
+					if (!hs.GameIsOver()) {
+						// Set next player to current player
 						hs.nextPlayer();
-						hs.sendMessage("Signal:Turn", hs.currentPlayer);
-						}
-					
-					else{
-						
-						
-						//TODO: Final scoring
-						//TODO: End of game
-						
-						
-						
+						hs.sendMessage ("Signal:Turn", hs.currentPlayer);
 					}
 					
-					
+					// If the game is over
+					else {
+						//TODO: Signal client to find final score
+						
+					}					
 				}
 				
-				if(line.equals("Signal:SendScore")){
-					System.out.println("score!");
-					String nextMessage=br.readLine();
+				if (line.equals ("Signal:SendScore")) {
+					//DEBUG
+					System.out.println("Score!");
 					
-					if(nextMessage.charAt(0)=='h'){
+					String nextMessage = (String) is.readObject();
+					
+					// If the score belongs to the host
+					if (nextMessage.charAt(0) == 'h') {		
+						int score = Integer.valueOf (nextMessage.substring(1, nextMessage.length()));
 						
+						hs.hostScore = score;
 						
+						PendingScore = score;
 						
-						int score=Integer.valueOf(nextMessage.substring(1, nextMessage.length()));
+						//DEBUG
+						System.out.println ("Set host score to: " + score);
 						
-						hs.hostScore=score;
+						// Set pending target to opponent (not host)
+						ServerThread another = hs.vServerThread.get(1);
 						
-						Pendingscore=score;
+						PendingTarget = another;
 						
-						System.out.println("set host score to: "+score);
-						ServerThread another=hs.vServerThread.get(1);
-						
-						PendingTarget=another;
 						//hs.sendMessage("Signal:ScoreOfAnother", another);
-						
 						//hs.sendMessage(Integer.toString(score), another);
 					}
 					
-					else{
+					// If the score is not the host's
+					else {						
+						int score = Integer.valueOf(nextMessage);
 						
+						hs.guestScore = score;
 						
-						int score=Integer.valueOf(nextMessage);
+						PendingScore = score;
 						
-						hs.guestScore=score;
+						//DEBUG
+						System.out.println ("Set other score to: " + score);
 						
-						Pendingscore=score;
-						System.out.println("set other score to: "+score);
-						ServerThread another=hs.vServerThread.get(0);
+						// Set pending target to opponent (host)
+						ServerThread another = hs.vServerThread.get(0);
 						
-						PendingTarget=another;
+						PendingTarget = another;
+						
 						//hs.sendMessage("Signal:ScoreOfAnother", another);
-						
 						//hs.sendMessage(Integer.toString(score), another);
 						
 					}
-					
-				
-					
 				}
 				
-				if(line.equals("Signal:SendSelectedCard")){
-					
-					
-					String nextMessage=br.readLine();
-					
-					if(nextMessage.equals("Signal:SendCard")){
-					
+				// Client sends server the card that was selected from hand
+				if (line.equals ("Signal:SendSelectedCard")) {
 					try {
+						String nextMessage = (String) is.readObject();
 						
-						Card received = (Card) is.readObject();
-						
-						hs.currentPlayedCard=received;
-						
-						ServerThread another=null;
-						
-						for(int i=0 ;i<hs.vServerThread.size();i++){
+						if (nextMessage.equals ("Signal:SendCard")) {
+							Card received = (Card) is.readObject();
 							
-							if(!hs.vServerThread.get(i).equals(hs.currentPlayer)){
-								
-								another=hs.vServerThread.get(i);
+							hs.currentPlayedCard = received;
+							
+							ServerThread another = null;
+							
+							// Find the server thread of the other player
+							for (int i = 0; i < hs.vServerThread.size(); i++) {
+								if(!hs.vServerThread.get(i).equals(hs.currentPlayer)){
+									another = hs.vServerThread.get(i);
+								}
 							}
-						
+							
+							// Send selected card to the other player
+							hs.sendMessage ("Signal:ReceiveSelectedCard", another);
+							hs.sendCard (hs.currentPlayedCard, another);
 						}
-						hs.sendMessage("Signal:ReceiveSelectedCard", another);
-						hs.sendCard(hs.currentPlayedCard, another);
-						
-						
-						
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
-					}
-				}
-					
-					
-					
+					}					
 				}
 				
-				
-				
-				System.out.println("received message: "+line);
-			}
-			
+				//DEBUG
+				System.out.println ("Received message: " + line);
+			} // End of while loop
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
 		}
-	}
+	} // End of run()
 }

@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -28,18 +30,26 @@ import com.usc.hanafuda.MyGame;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 import com.usc.hanafuda.screens.GameScreen;
 
-public class HandPanel extends JPanel{
+public class HandPanel extends JPanel implements Runnable{
 	static boolean aCardIsUp = false;
-	ArrayList<CardButton> cardButtonList;
+	static ArrayList<CardButton> cardButtonList;
 	public final int gap = 100;
-	private int score = 0;
-	private JLabel playerScore;
-	private JTextPane capturedCardPane;
+	private static int score = 0;
+	private static JLabel playerScore;
+	private static  CollectionPanel collectionPanel;
 	private String myName;
 	private String opponentName;
 	private GameScreen gameScreen;
-	HClient hClient;
+	static HClient hClient;
+	
+	private static int numMatchingCards =-1;
+	private static Card currentSelectedHandCard =null;
+	Lock lock = new ReentrantLock();
+	private  static boolean refreshFlag = false;
+	private static boolean removeAllCardButtons = false;
+	
 	public HandPanel(HClient hClient, GameScreen gs){
+		
 		this.gameScreen = gs;
 		this.setBackground(Color.yellow);
 		this.myName = hClient.getUserName();
@@ -59,18 +69,20 @@ public class HandPanel extends JPanel{
 		playerScore.setBounds(860, 35, 250, 100);
 		playerScore.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
 		this.add(playerScore);
+		
+		// collection panel
 		JButton showCapturedBtn = new JButton("Show Captured Cards");
 		showCapturedBtn.setBounds(860,110,160,40);
 		this.add(showCapturedBtn);
-		capturedCardPane = new JTextPane();
-		capturedCardPane.setEditable(false);
-		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
+		collectionPanel = new CollectionPanel();
+		
 		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-		final JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		final JScrollPane jsp = new JScrollPane(collectionPanel, v , h);
+		
 		showCapturedBtn.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				JFrame popup = new JFrame("Your Captured Cards");
+				JFrame popup = new JFrame("Your Collection Cards");
 				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
 				popup.setSize(500,300);
 				popup.setLocation(700,400);
@@ -85,47 +97,124 @@ public class HandPanel extends JPanel{
 		initialDeal();
 		refreshDisplay();
 		
-	}
-	
-	public void initialDeal(){
-		ArrayList<Card> hand = hClient.getHand();
+		Thread t = new Thread (this); // added by X
+		t.start();
 		
-		for(int i = 0 ; i < hand.size(); i++){
-			final CardButton cb = new CardButton();
+	}
+	public void run(){
+		while(true){
+//			System.out.println("panel thread running");
+			repaint();
+			this.revalidate();
+			collectionPanel.repaint();
+			collectionPanel.revalidate();
 			
-			cb.setCardImage(hand.get(i));
+			lock.lock();
+			if(removeAllCardButtons == true){
+				
+				removeAllCardButtons();
+				removeAllCardButtons = false;
+			}
 			
-			cb.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent aa) {
-					
-					Card c = ((CardButton) aa.getSource()).getCard();
-					if(!cb.isCardUp()) {
-						highlightMatchingCards(c);					
-						cb.moveUpDown();										
-						refreshDisplay();
-					}
-					else {
-						unhighlightMatchingCards(c);					
-						cb.moveUpDown();										
-						refreshDisplay();
-					}
-				}
-			});
-			
-			cardButtonList.add(cb);			
+			if(refreshFlag ==true){
+				refreshDisplay();
+				refreshFlag=false;
+			}
+			lock.unlock();
+
+		
 			
 		}
 	}
 	
-	public void highlightMatchingCards(Card c){
+	public static CollectionPanel returnCollectionPanel(){
+		return collectionPanel;
+	}
+	public static void resetNumMatchingCards(){
+		numMatchingCards =-1;
+	}
+	
+	public static int returnNumMatchingCards(){
+		return numMatchingCards;
+	}
+	
+	public void initialDeal(){
+		ArrayList<Card> hand = hClient.getHand();		
+		for(int i = 0 ; i < hand.size(); i++){
+			final CardButton cb = new CardButton();			
+			cb.setCardImage(hand.get(i));			
+			cb.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent aa) {
+					
+					Card c = ((CardButton) aa.getSource()).returnCard();
+//					if(!cb.isCardUp()) {
+						highlightMatchingCards(c);
+						currentSelectedHandCard =c;
+						
+						cb.moveUpDown();										
+						refreshDisplay();
+//					}
+//					else {
+//						unhighlightMatchingCards(c);					
+//						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+				}
+			});			
+			cardButtonList.add(cb);					
+		}
+	}
+	
+	public  synchronized static void refreshHand(){
+		System.out.println("refreshing hand");
+		ArrayList<Card> hand = hClient.getHand();
+		
+		removeAllCardButtons = true;
+		while (removeAllCardButtons==true){
+			System.out.println("waiting for hand card buttons to be removed");
+		}
+		
+		cardButtonList.clear();
+		System.out.println("cleared hand card Buttons");
+		for(int i = 0 ; i < hand.size(); i++){
+			final CardButton cb = new CardButton();			
+			cb.setCardImage(hand.get(i));			
+			cb.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent aa) {
+					
+					Card c = ((CardButton) aa.getSource()).returnCard();
+//					if(!cb.isCardUp()) {
+						highlightMatchingCards(c);
+						currentSelectedHandCard =c;						
+						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+//					else {
+//						unhighlightMatchingCards(c);					
+//						cb.moveUpDown();										
+//						refreshDisplay();
+//					}
+				}
+			});			
+			cardButtonList.add(cb);					
+		}
+		refreshFlag = true;
+	}
+	public static synchronized Card returnCurrentSelectedHandCard(){
+		return currentSelectedHandCard;
+	}
+	
+	public static void highlightMatchingCards(Card c){
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
 		System.out.println("Matching Card size: " +matchingCards.size());
+		numMatchingCards = matchingCards.size();
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).setGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
+					
 				}
 			}
 
@@ -138,7 +227,7 @@ public class HandPanel extends JPanel{
 		System.out.println("Matching Card size: " +matchingCards.size());
 		for(int i = 0 ; i <matchingCards.size(); i++){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).getCard())){
+				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
 //					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
 					FieldPanel.cardButtonList.get(j).unsetGlow();
 					FieldPanel.cardButtonList.get(j).repaint();
@@ -149,20 +238,31 @@ public class HandPanel extends JPanel{
 		}
 		
 	}
+	public static void setScore(int i){
+		score = i;
+		playerScore.setText("Score: " + Integer.toString(score));
+	}
 	
+	public synchronized void removeAllCardButtons(){
+		System.out.println("removing all card buttons");
+		for(int i = 0 ; i < cardButtonList.size(); i++){
+			//System.out.println("card " +  40+i*60 );
+			this.remove(cardButtonList.get(i));
+			//cardButtonList.get(i).setLocation(40+i*60 ,40);	
+		}
+		this.revalidate();
+	}
 	
-	
-	public void refreshDisplay(){
+	public synchronized void refreshDisplay(){
 		
 		for(int i = 0 ; i < cardButtonList.size(); i++){
 			//System.out.println("card " +  40+i*60 );
 			this.add(cardButtonList.get(i));
 			//cardButtonList.get(i).setLocation(40+i*60 ,40);
-			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );
-		
+			cardButtonList.get(i).setBounds(40+i*gap, cardButtonList.get(i).getNewX(), MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT );		
 		}
 		//cardButtonList.get(0).setLocation(40, 40);
-		this.validate();
+		this.revalidate();
 	}
 	
 	
@@ -175,10 +275,10 @@ public class HandPanel extends JPanel{
 //		g.drawImage(MyAssetHandler.cardImageArray[2], 800, 40, null);
 
 	}	
-	public void addToCapturedCard(String imagePath){
-		capturedCardPane.insertIcon(new ImageIcon(imagePath));
-		
-	}
+//	public void addToCapturedCard(String imagePath){
+//		collectionPanel.insertIcon(new ImageIcon(imagePath));
+//		
+//	}
 	public void incScore(int incBy){
 		score = score + incBy;
 		playerScore.setText(Integer.toString(score) + " ");
