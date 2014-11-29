@@ -35,6 +35,7 @@ public class CollectionPanel extends JPanel implements Runnable{
 	
 	public void run(){
 		while(true){
+			this.validate();
 			this.repaint();
 			this.revalidate();
 			
@@ -80,11 +81,7 @@ public class CollectionPanel extends JPanel implements Runnable{
 			this.validate();
 			this.repaint();
 		}
-		
-//		this.revalidate();
-//		this.repaint();
-		
-//		refreshFlag = true;
+
 		
 	}
 	
