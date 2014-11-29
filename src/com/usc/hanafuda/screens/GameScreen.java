@@ -97,7 +97,7 @@ public class GameScreen extends JPanel {
 					//do nothing, no message
 				}
 				else{
-					textArea.append("<" + "userName" + ">: " + textField.getText() + "\n"); 
+					textArea.append("<" + myGame + ">: " + textField.getText() + "\n"); 
 					textField.setText("");
 				}
 			}
@@ -109,7 +109,7 @@ public class GameScreen extends JPanel {
 						//do nothing, no message
 					}
 					else{
-						textArea.append("<" + "userName" + ">: " + textField.getText() + "\n"); 
+						textArea.append("<" + myGame.getName() + ">: " + textField.getText() + "\n"); 
 						textField.setText("");
 					}
 				}

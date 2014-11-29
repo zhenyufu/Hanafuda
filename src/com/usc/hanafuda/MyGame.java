@@ -29,6 +29,9 @@ public class MyGame extends JFrame{
 		setVisible(true);
 	}
 	
+	public String getName() {
+		return playerName;
+	}
 	
 	public HClient getHClient(){
 		return client;
