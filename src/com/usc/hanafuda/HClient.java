@@ -47,6 +47,7 @@ public class HClient extends Thread {
 	private boolean hostSet = false;
 	private boolean deckButtonClicked = false; // added by X
 	private String hostName, clientName;
+	private int turn =0;
 	
 	
 	public HClient (String hostname, int port, String userName) {	
@@ -584,6 +585,11 @@ public class HClient extends Thread {
 						for (int i = 0; i < Field.size(); i++) {
 							System.out.println ("<" + i + ">" + Field.get(i).getName());		
 						}
+						if(this.turn>=1){
+							FieldPanel.refreshField(Field);
+						}
+						this.turn++;
+
 						//refresh field and hand for current player
 
 						

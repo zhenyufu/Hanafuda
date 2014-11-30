@@ -34,6 +34,7 @@ public class FieldPanel extends JPanel implements Runnable{
 		private  static boolean refreshFlag = false;
 		private static boolean removeAllCardButtons = false;
 		Lock lock = new ReentrantLock();
+		private boolean firstRefresh = false;
 		
 		public FieldPanel(HClient hClient, GameScreen gs){
 			this.setBackground(Color.GRAY);
@@ -49,11 +50,13 @@ public class FieldPanel extends JPanel implements Runnable{
 			refreshDisplay();
 			Thread t = new Thread (this); //added by x
 			t.start();
+
 			
 		}
 		
 		public void run(){
 			while(true){
+
 				validate();
 				repaint();
 				this.revalidate();
@@ -69,6 +72,12 @@ public class FieldPanel extends JPanel implements Runnable{
 					refreshDisplay();
 					refreshFlag=false;
 				}
+				validate();
+				repaint();
+				this.revalidate();
+				this.repaint();
+
+				
 				lock.unlock();
 				
 			}
@@ -167,6 +176,46 @@ public class FieldPanel extends JPanel implements Runnable{
 				
 			});
 			ArrayList<Card> field = hClient.getField();
+			removeAllCardButtons = true;
+			while (removeAllCardButtons==true){
+				System.out.println("waiting for field card buttons to be removed");
+			}
+			
+			cardButtonList.clear();
+			System.out.println("cleared field card Buttons");
+			
+			for(int i = 0 ; i < field.size(); i++){
+				final CardButton cb = new CardButton();
+				
+				cb.setCardImage(field.get(i));				
+				cb.addActionListener(new ActionListener() {					
+					public void actionPerformed(ActionEvent aa) {
+						Card c = ((CardButton) aa.getSource()).returnCard();
+						if(cb.isGlowSet())selectedFieldCard =c;
+						else selectedFieldCard = null;
+					}
+				});				
+				cardButtonList.add(cb);
+			
+			}
+			refreshFlag = true;
+		}
+		
+		public static synchronized void refreshField(ArrayList<Card> Field ){
+			System.out.println("refreshing field");
+			ImageIcon deckImage = new ImageIcon("deck.png");
+			CardButton deck = new CardButton(deckImage);
+			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
+			
+			deck.addActionListener(new ActionListener(){
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					hClient.setDeckButtonStatus(true);					
+				}
+				
+			});
+			ArrayList<Card> field = Field;
 			removeAllCardButtons = true;
 			while (removeAllCardButtons==true){
 				System.out.println("waiting for field card buttons to be removed");
