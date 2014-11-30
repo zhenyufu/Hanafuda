@@ -39,7 +39,6 @@ public class OpponentCollectionPanel extends JPanel implements Runnable{
 			this.revalidate();
 			this.repaint();
 			
-			
 			lock.lock();
 			if(removeAllPictures == true){				
 				this.removeAll();
@@ -58,13 +57,13 @@ public class OpponentCollectionPanel extends JPanel implements Runnable{
 		}
 	}
 	
-	public synchronized void updateCollection(){
+	public  void updateCollection(){
 		System.out.println("refreshing collection");
 		ArrayList<Card> collection = HandPanel.hClient.getOpponentCollection();
 		
 		removeAllPictures = true;
 		while (removeAllPictures==true){
-			System.out.println("waiting for collection to be erased");
+			System.out.println("waiting for opponent collection to be erased");
 		}
 
 		System.out.println("Collection successfully erased");

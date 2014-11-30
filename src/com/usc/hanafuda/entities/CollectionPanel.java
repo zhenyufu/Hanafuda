@@ -63,7 +63,7 @@ public class CollectionPanel extends JPanel implements Runnable{
 		
 		removeAllPictures = true;
 		while (removeAllPictures==true){
-			System.out.println("waiting for collection to be erased");
+			System.out.println("waiting for your collection to be erased");
 		}
 
 		System.out.println("Collection successfully erased");

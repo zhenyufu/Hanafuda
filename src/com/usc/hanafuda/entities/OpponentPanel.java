@@ -128,7 +128,8 @@ public class OpponentPanel extends JPanel implements Runnable{
 		while(true){
 
 			lock.lock();
-
+			this.repaint();
+			this.validate();
 			this.revalidate();
 			this.repaint();
 //			if(refreshFlag ==true){

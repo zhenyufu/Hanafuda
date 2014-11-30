@@ -54,8 +54,8 @@ public class FieldPanel extends JPanel implements Runnable{
 		
 		public void run(){
 			while(true){
+				validate();
 				repaint();
-				this.revalidate();
 				this.revalidate();
 				this.repaint();
 				
