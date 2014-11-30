@@ -570,7 +570,8 @@ public class HClient extends Thread {
 						//refresh field and hand for current player
 
 						
-						OpponentPanel.refreshOpponnetHand();
+						
+						
 						System.out.println("Select a hand card to play");
 						//int choice=scan.nextInt();
 						//Card playing=Hand.get(choice);
@@ -725,6 +726,7 @@ public class HClient extends Thread {
 						
 						HandPanel.resetNumMatchingCards(); // added by X
 						deckButtonClicked =false;
+						OpponentPanel.refreshOpponentHand();
 						
 						//update opponent GUI
 						endTurn();

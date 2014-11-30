@@ -43,6 +43,7 @@ public class OpponentPanel extends JPanel implements Runnable{
 	private static JPanel cardPanel;
 	private GameScreen gameScreen;
 	static HClient hClient;
+	static boolean refreshFlag = false;
 	
 	Lock lock = new ReentrantLock();
 	
@@ -52,6 +53,7 @@ public class OpponentPanel extends JPanel implements Runnable{
 		this.playerName = playerName;
 		this.hClient =  hClient;
 		this.gameScreen=gs;
+		cardLeft = 8;
 		
 		nameLabel = new JLabel(playerName + " ");
 		nameLabel.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
@@ -81,7 +83,7 @@ public class OpponentPanel extends JPanel implements Runnable{
 		cardPanel = new JPanel();
 		cardPanel.setBackground(Color.LIGHT_GRAY);
 		add(cardPanel);
-		refreshOpponnetHand();
+
 				
 		
 		//this.add(jsp);
@@ -105,14 +107,31 @@ public class OpponentPanel extends JPanel implements Runnable{
 		this.setMinimumSize(new Dimension (1150, 200));
 		this.setMaximumSize(new Dimension (1150, 200));
 		
+		try {
+			cardFaceDown = ImageIO.read(new File("deck.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		Thread t1 = new Thread(this);
+		t1.start();
+		
+		refreshOpponentHand();
 //		addToCapturedCard("deck.png");//function test out
 		//throwCard();//function test out
 	}
 	public void run(){
 		while(true){
 
+			lock.lock();
+
 			repaint();
 			revalidate();
+//			if(refreshFlag ==true){
+//				refreshOpponnetHand();
+//				refreshFlag=false;
+//			}
+			lock.unlock();
 			
 //			collectionPanel.repaint();
 //			collectionPanel.revalidate();
@@ -127,22 +146,22 @@ public class OpponentPanel extends JPanel implements Runnable{
 		cardLeft--;
 		numCards.setText("Cards left: " + cardLeft + " ");
 		cardPanel.removeAll();
-		refreshOpponnetHand();
+		refreshOpponentHand();
 	}
 	
-//	public void addToCapturedCard(String imagePath){
-//		capturedCardPane.insertIcon(new ImageIcon(imagePath));
-//		
-//	}
-	public static void refreshOpponnetHand(){
-		try {
-			cardFaceDown = ImageIO.read(new File("deck.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void addToCapturedCard(String imagePath){
+		capturedCardPane.insertIcon(new ImageIcon(imagePath));
+		
+	}
+	
+	
+	public static void refreshOpponentHand(){
+		cardPanel.removeAll();
+
 		for(int i = 0; i < cardLeft; i++){
-//			cardPanel.add(new JLabel(new ImageIcon(cardFaceDown)));
+			cardPanel.add(new JLabel(new ImageIcon(cardFaceDown)));
 		}
+		refreshFlag=true;
 	}
 	
 }
