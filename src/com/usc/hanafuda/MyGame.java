@@ -27,7 +27,6 @@ public class MyGame extends JFrame{
 		this.playerName = h.getUserName();
 		
 		chatClient = new ChatClient ("localhost",7777,this);
-		gameScreen = new GameScreen(this);
 		
 		currentPanel = new MenuScreen(this);
 		add(currentPanel);
@@ -37,6 +36,10 @@ public class MyGame extends JFrame{
 	
 	public GameScreen getGameScreen() {
 		return gameScreen;
+	}
+	
+	public void setGameScreen (GameScreen gs) {
+		gameScreen = gs;
 	}
 	
 	public ChatClient getChatClient() {

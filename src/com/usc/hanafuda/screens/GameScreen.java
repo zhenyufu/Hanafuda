@@ -36,7 +36,7 @@ public class GameScreen extends JPanel {
 	private MyGame myGame;
 	
 	
-	public GameScreen(final MyGame mg) {
+	public GameScreen(MyGame mg) {
 		//deck = new Deck();
 
 		this.myGame = mg;
