@@ -255,8 +255,8 @@ public class ServerThread extends Thread {
 						
 						PendingTarget = another;
 						
-						//hs.sendMessage("Signal:ScoreOfAnother", another);
-						//hs.sendMessage(Integer.toString(score), another);
+						hs.sendMessage("Signal:ScoreOfAnother", another);
+						hs.sendMessage(Integer.toString(score), another);
 					}
 					
 					// If the score is not the host's
@@ -275,8 +275,8 @@ public class ServerThread extends Thread {
 						
 						PendingTarget = another;
 						
-						//hs.sendMessage("Signal:ScoreOfAnother", another);
-						//hs.sendMessage(Integer.toString(score), another);
+						hs.sendMessage("Signal:ScoreOfAnother", another);
+						hs.sendMessage(Integer.toString(score), another);
 						
 					}
 				}
