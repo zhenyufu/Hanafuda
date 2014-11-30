@@ -47,6 +47,7 @@ public class HandPanel extends JPanel implements Runnable{
 	Lock lock = new ReentrantLock();
 	private  static boolean refreshFlag = false;
 	private static boolean removeAllCardButtons = false;
+	private static boolean disableButtons = false;
 	
 	public HandPanel(HClient hClient, GameScreen gs){
 		
@@ -109,37 +110,30 @@ public class HandPanel extends JPanel implements Runnable{
 //			collectionPanel.revalidate();
 			
 			lock.lock();
+
 			if(removeAllCardButtons == true){
 				
 				removeAllCardButtons();
 				removeAllCardButtons = false;
+				
 			}
 			
 			if(refreshFlag ==true){
 				refreshDisplay();
 				refreshFlag=false;
+				disableButtons = true;
 			}
-			
-			if(hClient.getMyTurn() && !removeAllCardButtons){
-				for(int j=0;j<HandPanel.cardButtonList.size();j++){
-					/*HandPanel.cardButtonList.get(j).isMyTurn();
-					HandPanel.cardButtonList.get(j).repaint();*/
-					HandPanel.cardButtonList.get(j).setEnabled(true);
-				}
-			}
-			else if(!hClient.getMyTurn() && !removeAllCardButtons){
-				for(int j=0;j<HandPanel.cardButtonList.size();j++){
-					/*HandPanel.cardButtonList.get(j).isNotMyTurn();
-					HandPanel.cardButtonList.get(j).repaint();*/
-					HandPanel.cardButtonList.get(j).setEnabled(false);
-				}
-			}
+
 			lock.unlock();
 		
 			
 		}
 	}
-	
+//	public static synchronized void setCardButtonStatus(boolean currentPlaying){
+//		if(currentPlaying) disableButtons =false;
+//		disableButtons = true;
+//
+//	}
 	public static CollectionPanel returnCollectionPanel(){
 		return collectionPanel;
 	}
@@ -172,7 +166,8 @@ public class HandPanel extends JPanel implements Runnable{
 
 				}
 			});			
-			cardButtonList.add(cb);					
+			cardButtonList.add(cb);	
+
 		}
 	}
 
@@ -206,9 +201,12 @@ public class HandPanel extends JPanel implements Runnable{
 						
 				}
 			});			
-			cardButtonList.add(cb);					
+			cardButtonList.add(cb);	
+
 		}
 		refreshFlag = true;
+		
+
 	}
 	public static synchronized Card returnCurrentSelectedHandCard(){
 		return currentSelectedHandCard;
