@@ -56,6 +56,8 @@ public class FieldPanel extends JPanel implements Runnable{
 			while(true){
 				repaint();
 				this.revalidate();
+				this.revalidate();
+				this.repaint();
 				
 				lock.lock();
 				if(removeAllCardButtons == true){

@@ -36,8 +36,8 @@ public class CollectionPanel extends JPanel implements Runnable{
 	public void run(){
 		while(true){
 			this.validate();
-			this.repaint();
 			this.revalidate();
+			this.repaint();
 			
 			lock.lock();
 			if(removeAllPictures == true){				

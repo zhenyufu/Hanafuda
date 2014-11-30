@@ -577,10 +577,18 @@ public class HClient extends Thread {
 						System.out.println("Select a hand card to play");
 						//int choice=scan.nextInt();
 						//Card playing=Hand.get(choice);
-//						if(OpponentCollection.size()!=0){
-//							OpponentPanel.returnOpponentCollectionPanel().updateCollection();
-//						}
-//						OpponentCollectionPanel.updateCollection();
+						
+						//initialize opponnet panle score collection
+						if(OpponentCollection.size()!=0){
+							OpponentPanel.returnOpponentCollectionPanel().updateCollection();
+						}
+						System.out.println("Score of the Other player: "+ AnotherScore);
+						if(AnotherScore!=0){
+							OpponentPanel.setScore(AnotherScore);
+						}
+						
+						
+						
 						while (HandPanel.returnCurrentSelectedHandCard() == null) {
 							//System.out.println("waiting for a hand card to be selected");
 						}

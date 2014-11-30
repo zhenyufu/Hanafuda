@@ -36,8 +36,9 @@ public class OpponentCollectionPanel extends JPanel implements Runnable{
 	public void run(){
 		while(true){
 			this.validate();
-			this.repaint();
 			this.revalidate();
+			this.repaint();
+			
 			
 			lock.lock();
 			if(removeAllPictures == true){				
@@ -57,7 +58,7 @@ public class OpponentCollectionPanel extends JPanel implements Runnable{
 		}
 	}
 	
-	public void updateCollection(){
+	public synchronized void updateCollection(){
 		System.out.println("refreshing collection");
 		ArrayList<Card> collection = HandPanel.hClient.getOpponentCollection();
 		

@@ -104,10 +104,9 @@ public class HandPanel extends JPanel implements Runnable{
 	public void run(){
 		while(true){
 //			System.out.println("panel thread running");
-			repaint();
+
 			this.revalidate();
-//			collectionPanel.repaint();
-//			collectionPanel.revalidate();
+			this.repaint();
 			
 			lock.lock();
 
