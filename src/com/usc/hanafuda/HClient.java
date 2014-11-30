@@ -577,7 +577,9 @@ public class HClient extends Thread {
 						System.out.println("Select a hand card to play");
 						//int choice=scan.nextInt();
 						//Card playing=Hand.get(choice);
-//						OpponentPanel.returnOpponentCollectionPanel().updateCollection();
+//						if(OpponentCollection.size()!=0){
+//							OpponentPanel.returnOpponentCollectionPanel().updateCollection();
+//						}
 //						OpponentCollectionPanel.updateCollection();
 						while (HandPanel.returnCurrentSelectedHandCard() == null) {
 							//System.out.println("waiting for a hand card to be selected");
