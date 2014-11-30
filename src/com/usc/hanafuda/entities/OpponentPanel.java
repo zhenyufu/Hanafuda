@@ -32,9 +32,9 @@ public class OpponentPanel extends JPanel implements Runnable{
 
 	private JButton showCapturedCard;
 	private JLabel nameLabel;
-	private JLabel numCards;
+	private static JLabel numCards;
 	private JLabel scoreLabel, userScore;
-	private String playerName;
+	private String playerName = " ";
 	private static int cardLeft = 8;
 	private int score = 0;
 	private String btnText = "Show\nCaptured\nCards";
@@ -161,6 +161,9 @@ public class OpponentPanel extends JPanel implements Runnable{
 		for(int i = 0; i < cardLeft; i++){
 			cardPanel.add(new JLabel(new ImageIcon(cardFaceDown)));
 		}
+		numCards.setText("Cards left: " + cardLeft + " ");
+		cardLeft--;
+		
 		refreshFlag=true;
 	}
 	

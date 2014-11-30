@@ -671,7 +671,16 @@ public class HClient extends Thread {
 						ArrayList<Card> temp2 = getMatchingCards(receivedDeckCard);
 						
 						if (temp2.size()==0) { // No match to drawn card							
-
+							FieldPanel.setDeckImage(receivedDeckCard);
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							FieldPanel.resetDeckImage();
+							
 							this.addDrawnCardToField(receivedDeckCard); // modified by x to refresh GUI
 							
 							this.waitForResponse();							
@@ -683,13 +692,16 @@ public class HClient extends Thread {
 //							for (int i=0; i < temp2.size(); i++) {
 //								System.out.println ("<" + i + ">" + temp2.get(i).getName());
 //								
-//							}
+//							FieldPanel.setDeckImage(receivedDeckCard.getImage());// set deck image
+							FieldPanel.setDeckImage(receivedDeckCard);// set deck image
+							
 							HandPanel.highlightMatchingCards(receivedDeckCard); 
 							Card selectedMatchedCard = null;
 							while (FieldPanel.returnSelectedFieldCard() == null) {
 								System.out.println("waiting for matched field card to be selected");
 							}
 							
+							FieldPanel.resetDeckImage();
 							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();
 							
 							FieldPanel.resetSelectedFieldCard(); // reset after receive to prevent errors
