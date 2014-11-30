@@ -15,12 +15,17 @@ public class HServer {
 	public ArrayList<Card> Field;
 	public ArrayList<Card> Collection = new ArrayList<Card>();
 	public ServerThread currentPlayer;
-	public String hostName, clientName;
+	public String hostName = "";
+	public String clientName = "";
 	
 	public Card currentPlayedCard;
 	
 	public int hostScore = 0;
 	public int guestScore = 0;
+	private int finalHostScore = 0;
+	private int finalGuestScore = 0;
+	private boolean receivedFinalHostScore = false;
+	private boolean receivedFinalGuestScore = false;
 	public boolean close = false;
 	
 	public HServer (int port) {
@@ -236,6 +241,40 @@ public class HServer {
 		
 		return false;	
 		
+	}
+	
+	
+	public void notifyEndOfGame() {
+		for (ServerThread s : vServerThread) {
+			sendMessage ("Signal:GameEnded", s);
+		}
+	}
+	
+	
+	public boolean hasReceivedFinalHostScore() {
+		return receivedFinalHostScore;
+	}
+	
+	
+	public boolean hasReceivedFinalGuestScore() {
+		return receivedFinalGuestScore;
+	}
+	
+	
+	public void setFinalHostScore (int s) {
+		finalHostScore = s;
+		receivedFinalHostScore = true;
+	}
+	
+	
+	public void setFinalGuestScore (int s) {
+		finalGuestScore = s;
+		receivedFinalGuestScore = true;
+	}
+	
+	
+	public void saveScoresInDatabase() {
+		new Database (hostName, clientName, finalHostScore, finalGuestScore);
 	}
 
 	

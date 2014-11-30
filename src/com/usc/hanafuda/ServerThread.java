@@ -229,6 +229,7 @@ public class ServerThread extends Thread {
 					else {
 						//TODO: Signal client to find final score
 						
+						hs.notifyEndOfGame();
 					}					
 				}
 				
@@ -306,6 +307,62 @@ public class ServerThread extends Thread {
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
 					}					
+				}
+				
+				if (line.equals ("Signal:SendFinalScore")) {
+					//DEBUG
+					System.out.println("FinalScore!");
+					
+					String nextMessage = (String) is.readObject();
+					
+					// If the score belongs to the host
+					if (nextMessage.charAt(0) == 'h') {		
+						int score = Integer.valueOf (nextMessage.substring(1, nextMessage.length()));
+						
+						hs.setFinalHostScore(score);
+						
+						if (hs.hasReceivedFinalGuestScore() && hs.hasReceivedFinalHostScore()) {
+							hs.saveScoresInDatabase();
+						}
+						
+						PendingScore = score;
+						
+						//DEBUG
+						System.out.println ("Set host final score to: " + score);
+						
+						// Set pending target to opponent (not host)
+						ServerThread another = hs.vServerThread.get(1);
+						
+						PendingTarget = another;
+						
+						hs.sendMessage("Signal:ScoreOfAnother", another);
+						hs.sendMessage(Integer.toString(score), another);
+					}
+					
+					// If the score is not the host's
+					else {						
+						int score = Integer.valueOf(nextMessage);
+						
+						hs.setFinalGuestScore(score);
+						
+						if (hs.hasReceivedFinalGuestScore() && hs.hasReceivedFinalHostScore()) {
+							hs.saveScoresInDatabase();
+						}
+						
+						PendingScore = score;
+						
+						//DEBUG
+						System.out.println ("Set other final score to: " + score);
+						
+						// Set pending target to opponent (host)
+						ServerThread another = hs.vServerThread.get(0);
+						
+						PendingTarget = another;
+						
+						hs.sendMessage("Signal:ScoreOfAnother", another);
+						hs.sendMessage(Integer.toString(score), another);
+						
+					}
 				}
 				
 				//DEBUG

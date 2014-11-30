@@ -107,6 +107,19 @@ public class HClient extends Thread {
 	}
 	
 	
+	public void sendFinalScore() {
+		sendMessage ("Signal:SendFinalScore");
+		
+		// Add an h to the front of Host's score to differentiate between them
+		if (Host) {
+			sendMessage ("h"+Integer.toString(score));
+		}
+		else {
+			sendMessage (Integer.toString(score));
+		}
+	}
+	
+	
 	public void updateScore() {
 		int tempScore = 0;
 
@@ -805,6 +818,8 @@ public class HClient extends Thread {
 				
 				if (line.equals ("Signal:GameEnded")) {  
 					//TODO: print to GUI that the game ended and show final score
+					calculateFinalScore();
+					sendFinalScore();
 				}
 				
 
