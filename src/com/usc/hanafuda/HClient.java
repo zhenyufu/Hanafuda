@@ -636,6 +636,7 @@ public class HClient extends Thread {
 						}
 						
 						// Get card from deck
+						HandPanel.setScore(score);
 						HandPanel.resetNumMatchingCards();// reset mathcing cards after use
 						getCardFromDeck();
 						

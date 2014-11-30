@@ -141,7 +141,7 @@ public class OpponentPanel extends JPanel implements Runnable{
 			e.printStackTrace();
 		}
 		for(int i = 0; i < cardLeft; i++){
-			cardPanel.add(new JLabel(new ImageIcon(cardFaceDown)));
+//			cardPanel.add(new JLabel(new ImageIcon(cardFaceDown)));
 		}
 	}
 	
