@@ -38,7 +38,6 @@ public class OpponentPanel extends JPanel implements Runnable{
 	private String playerName = " ";
 	private static int cardLeft = 8;
 	private int score = 0;
-	private String btnText = "Show\nCaptured\nCards";
 	private static OpponentCollectionPanel opponentCollectionPanel;
 	private static BufferedImage cardFaceDown;
 	private static JPanel cardPanel;
@@ -60,8 +59,8 @@ public class OpponentPanel extends JPanel implements Runnable{
 		nameLabel.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
 		this.add(nameLabel);
 		this.add(Box.createHorizontalGlue());
-		showCapturedCard = new JButton("<html>" + btnText.replaceAll("\\n", "<br>") + "</html>");
-		showCapturedCard.setMaximumSize(new Dimension(40,100));
+		showCapturedCard = new JButton("Show Captured Cards");
+		showCapturedCard.setMaximumSize(new Dimension(160,40));
 		opponentCollectionPanel = new OpponentCollectionPanel();
 //		opponentCollectionPanel.setEditable(false);
 		
