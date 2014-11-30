@@ -50,6 +50,11 @@ public class CardButton extends JButton{
 			cardUp = true;
 		}		
 	}
+	
+	public void moveDown(){
+		x = 40;
+		HandPanel.aCardIsUp = false;
+	}
 
 	public void setCardImage(Card card){
 		ImageIcon icon = MyAssetHandler.getIcon(card.getId());

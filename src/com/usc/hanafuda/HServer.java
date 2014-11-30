@@ -22,7 +22,6 @@ public class HServer {
 	public int hostScore = 0;
 	public int guestScore = 0;
 	public boolean close = false;
-	public static boolean hostExist = false;
 	
 	public HServer (int port) {
 		try {
@@ -43,7 +42,6 @@ public class HServer {
 				if (vServerThread.size() == 1) {
 					//The first one connected is default to be the host
 					sendMessage ("Signal:Host", st);
-					hostExist = true;
 					System.out.println("host connected");
 				}
 				

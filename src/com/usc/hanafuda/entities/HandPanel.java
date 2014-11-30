@@ -146,18 +146,13 @@ public class HandPanel extends JPanel implements Runnable{
 				public void actionPerformed(ActionEvent aa) {
 					
 					Card c = ((CardButton) aa.getSource()).returnCard();
-//					if(!cb.isCardUp()) {
+
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;
 						
 						cb.moveUpDown();										
 						refreshDisplay();
-//					}
-//					else {
-//						unhighlightMatchingCards(c);					
-//						cb.moveUpDown();										
-//						refreshDisplay();
-//					}
+
 				}
 			});			
 			cardButtonList.add(cb);					
@@ -180,19 +175,13 @@ public class HandPanel extends JPanel implements Runnable{
 			cb.setCardImage(hand.get(i));			
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
-					
+					//moveDownAllCards();
 					Card c = ((CardButton) aa.getSource()).returnCard();
-//					if(!cb.isCardUp()) {
+
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;						
-						cb.moveUpDown();										
-//						refreshDisplay();
-//					}
-//					else {
-//						unhighlightMatchingCards(c);					
-//						cb.moveUpDown();										
-//						refreshDisplay();
-//					}
+						cb.moveUpDown();	
+						
 				}
 			});			
 			cardButtonList.add(cb);					
@@ -204,6 +193,9 @@ public class HandPanel extends JPanel implements Runnable{
 	}
 	
 	public static void highlightMatchingCards(Card c){
+		unhighlightAllCards();
+		
+		
 		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
 		System.out.println("Matching Card size: " +matchingCards.size());
 		numMatchingCards = matchingCards.size();
@@ -221,22 +213,19 @@ public class HandPanel extends JPanel implements Runnable{
 		}
 		
 	}
-	public void unhighlightMatchingCards(Card c){
-		ArrayList<Card> matchingCards = hClient.getMatchingCards(c);
-		System.out.println("Matching Card size: " +matchingCards.size());
-		for(int i = 0 ; i <matchingCards.size(); i++){
+	public static void unhighlightAllCards(){
 			for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-				if((matchingCards.get(i)).isMatch((FieldPanel.cardButtonList.get(j)).returnCard())){
-//					System.out.println("Matching card Number : "+ ((FieldPanel.cardButtonList.get(i)).getCard()).getId());
-					FieldPanel.cardButtonList.get(j).unsetGlow();
-					FieldPanel.cardButtonList.get(j).repaint();
-				}
+				FieldPanel.cardButtonList.get(j).unsetGlow();
+				FieldPanel.cardButtonList.get(j).repaint();
 			}
-
-
-		}
-		
 	}
+	
+	/*public static void moveDownAllCards(){
+		for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+			FieldPanel.cardButtonList.get(j).moveDown();
+		}
+
+	}*/
 	public static void setScore(int i){
 		score = i;
 		playerScore.setText("Score: " + Integer.toString(score));

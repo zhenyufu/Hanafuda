@@ -44,6 +44,7 @@ public class HClient extends Thread {
 	private Scanner scan;
 	private boolean hostSet = false;
 	private boolean deckButtonClicked = false; // added by X
+	private String hostName, clientName;
 	
 	
 	public HClient (String hostname, int port, String userName) {	
@@ -787,6 +788,7 @@ public class HClient extends Thread {
 				if (line.equals ("Signal:GameEnded")) {  
 					//TODO: print to GUI that the game ended and show final score
 				}
+				
 
 			
 			} // End of while(true) block

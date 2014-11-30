@@ -102,8 +102,10 @@ public class FieldPanel extends JPanel implements Runnable{
 					
 					public void actionPerformed(ActionEvent aa) {
 						Card c = ((CardButton) aa.getSource()).returnCard();
-						if(cb.isGlowSet())selectedFieldCard =c;
-						else selectedFieldCard = null;
+						if(cb.isGlowSet())
+							selectedFieldCard =c;
+						else 
+							selectedFieldCard = null;
 
 //						if(!cb.isGlowSet()) {
 //							cb.setGlow();
