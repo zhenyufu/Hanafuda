@@ -28,6 +28,8 @@ public class FieldPanel extends JPanel implements Runnable{
 		private GameScreen gameScreen;
 		static HClient hClient;
 		
+		private static CardButton deckButton;
+		
 		private static Card selectedFieldCard = null; // add by X
 		private  static boolean refreshFlag = false;
 		private static boolean removeAllCardButtons = false;
@@ -76,23 +78,36 @@ public class FieldPanel extends JPanel implements Runnable{
 		public static void resetSelectedFieldCard(){
 			selectedFieldCard = null;
 		}
+
 		
+		public static synchronized void setDeckImage(Card c){
+			deckButton.setCardImage(c);	
+//			deckButton.setIcon(deckImage);
+			deckButton.repaint();
+			deckButton.revalidate();
+		}
+		public static synchronized void resetDeckImage(){
+			ImageIcon deckImage = new ImageIcon("deck.png");
+			deckButton.setIcon(deckImage);
+			deckButton.repaint();
+			deckButton.revalidate();
+		}
 		public void initialDeal(){
 			ArrayList<Card> field = hClient.getField();
 			ImageIcon deckImage = new ImageIcon("deck.png");
-			CardButton deck = new CardButton(deckImage);
-			deck.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
+			deckButton = new CardButton(deckImage);
+			deckButton.setBounds(40, 40, MyAssetHandler.WIDTH, MyAssetHandler.HEIGHT);
 			
-			deck.addActionListener(new ActionListener(){
+			deckButton.addActionListener(new ActionListener(){
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					hClient.setDeckButtonStatus(true);					
+					hClient.setDeckButtonStatus(true);
 				}
 				
 			});
 //			deck.setEnabled(false);
-			this.add(deck);
+			this.add(deckButton);
 			
 			for(int i = 0 ; i < field.size(); i++){
 				final CardButton cb = new CardButton();

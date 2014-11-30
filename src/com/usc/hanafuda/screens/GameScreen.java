@@ -66,7 +66,7 @@ public class GameScreen extends JPanel {
 		deckPanel.add(fieldPanel, BorderLayout.CENTER);
 		
 		//deckPanel.add(fieldPanel, BorderLayout.CENTER);
-		opponentPanelNorth = new OpponentPanel("northPlayer");
+		opponentPanelNorth = new OpponentPanel(myGame.getHClient(), this);
 		deckPanel.add(opponentPanelNorth, BorderLayout.NORTH);
 		
 		JPanel textPanel = new JPanel();

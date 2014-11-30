@@ -14,6 +14,7 @@ import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Card.Yaku;
 import com.usc.hanafuda.entities.FieldPanel;
 import com.usc.hanafuda.entities.HandPanel;
+import com.usc.hanafuda.entities.OpponentPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 //TODO: How do we notify the GUI of when to change things?
@@ -573,6 +574,7 @@ public class HClient extends Thread {
 
 						
 						
+						
 						System.out.println("Select a hand card to play");
 						//int choice=scan.nextInt();
 						//Card playing=Hand.get(choice);
@@ -638,6 +640,7 @@ public class HClient extends Thread {
 						}
 						
 						// Get card from deck
+						HandPanel.setScore(score);
 						HandPanel.resetNumMatchingCards();// reset mathcing cards after use
 						getCardFromDeck();
 						
@@ -671,7 +674,16 @@ public class HClient extends Thread {
 						ArrayList<Card> temp2 = getMatchingCards(receivedDeckCard);
 						
 						if (temp2.size()==0) { // No match to drawn card							
-
+							FieldPanel.setDeckImage(receivedDeckCard);
+							
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							FieldPanel.resetDeckImage();
+							
 							this.addDrawnCardToField(receivedDeckCard); // modified by x to refresh GUI
 							
 							this.waitForResponse();							
@@ -683,13 +695,16 @@ public class HClient extends Thread {
 //							for (int i=0; i < temp2.size(); i++) {
 //								System.out.println ("<" + i + ">" + temp2.get(i).getName());
 //								
-//							}
+//							FieldPanel.setDeckImage(receivedDeckCard.getImage());// set deck image
+							FieldPanel.setDeckImage(receivedDeckCard);// set deck image
+							
 							HandPanel.highlightMatchingCards(receivedDeckCard); 
 							Card selectedMatchedCard = null;
 							while (FieldPanel.returnSelectedFieldCard() == null) {
 								System.out.println("waiting for matched field card to be selected");
 							}
 							
+							FieldPanel.resetDeckImage();
 							selectedMatchedCard = FieldPanel.returnSelectedFieldCard();
 							
 							FieldPanel.resetSelectedFieldCard(); // reset after receive to prevent errors
@@ -726,6 +741,7 @@ public class HClient extends Thread {
 						
 						HandPanel.resetNumMatchingCards(); // added by X
 						deckButtonClicked =false;
+						OpponentPanel.refreshOpponentHand();
 						
 						//update opponent GUI
 						endTurn();

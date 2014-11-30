@@ -1,6 +1,7 @@
 package com.usc.hanafuda.screens;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -60,6 +61,7 @@ public class MenuScreen extends JPanel {
 		
 		south.setOpaque(false);
 		singlePlayButton = new JButton("Play"); 
+		singlePlayButton.setFont(new Font("TimesRoman", Font.BOLD, 30));
 		singlePlayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent aa) {
 
@@ -69,7 +71,8 @@ public class MenuScreen extends JPanel {
 		});
 
 		
-		howToButton = new JButton("How To Play");
+		howToButton = new JButton("How To");
+		howToButton.setFont(new Font("TimesRoman", Font.BOLD, 30));
 		howToButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				new HowToScreen();

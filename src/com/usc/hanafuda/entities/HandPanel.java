@@ -175,6 +175,7 @@ public class HandPanel extends JPanel implements Runnable{
 			cardButtonList.add(cb);					
 		}
 	}
+
 	
 	public synchronized static void refreshHand(){
 		System.out.println("refreshing hand");
