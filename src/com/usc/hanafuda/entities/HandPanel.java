@@ -122,16 +122,17 @@ public class HandPanel extends JPanel implements Runnable{
 			
 			if(hClient.getMyTurn() && !removeAllCardButtons){
 				for(int j=0;j<HandPanel.cardButtonList.size();j++){
-					/*HandPanel.cardButtonList.get(j).isMyTurn();
-					HandPanel.cardButtonList.get(j).repaint();*/
-					HandPanel.cardButtonList.get(j).setEnabled(true);
+					cardButtonList.get(j).setEnabled(true);
+					this.repaint();
+					this.validate();
 				}
 			}
 			else if(!hClient.getMyTurn() && !removeAllCardButtons){
 				for(int j=0;j<HandPanel.cardButtonList.size();j++){
-					/*HandPanel.cardButtonList.get(j).isNotMyTurn();
-					HandPanel.cardButtonList.get(j).repaint();*/
-					HandPanel.cardButtonList.get(j).setEnabled(false);
+					cardButtonList.get(j).setEnabled(false);
+					this.repaint();
+					this.validate();
+
 				}
 			}
 			lock.unlock();
