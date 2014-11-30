@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.usc.hanafuda.handlers.MyAssetHandler;
+import com.usc.hanafuda.screens.GameScreen;
 import com.usc.hanafuda.screens.MenuScreen;
 
 public class MyGame extends JFrame{
@@ -13,8 +14,10 @@ public class MyGame extends JFrame{
 	static JPanel currentPanel;
 	static HClient client;
 	static String playerName;
+	private ChatClient chatClient;
+	private GameScreen gameScreen;
 	
-	public MyGame(HClient h) {
+	public MyGame (HClient h) {
 		super("Hanafuda");
 		setSize(1400, 1000);
 		setLocation(150, 30);
@@ -23,10 +26,24 @@ public class MyGame extends JFrame{
 		this.client = h;
 		this.playerName = h.getUserName();
 		
+		chatClient = new ChatClient ("localhost",7777,this);
+		
 		currentPanel = new MenuScreen(this);
 		add(currentPanel);
 		
 		setVisible(true);
+	}
+	
+	public GameScreen getGameScreen() {
+		return gameScreen;
+	}
+	
+	public void setGameScreen (GameScreen gs) {
+		gameScreen = gs;
+	}
+	
+	public ChatClient getChatClient() {
+		return chatClient;
 	}
 	
 	public String getName() {

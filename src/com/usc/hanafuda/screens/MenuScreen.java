@@ -64,8 +64,9 @@ public class MenuScreen extends JPanel {
 		singlePlayButton.setFont(new Font("TimesRoman", Font.BOLD, 30));
 		singlePlayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent aa) {
-
-				myGame.setPanel(new GameScreen(myGame));
+				GameScreen gs = new GameScreen (myGame);
+				myGame.setGameScreen(gs);
+				myGame.setPanel(gs);
 				
 			}
 		});

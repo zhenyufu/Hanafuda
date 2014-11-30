@@ -33,12 +33,13 @@ public class GameScreen extends JPanel {
 	private OpponentPanel opponentPanelNorth;
 	//public static Deck deck;
 	private FieldPanel fieldPanel;
+	private MyGame myGame;
 	
 	
-	public GameScreen(final MyGame myGame) {
+	public GameScreen(MyGame mg) {
 		//deck = new Deck();
 
-		
+		this.myGame = mg;
 		this.setLayout(new BorderLayout());
 		JPanel deckPanel = new JPanel();
 		deckPanel.setLayout(new BorderLayout());
@@ -91,35 +92,8 @@ public class GameScreen extends JPanel {
 		
 		sendMessage = new JButton("Send");
 		//textPanel.add(sendMessage, BorderLayout.SOUTH);
-		sendMessage.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent ae) {
-				if(textField.getText().length()<1){
-					//do nothing, no message
-				}
-				else{
-					textArea.append("<" + myGame + ">: " + textField.getText() + "\n"); 
-					textField.setText("");
-				}
-			}
-		});
-		textField.addKeyListener(new KeyListener(){
-			public void keyPressed(KeyEvent ke) {
-				if(ke.getKeyCode() == KeyEvent.VK_ENTER){
-					if(textField.getText().length()<1){
-						//do nothing, no message
-					}
-					else{
-						textArea.append("<" + myGame.getName() + ">: " + textField.getText() + "\n"); 
-						textField.setText("");
-					}
-				}
-			}
-			public void keyReleased(KeyEvent ke) {
-			}
-			public void keyTyped(KeyEvent ke) {
-				
-			}
-		});
+		sendMessage.addActionListener(new ChatActionListener(this));
+		textField.addKeyListener(new ChatKeyListener(this));
 		
 		chatBottomPanel.add(textField);
 		chatBottomPanel.add(sendMessage);
@@ -158,9 +132,17 @@ public class GameScreen extends JPanel {
 //		deckPanel.add(o, BorderLayout.CENTER);
 
 	}
+	
+	public MyGame getMyGame() {
+		return myGame;
+	}
 
 	public FieldPanel getFieldPanel () {
 		return fieldPanel;
+	}
+	
+	public void enterNewMessage (String newMessage) {
+		textArea.append(newMessage + "\n");
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -175,6 +157,55 @@ public class GameScreen extends JPanel {
 		//g.drawImage(MyAssetHandler.deckImage, 200, 300, null);
 
 	
+	}
+	
+	public class ChatActionListener implements ActionListener {
+		private GameScreen myGameScreen;
+		
+		public ChatActionListener (GameScreen gameScreen) {
+			myGameScreen = gameScreen;
+		}
+		
+		public void actionPerformed (ActionEvent ae) {
+			if(textField.getText().length() < 1) {
+				//do nothing, no message
+			}
+			else{
+				String newMessage = "<" + myGame.getName() + ">: " + textField.getText();
+				myGameScreen.getMyGame().getChatClient().sendMessage(newMessage);
+				textArea.append(newMessage + "\n"); 
+				textField.setText("");
+			}
+		}
+	}
+	
+	public class ChatKeyListener implements KeyListener {
+		private GameScreen myGameScreen;
+		
+		public ChatKeyListener (GameScreen gameScreen) {
+			myGameScreen = gameScreen;
+		}
+
+		public void keyPressed (KeyEvent ke) {
+			if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+				if (textField.getText().length() < 1) {
+					//do nothing, no message
+				}
+				else {
+					String newMessage = "<" + myGame.getName() + ">: " + textField.getText();
+					myGameScreen.getMyGame().getChatClient().sendMessage(newMessage);
+					textArea.append(newMessage + "\n"); 
+					textField.setText("");
+				}
+			}
+		}
+
+		public void keyReleased(KeyEvent arg0) {			
+		}
+
+		public void keyTyped(KeyEvent e) {
+			
+		}
 	}
 
 }

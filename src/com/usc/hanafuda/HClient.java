@@ -67,7 +67,7 @@ public class HClient extends Thread {
 		
 	} // End of constructor
 	
-	public boolean myTurn(){
+	public boolean getMyTurn(){
 		return MyTurn;
 	}
 	
