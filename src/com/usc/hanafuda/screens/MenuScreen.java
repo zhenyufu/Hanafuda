@@ -65,7 +65,7 @@ public class MenuScreen extends JPanel {
 		singlePlayButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent aa) {
 
-				myGame.setPanel(new GameScreen(myGame));
+				myGame.setPanel(myGame.getGameScreen());
 				
 			}
 		});
