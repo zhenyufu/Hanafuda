@@ -34,7 +34,7 @@ public class HClient extends Thread {
 	private ArrayList<Card> Collection = new ArrayList<Card>();
 	private ArrayList<Card> OpponentCollection = new ArrayList<Card>();
 	private boolean Host = false;
-	private boolean MyTurn = false;
+	private static boolean MyTurn = false;
 	private int score=0;
 	private int AnotherScore=0;
 	private Card anotherSelectedCard;
@@ -45,7 +45,7 @@ public class HClient extends Thread {
 	private boolean hostSet = false;
 	private boolean deckButtonClicked = false; // added by X
 	private String hostName, clientName;
-	
+	public static String line;
 	
 	public HClient (String hostname, int port, String userName) {	
 		
@@ -66,6 +66,9 @@ public class HClient extends Thread {
 		
 	} // End of constructor
 	
+	public boolean getMyTurn() {
+		return MyTurn;
+	}
 	
 	public void setDeckButtonStatus(boolean b){ // added by X
 		deckButtonClicked = b;
@@ -445,7 +448,7 @@ public class HClient extends Thread {
 				//DEBUG
 				//System.out.println(1);
 				
-				String line = (String) is.readObject();
+				line = (String) is.readObject();
 				
 				//DEBUG
 				//System.out.println(2);
@@ -728,7 +731,6 @@ public class HClient extends Thread {
 						endTurn();
 
 						System.out.println("My turn is ended");	
-						
 						
 				}
 				

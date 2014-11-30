@@ -15,6 +15,7 @@ import com.usc.hanafuda.handlers.MyAssetHandler;
 public class CardButton extends JButton{
 	private int x =40;
 	private boolean setGlow = false;
+	private boolean myTurn = true;
 	private Card card;
 	private boolean cardUp;
 	
@@ -39,16 +40,6 @@ public class CardButton extends JButton{
 		return cardUp;
 	}
 	public void moveUp(){
-		/*if(x == 20) { 
-			x = 40;
-			HandPanel.aCardIsUp = false;
-			cardUp = false;
-		}
-		else if(x == 40 && 	!HandPanel.aCardIsUp) {
-			x = 20; 
-			HandPanel.aCardIsUp = true;
-			cardUp = true;
-		}	*/	
 		x = 20;
 	}
 	
@@ -74,6 +65,12 @@ public class CardButton extends JButton{
 		setGlow = false;
 	}
 	
+	public void isMyTurn() {
+		myTurn = true;
+	}
+	public void isNotMyTurn() {
+		myTurn = false;
+	}
 	public boolean isGlowSet() {
 		return setGlow;
 	}
@@ -86,6 +83,13 @@ public class CardButton extends JButton{
 			g2.setFont(new Font("Arial", Font.BOLD, 20)); 
 			g2.setColor(Color.green);
 			g2.drawRect(5, 5, 75, 130);
+		}
+		if(myTurn == false) {
+			g.setColor(Color.red);
+			g.setFont(new Font("Arial", Font.BOLD, 18)); 
+			g.drawString("Wait", 10, 10);
+			g.drawString("For", 10, 20);
+			g.drawString("Opponent", 10, 30);
 		}
 		
 	}

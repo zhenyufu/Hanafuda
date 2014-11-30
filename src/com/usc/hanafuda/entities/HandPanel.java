@@ -119,8 +119,22 @@ public class HandPanel extends JPanel implements Runnable{
 				refreshDisplay();
 				refreshFlag=false;
 			}
+			
+			if(hClient.getMyTurn() && !removeAllCardButtons){
+				for(int j=0;j<HandPanel.cardButtonList.size();j++){
+					/*HandPanel.cardButtonList.get(j).isMyTurn();
+					HandPanel.cardButtonList.get(j).repaint();*/
+					HandPanel.cardButtonList.get(j).setEnabled(true);
+				}
+			}
+			else if(!hClient.getMyTurn() && !removeAllCardButtons){
+				for(int j=0;j<HandPanel.cardButtonList.size();j++){
+					/*HandPanel.cardButtonList.get(j).isNotMyTurn();
+					HandPanel.cardButtonList.get(j).repaint();*/
+					HandPanel.cardButtonList.get(j).setEnabled(false);
+				}
+			}
 			lock.unlock();
-
 		
 			
 		}
@@ -144,7 +158,7 @@ public class HandPanel extends JPanel implements Runnable{
 			cb.setCardImage(hand.get(i));			
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
-					for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+					for(int j=0;j<HandPanel.cardButtonList.size();j++){
 						HandPanel.cardButtonList.get(j).moveDown();
 					}
 					refreshDisplay();
@@ -153,7 +167,7 @@ public class HandPanel extends JPanel implements Runnable{
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;
 						
-						cb.moveUp();										
+						cb.moveUp();		
 						refreshDisplay();
 
 				}
@@ -178,7 +192,7 @@ public class HandPanel extends JPanel implements Runnable{
 			cb.setCardImage(hand.get(i));			
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
-					for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+					for(int j=0;j<HandPanel.cardButtonList.size();j++){
 						HandPanel.cardButtonList.get(j).moveDown();
 					}
 					
@@ -186,7 +200,8 @@ public class HandPanel extends JPanel implements Runnable{
 
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;						
-						cb.moveUp();	
+						cb.moveUp();
+						
 						
 				}
 			});			
@@ -225,13 +240,7 @@ public class HandPanel extends JPanel implements Runnable{
 				FieldPanel.cardButtonList.get(j).repaint();
 			}
 	}
-	
-	public static void moveDownAllCards(){
-		for(int j=0;j<FieldPanel.cardButtonList.size();j++){
-			FieldPanel.cardButtonList.get(j).moveDown();
-		}
 
-	}
 	public static void setScore(int i){
 		score = i;
 		playerScore.setText("Score: " + Integer.toString(score));
@@ -239,9 +248,9 @@ public class HandPanel extends JPanel implements Runnable{
 	
 	public synchronized void removeAllCardButtons(){
 		System.out.println("removing all card buttons");
-		for(int i = 0 ; i < cardButtonList.size(); i++){
+		for(int i = 0 ; i < HandPanel.cardButtonList.size(); i++){
 			//System.out.println("card " +  40+i*60 );
-			this.remove(cardButtonList.get(i));
+			this.remove(HandPanel.cardButtonList.get(i));
 			//cardButtonList.get(i).setLocation(40+i*60 ,40);	
 		}
 		this.revalidate();
