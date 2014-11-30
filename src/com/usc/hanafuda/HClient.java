@@ -14,6 +14,7 @@ import com.usc.hanafuda.entities.Card;
 import com.usc.hanafuda.entities.Card.Yaku;
 import com.usc.hanafuda.entities.FieldPanel;
 import com.usc.hanafuda.entities.HandPanel;
+import com.usc.hanafuda.entities.OpponentPanel;
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
 //TODO: How do we notify the GUI of when to change things?
@@ -569,7 +570,7 @@ public class HClient extends Thread {
 						//refresh field and hand for current player
 
 						
-						
+						OpponentPanel.refreshOpponnetHand();
 						System.out.println("Select a hand card to play");
 						//int choice=scan.nextInt();
 						//Card playing=Hand.get(choice);

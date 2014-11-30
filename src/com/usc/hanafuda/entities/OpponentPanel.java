@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -23,24 +25,33 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 
-public class OpponentPanel extends JPanel{
+import com.usc.hanafuda.HClient;
+import com.usc.hanafuda.screens.GameScreen;
+
+public class OpponentPanel extends JPanel implements Runnable{
 
 	private JButton showCapturedCard;
 	private JLabel nameLabel;
 	private JLabel numCards;
 	private JLabel scoreLabel, userScore;
 	private String playerName;
-	private int cardLeft = 8;
+	private static int cardLeft = 8;
 	private int score = 0;
 	private String btnText = "Show\nCaptured\nCards";
 	private JTextPane capturedCardPane;
-	private BufferedImage cardFaceDown;
-	private JPanel cardPanel;
+	private static BufferedImage cardFaceDown;
+	private static JPanel cardPanel;
+	private GameScreen gameScreen;
+	static HClient hClient;
 	
-	public OpponentPanel(String playerName){
+	Lock lock = new ReentrantLock();
+	
+	public OpponentPanel(HClient hClient, GameScreen gs){
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.playerName = playerName;
+		this.hClient =  hClient;
+		this.gameScreen=gs;
 		
 		nameLabel = new JLabel(playerName + " ");
 		nameLabel.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
@@ -70,9 +81,8 @@ public class OpponentPanel extends JPanel{
 		cardPanel = new JPanel();
 		cardPanel.setBackground(Color.LIGHT_GRAY);
 		add(cardPanel);
-		showOpponentHand();
-		
-		
+		refreshOpponnetHand();
+				
 		
 		//this.add(jsp);
 		this.add(Box.createHorizontalGlue());
@@ -95,8 +105,19 @@ public class OpponentPanel extends JPanel{
 		this.setMinimumSize(new Dimension (1150, 200));
 		this.setMaximumSize(new Dimension (1150, 200));
 		
-		addToCapturedCard("deck.png");//function test out
+//		addToCapturedCard("deck.png");//function test out
 		//throwCard();//function test out
+	}
+	public void run(){
+		while(true){
+
+			repaint();
+			revalidate();
+			
+//			collectionPanel.repaint();
+//			collectionPanel.revalidate();
+						
+		}
 	}
 	public void incScore(int incBy){
 		score = score + incBy;
@@ -106,13 +127,14 @@ public class OpponentPanel extends JPanel{
 		cardLeft--;
 		numCards.setText("Cards left: " + cardLeft + " ");
 		cardPanel.removeAll();
-		showOpponentHand();
+		refreshOpponnetHand();
 	}
-	public void addToCapturedCard(String imagePath){
-		capturedCardPane.insertIcon(new ImageIcon(imagePath));
-		
-	}
-	public void showOpponentHand(){
+	
+//	public void addToCapturedCard(String imagePath){
+//		capturedCardPane.insertIcon(new ImageIcon(imagePath));
+//		
+//	}
+	public static void refreshOpponnetHand(){
 		try {
 			cardFaceDown = ImageIO.read(new File("deck.png"));
 		} catch (IOException e) {
