@@ -15,14 +15,14 @@ import javax.swing.JTextPane;
 
 import com.usc.hanafuda.handlers.MyAssetHandler;
 
-public class CollectionPanel extends JPanel implements Runnable{
+public class OpponentCollectionPanel extends JPanel implements Runnable{
 	
 	Lock lock = new ReentrantLock();
 	private  static boolean refreshFlag = false;
 	private static boolean removeAllPictures = false;
 
 
-	CollectionPanel(){
+	OpponentCollectionPanel(){
 //		this.setEditable(false);
 		this.setLayout(new FlowLayout());
 //		JLabel iconLabel2 = new JLabel( new ImageIcon ( "deck.png" ));
@@ -38,6 +38,7 @@ public class CollectionPanel extends JPanel implements Runnable{
 			this.validate();
 			this.revalidate();
 			this.repaint();
+			
 			
 			lock.lock();
 			if(removeAllPictures == true){				
@@ -57,9 +58,9 @@ public class CollectionPanel extends JPanel implements Runnable{
 		}
 	}
 	
-	public void updateCollection(){
+	public synchronized void updateCollection(){
 		System.out.println("refreshing collection");
-		ArrayList<Card> collection = HandPanel.hClient.getCollection();
+		ArrayList<Card> collection = HandPanel.hClient.getOpponentCollection();
 		
 		removeAllPictures = true;
 		while (removeAllPictures==true){

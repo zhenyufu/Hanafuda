@@ -47,6 +47,7 @@ public class HandPanel extends JPanel implements Runnable{
 	Lock lock = new ReentrantLock();
 	private  static boolean refreshFlag = false;
 	private static boolean removeAllCardButtons = false;
+	private static boolean disableButtons = false;
 	
 	public HandPanel(HClient hClient, GameScreen gs){
 		
@@ -103,44 +104,51 @@ public class HandPanel extends JPanel implements Runnable{
 	public void run(){
 		while(true){
 //			System.out.println("panel thread running");
-			repaint();
+
 			this.revalidate();
-//			collectionPanel.repaint();
-//			collectionPanel.revalidate();
+			this.repaint();
 			
 			lock.lock();
+
 			if(removeAllCardButtons == true){
 				
 				removeAllCardButtons();
 				removeAllCardButtons = false;
+				
 			}
-			
 			if(refreshFlag ==true){
 				refreshDisplay();
 				refreshFlag=false;
 			}
+
 			
 			if(hClient.getMyTurn() && !removeAllCardButtons){
 				for(int j=0;j<HandPanel.cardButtonList.size();j++){
-					cardButtonList.get(j).setEnabled(true);
+
+					HandPanel.cardButtonList.get(j).setEnabled(true);
 					this.repaint();
 					this.validate();
 				}
 			}
 			else if(!hClient.getMyTurn() && !removeAllCardButtons){
 				for(int j=0;j<HandPanel.cardButtonList.size();j++){
-					cardButtonList.get(j).setEnabled(false);
+
+					HandPanel.cardButtonList.get(j).setEnabled(false);
 					this.repaint();
 					this.validate();
-
 				}
 			}
+
 			lock.unlock();
 		
 			
 		}
 	}
-	
+//	public static synchronized void setCardButtonStatus(boolean currentPlaying){
+//		if(currentPlaying) disableButtons =false;
+//		disableButtons = true;
+//
+//	}
 	public static CollectionPanel returnCollectionPanel(){
 		return collectionPanel;
 	}
@@ -173,7 +181,8 @@ public class HandPanel extends JPanel implements Runnable{
 
 				}
 			});			
-			cardButtonList.add(cb);					
+			cardButtonList.add(cb);	
+
 		}
 	}
 
@@ -207,9 +216,12 @@ public class HandPanel extends JPanel implements Runnable{
 						
 				}
 			});			
-			cardButtonList.add(cb);					
+			cardButtonList.add(cb);	
+
 		}
 		refreshFlag = true;
+		
+
 	}
 	public static synchronized Card returnCurrentSelectedHandCard(){
 		return currentSelectedHandCard;

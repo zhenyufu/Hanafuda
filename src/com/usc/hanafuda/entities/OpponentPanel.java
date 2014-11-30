@@ -33,12 +33,13 @@ public class OpponentPanel extends JPanel implements Runnable{
 	private JButton showCapturedCard;
 	private JLabel nameLabel;
 	private static JLabel numCards;
-	private JLabel scoreLabel, userScore;
+	private static JLabel scoreLabel;
+	private JLabel userScore;
 	private String playerName = " ";
 	private static int cardLeft = 8;
 	private int score = 0;
 	private String btnText = "Show\nCaptured\nCards";
-	private JTextPane capturedCardPane;
+	private static OpponentCollectionPanel opponentCollectionPanel;
 	private static BufferedImage cardFaceDown;
 	private static JPanel cardPanel;
 	private GameScreen gameScreen;
@@ -61,16 +62,18 @@ public class OpponentPanel extends JPanel implements Runnable{
 		this.add(Box.createHorizontalGlue());
 		showCapturedCard = new JButton("<html>" + btnText.replaceAll("\\n", "<br>") + "</html>");
 		showCapturedCard.setMaximumSize(new Dimension(40,100));
-		capturedCardPane = new JTextPane();
-		capturedCardPane.setEditable(false);
-		capturedCardPane.insertIcon ( new ImageIcon ( "Image1.png" ) ); 
+		opponentCollectionPanel = new OpponentCollectionPanel();
+//		opponentCollectionPanel.setEditable(false);
+		
+ 
 		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
-		final JScrollPane jsp = new JScrollPane(capturedCardPane, v , h);
+		final JScrollPane jsp = new JScrollPane(opponentCollectionPanel, v , h);
 		this.add(showCapturedCard);
+		
 		showCapturedCard.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				JFrame popup = new JFrame("Opponent's Captured Cards");
+				JFrame popup = new JFrame("Opponent's Collection Cards");
 				popup.setDefaultCloseOperation(popup.DISPOSE_ON_CLOSE);
 				popup.setSize(500,300);
 				popup.setLocation(100, 100);
@@ -92,6 +95,7 @@ public class OpponentPanel extends JPanel implements Runnable{
 		JPanel eastPanel = new JPanel();
 		eastPanel.setBackground(Color.LIGHT_GRAY);
 		eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+		
 		scoreLabel = new JLabel("Score: " + Integer.toString(score) + " ");
 		scoreLabel.setFont(new Font("Monotype Corsiva", Font.PLAIN, 30));
 		eastPanel.add(scoreLabel);
@@ -125,8 +129,8 @@ public class OpponentPanel extends JPanel implements Runnable{
 
 			lock.lock();
 
-			repaint();
-			revalidate();
+			this.revalidate();
+			this.repaint();
 //			if(refreshFlag ==true){
 //				refreshOpponnetHand();
 //				refreshFlag=false;
@@ -137,6 +141,12 @@ public class OpponentPanel extends JPanel implements Runnable{
 //			collectionPanel.revalidate();
 						
 		}
+	}
+	public static  void setScore(int score){
+		scoreLabel.setText("Score: " + Integer.toString(score));
+	}
+	public static OpponentCollectionPanel returnOpponentCollectionPanel(){
+		return opponentCollectionPanel;
 	}
 	public void incScore(int incBy){
 		score = score + incBy;
@@ -149,10 +159,10 @@ public class OpponentPanel extends JPanel implements Runnable{
 		refreshOpponentHand();
 	}
 	
-	public void addToCapturedCard(String imagePath){
-		capturedCardPane.insertIcon(new ImageIcon(imagePath));
-		
-	}
+//	public void addToCapturedCard(String imagePath){
+//		opponentCollectionPanel.insertIcon(new ImageIcon(imagePath));
+//		
+//	}
 	
 	
 	public static void refreshOpponentHand(){
