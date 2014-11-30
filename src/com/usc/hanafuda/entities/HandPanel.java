@@ -144,13 +144,16 @@ public class HandPanel extends JPanel implements Runnable{
 			cb.setCardImage(hand.get(i));			
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
-					
+					for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+						HandPanel.cardButtonList.get(j).moveDown();
+					}
+					refreshDisplay();
 					Card c = ((CardButton) aa.getSource()).returnCard();
 
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;
 						
-						cb.moveUpDown();										
+						cb.moveUp();										
 						refreshDisplay();
 
 				}
@@ -175,12 +178,15 @@ public class HandPanel extends JPanel implements Runnable{
 			cb.setCardImage(hand.get(i));			
 			cb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent aa) {
-					//moveDownAllCards();
+					for(int j=0;j<FieldPanel.cardButtonList.size();j++){
+						HandPanel.cardButtonList.get(j).moveDown();
+					}
+					
 					Card c = ((CardButton) aa.getSource()).returnCard();
 
 						highlightMatchingCards(c);
 						currentSelectedHandCard =c;						
-						cb.moveUpDown();	
+						cb.moveUp();	
 						
 				}
 			});			
@@ -220,12 +226,12 @@ public class HandPanel extends JPanel implements Runnable{
 			}
 	}
 	
-	/*public static void moveDownAllCards(){
+	public static void moveDownAllCards(){
 		for(int j=0;j<FieldPanel.cardButtonList.size();j++){
 			FieldPanel.cardButtonList.get(j).moveDown();
 		}
 
-	}*/
+	}
 	public static void setScore(int i){
 		score = i;
 		playerScore.setText("Score: " + Integer.toString(score));

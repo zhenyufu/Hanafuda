@@ -38,8 +38,8 @@ public class CardButton extends JButton{
 	public boolean isCardUp() {
 		return cardUp;
 	}
-	public void moveUpDown(){
-		if(x == 20) { 
+	public void moveUp(){
+		/*if(x == 20) { 
 			x = 40;
 			HandPanel.aCardIsUp = false;
 			cardUp = false;
@@ -48,12 +48,12 @@ public class CardButton extends JButton{
 			x = 20; 
 			HandPanel.aCardIsUp = true;
 			cardUp = true;
-		}		
+		}	*/	
+		x = 20;
 	}
 	
 	public void moveDown(){
 		x = 40;
-		HandPanel.aCardIsUp = false;
 	}
 
 	public void setCardImage(Card card){
