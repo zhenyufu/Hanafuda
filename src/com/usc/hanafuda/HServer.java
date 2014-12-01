@@ -71,7 +71,7 @@ public class HServer {
 	
 	
 	// Send a card to a specific client 
-	public void sendCard (Card cd, ServerThread current) {
+	public synchronized void sendCard (Card cd, ServerThread current) {
 		//DEBUG
 		//System.out.println ("Server: Sending card to client: " + cd.getName());
 		
@@ -161,6 +161,7 @@ public class HServer {
 	// This method will send the updated field to the opponent of the current player
 	public synchronized void updateField (ServerThread oppo) {
 		sendMessage("123",oppo); // Junk message to allow Signal:UpdateField to be sent
+		
 		sendMessage ("Signal:UpdateField", oppo);
 
 		for(int j=0; j < Field.size(); j++) {
@@ -177,6 +178,8 @@ public class HServer {
 			
 			sendCard (Field.get (j), oppo);
 		}			
+		
+		sendMessage ("Signal:UpdateFieldEnded", oppo);
 		
 	} // End of updateField() block
 	
@@ -199,18 +202,20 @@ public class HServer {
 			sendCard (Collection.get (j), oppo);
 		}
 		
+		sendMessage ("Signal:SendOpponentCollectionEnded", oppo);
+		
 	} // End of updateOpponenetCollection() block
 	
 	
 	// This method will send card from the deck to the current client
-	public void sendCardFromDeck () {
+	public synchronized void sendCardFromDeck () {
 		// Draw card from deck
 		Card drawnCard = deck.drawCard();
 		
 		// Inform the player that a card will be sent
-		sendMessage ("Signal:SendCardFromDeck", currentPlayer); 
+		sendMessage ("Signal:SendCardFromDeck", currentPlayer);
 		
-		sendCard(drawnCard, currentPlayer);
+		sendCard (drawnCard, currentPlayer);
 		
 	}
 	

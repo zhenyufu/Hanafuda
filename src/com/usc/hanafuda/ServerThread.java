@@ -37,6 +37,7 @@ public class ServerThread extends Thread {
 	public void sendCard (Card cd){
 		try {
 			// Send as object instead of using printwriter
+			os.reset();
 			os.writeObject ("Signal:SendCard");
 			os.flush();
 			
@@ -60,6 +61,7 @@ public class ServerThread extends Thread {
 	// This method sends a String to the client
 	public void send (String message) {
 		try {
+			os.reset();
 			os.writeObject (message);
 			os.flush();
 			
