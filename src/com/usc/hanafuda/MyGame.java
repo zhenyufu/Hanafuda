@@ -39,7 +39,7 @@ public class MyGame extends JFrame {
 	}
 	
 	
-	public GameScreen getGameScreen() {
+	public synchronized GameScreen getGameScreen() {
 		return gameScreen;
 	}
 	

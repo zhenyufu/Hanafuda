@@ -110,7 +110,7 @@ public class FieldPanel extends JPanel {
 	
 	public synchronized void removeAllCardButtons() {
 		//DEBUG
-		System.out.println ("FieldPanel: Entering removeAllCardButtons()");
+		//System.out.println ("FieldPanel: Entering removeAllCardButtons()");
 		
 		for (int i = 0 ; i < cardButtonList.size(); i++) {
 			this.remove (cardButtonList.get(i));
@@ -125,7 +125,7 @@ public class FieldPanel extends JPanel {
 	
 	public synchronized void refreshField() {
 		//DEBUG
-		System.out.println("FieldPanel: Entering refreshField()");
+		//System.out.println("FieldPanel: Entering refreshField()");
 		
 		ArrayList<Card> field = hClient.getField();
 		
@@ -149,7 +149,7 @@ public class FieldPanel extends JPanel {
 	
 	
 	public synchronized void refreshDisplay() {
-		System.out.println ("FieldPanel: Entering refreshDisplay()");
+		//System.out.println ("FieldPanel: Entering refreshDisplay()");
 		
 		for (int i = 0 ; i < cardButtonList.size(); i++) {
 			this.add (cardButtonList.get(i));
@@ -227,7 +227,7 @@ public class FieldPanel extends JPanel {
 		}
 		
 		public void actionPerformed (ActionEvent e) {
-			System.out.println ("Deck has been clicked.");
+			//System.out.println ("Deck has been clicked.");
 			numDeckClicked++;
 			
 			HandPanel hp = gameScreen.getHandPanel();

@@ -2,16 +2,12 @@ package com.usc.hanafuda.entities;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,7 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 
@@ -36,25 +31,23 @@ public class OpponentPanel extends JPanel {
 	private OpponentCollectionPanel opponentCollectionPanel;
 
 	private JButton showCapturedCard;
-	private JLabel nameLabel, numCards, scoreLabel, userScore;
-	private String playerName = " ";
+	private JLabel numCards, scoreLabel;
 	private int cardLeft = 8;
 	private int score = 0;
 	private BufferedImage cardFaceDown;
 	
-	Lock lock = new ReentrantLock();
-	
 	public OpponentPanel (HClient hc, GameScreen gs) {
 		this.hClient = hc;
 		this.gameScreen = gs;
-		this.playerName = hc.getUserName();
 		
 		this.setLayout (new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		// Set up name label and captured card button
-		nameLabel = new JLabel (playerName + " ");
+		/*
+		nameLabel = new JLabel (" ");
 		nameLabel.setFont (new Font (Font.DIALOG, Font.PLAIN, 30));
 		this.add (nameLabel);
+		*/
 		this.add (Box.createHorizontalGlue());
 		showCapturedCard = new JButton ("Show Captured Cards");
 		showCapturedCard.setMaximumSize (new Dimension (160,40));
@@ -90,12 +83,12 @@ public class OpponentPanel extends JPanel {
 		
 		// Create label for score
 		scoreLabel = new JLabel ("Score: " + Integer.toString(score) + " ");
-		scoreLabel.setFont (new Font (Font.DIALOG, Font.PLAIN, 30));
+		scoreLabel.setFont (new Font ("Arial", Font.PLAIN, 30));
 		eastPanel.add (scoreLabel);
 		
 		// Create label for cards left
 		numCards = new JLabel ("Cards left: " + cardLeft + " ");
-		numCards.setFont (new Font (Font.DIALOG, Font.PLAIN, 30));
+		numCards.setFont (new Font ("Arial", Font.PLAIN, 30));
 		eastPanel.add (numCards);
 		
 		this.add (eastPanel);

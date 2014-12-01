@@ -47,11 +47,11 @@ public class HServer {
 				if (vServerThread.size() == 1) {
 					//The first one connected is default to be the host
 					sendMessage ("Signal:Host", st);
-					System.out.println("host connected");
+					//System.out.println("host connected");
 				}
 				
 				//DEBUG
-				System.out.println ("Client has connected to the server.");
+				//System.out.println ("Client has connected to the server.");
 				
 			}
 		} catch (IOException ioe) {
@@ -63,7 +63,7 @@ public class HServer {
 	// Send a message to a specific client
 	public synchronized void  sendMessage (String msg, ServerThread current) {
 		//DEBUG
-		System.out.println ("Server: Sending message to client: " + msg);
+		//System.out.println ("Server: Sending message to client: " + msg);
 		
 		current.send (msg);
 		
@@ -148,7 +148,7 @@ public class HServer {
 		}
 		
 		//DEBUG
-		System.out.println ("Amount of cards in deck: " + deck.numCardsLeft());
+		//System.out.println ("Amount of cards in deck: " + deck.numCardsLeft());
 		
 		// Notify first player of his/her turn; as default, the host gets the first turn
 		ServerThread host = vServerThread.get (0);
@@ -239,7 +239,7 @@ public class HServer {
 	public boolean GameIsOver() {		
 		if(deck.numCardsLeft()==8) {
 			//DEBUG
-			System.out.println ("Game is over");
+			//System.out.println ("Game is over");
 			
 			return true;
 		}
@@ -253,33 +253,51 @@ public class HServer {
 		for (ServerThread s : vServerThread) {
 			sendMessage ("Signal:GameEnded", s);
 		}
+		
 	}
 	
 	
 	public boolean hasReceivedFinalHostScore() {
 		return receivedFinalHostScore;
+		
 	}
 	
 	
 	public boolean hasReceivedFinalGuestScore() {
 		return receivedFinalGuestScore;
+		
 	}
 	
 	
 	public void setFinalHostScore (int s) {
 		finalHostScore = s;
 		receivedFinalHostScore = true;
+		
 	}
 	
 	
 	public void setFinalGuestScore (int s) {
 		finalGuestScore = s;
 		receivedFinalGuestScore = true;
+		
 	}
 	
 	
-	public void saveScoresInDatabase() {
+	public void saveScoresInDatabase() {		
 		new Database (hostName, clientName, finalHostScore, finalGuestScore);
+		
+	}
+	
+	
+	public void setHostName (String s) {
+		hostName = s;
+		
+	}
+	
+	
+	public void setClientName (String s) {
+		clientName = s;
+		
 	}
 
 	

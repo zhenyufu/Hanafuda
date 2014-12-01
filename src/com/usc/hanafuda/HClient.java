@@ -32,10 +32,10 @@ public class HClient extends Thread {
 	private int AnotherScore = 0;
 	private Card anotherSelectedCard;
 	private Card receivedDeckCard;
+	private boolean calculatedFinalScore = false;
+	private boolean receivedOpponentFinalScore = false;
 		
 	private Scanner scan;
-	private boolean hostSet = false;
-	private boolean deckButtonClicked = false;
 	
 	
 	public HClient (String hostname, int port, String userName) {	
@@ -49,6 +49,8 @@ public class HClient extends Thread {
 			this.os = new ObjectOutputStream (s.getOutputStream());
 			this.is = new ObjectInputStream (s.getInputStream());
 			this.start();
+			
+			sendName();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -69,12 +71,6 @@ public class HClient extends Thread {
 	
 	public boolean getMyTurn() {
 		return MyTurn;
-		
-	}
-	
-	
-	public void setDeckButtonStatus (boolean b) {
-		deckButtonClicked = b;
 		
 	}
 
@@ -111,6 +107,20 @@ public class HClient extends Thread {
 	
 	public void resetReceivedDeckCard() {
 		receivedDeckCard = null;
+	}
+	
+	
+	public void sendName() {
+		sendMessage ("Signal:SendName");
+		
+		// Add an h to the front of Host's score to differentiate between them
+		if (Host) {
+			sendMessage ("h" + userName);
+		}
+		else {
+			sendMessage (userName);
+		}
+		
 	}
 	
 	
@@ -315,7 +325,7 @@ public class HClient extends Thread {
 	// Requests a card from the deck from the server
 	public void getCardFromDeck() {
 		//DEBUG
-		System.out.println ("Requesting card from deck.");
+		//System.out.println ("Requesting card from deck.");
 		
 		sendMessage ("Signal:GetCardFromDeck");
 		
@@ -377,9 +387,9 @@ public class HClient extends Thread {
 			if (cc.isGaji()) {
 				// Check if field has any cards from gaji month
 				for (Card fc : Field) {
-					//TODO: May want to show cards being added to hand
 					if (fc.getMonth() == cc.getGajiMonth()) {
 						Collection.add(fc);
+						myGame.getGameScreen().getHandPanel().returnCollectionPanel().updateCollection();
 					}
 				}
 			}
@@ -473,6 +483,14 @@ public class HClient extends Thread {
 		score = finalScore;
 		myGame.getGameScreen().getHandPanel().setScore (score);
 		
+		calculatedFinalScore = true;
+		
+		if (receivedOpponentFinalScore) {
+			if (score > AnotherScore) {
+				myGame.getGameScreen().sendFinalScoreMessage ("\n\n****************************\n\n" + userName + " won!" + "\n****************************\n\n");
+			}
+		}
+		
 		return finalScore;
 	}
 	
@@ -483,14 +501,14 @@ public class HClient extends Thread {
 				String line = (String) is.readObject();
 				
 				//DEBUG
-				System.out.println ("Client: Received message from Server: "+ line);
+				//System.out.println ("Client: Received message from Server: "+ line);
 				
 				
 				if (line.equals ("Signal:Host")) {					
 					Host = true;
 					
 					//DEBUG
-					System.out.println ("I am the host: " + Host);
+					//System.out.println ("I am the host: " + Host);
 					
 				}
 				
@@ -560,7 +578,7 @@ public class HClient extends Thread {
 							OpponentCollection.add(received);
 							
 							//DEBUG
-							System.out.println ("Collection Card received: " + received.getName());
+							//System.out.println ("Collection Card received: " + received.getName());
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
@@ -631,17 +649,16 @@ public class HClient extends Thread {
 					*/
 					
 					while (myGame.getGameScreen() == null) {
-						System.out.println ("Waiting...");
+						//System.out.println ("Waiting...");
+						if (myGame.getGameScreen() != null) {
+							break;
+						}
 					}
 					
 					//DEBUG
-					System.out.println ("In Signal:Turn");
+					//System.out.println ("In Signal:Turn");
 					
 					MyTurn = true;
-					
-					//TODO: Check if need to update field here
-						
-					//TODO: Check if need to update opponent panel and collection here
 					
 					// Enable cards in hand
 					myGame.getGameScreen().getHandPanel().enableAllCards();
@@ -748,6 +765,23 @@ public class HClient extends Thread {
 				}
 				
 				
+				// Receive opponent's final score
+				else if (line.equals ("Signal:FinalScoreOfAnother")) {
+						String nextMessage = (String) is.readObject();
+						
+						AnotherScore = Integer.valueOf(nextMessage);
+						
+						myGame.getGameScreen().getOpponentPanel().setScore (AnotherScore);
+						
+						if (calculatedFinalScore) {
+							if (score > AnotherScore) {
+								myGame.getGameScreen().sendFinalScoreMessage ("\n\n****************************\n" + userName + " won!" + "\n****************************\n\n");
+							}
+						}
+					
+				}
+				
+				
 				// Receive opponent's selected card
 				else if (line.equals("Signal:ReceiveSelectedCard")){
 					String nextMessage = (String) is.readObject();
@@ -771,10 +805,10 @@ public class HClient extends Thread {
 				}
 				
 				
-				else if (line.equals ("Signal:GameEnded")) {  
-					//TODO: print to GUI that the game ended and show final score
+				else if (line.equals ("Signal:GameEnded")) {
 					calculateFinalScore();
 					sendFinalScore();
+					
 				}				
 
 			

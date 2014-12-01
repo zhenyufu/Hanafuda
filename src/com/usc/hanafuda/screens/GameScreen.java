@@ -123,6 +123,12 @@ public class GameScreen extends JPanel {
 	}
 	
 	
+	public void sendFinalScoreMessage (String message) {
+		getMyGame().getChatClient().sendMessage (message);
+		textArea.append (message + "\n");
+	}
+	
+	
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 	

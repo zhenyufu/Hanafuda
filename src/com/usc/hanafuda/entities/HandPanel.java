@@ -36,7 +36,6 @@ public class HandPanel extends JPanel {
 	private String myName;
 	
 	boolean aCardIsUp = false;
-	private int numMatchingCards = -1;
 	
 	Lock lock = new ReentrantLock();
 	
@@ -59,13 +58,13 @@ public class HandPanel extends JPanel {
 		// Set up player's name which is displayed next to player's hand
 		JLabel playerName = new JLabel (myName);
 		playerName.setBounds (860, 10, 200, 50);
-		playerName.setFont (new Font (Font.DIALOG, Font.PLAIN, 30));
+		playerName.setFont (new Font ("Arial", Font.PLAIN, 30));
 		this.add (playerName);
 		
 		// Set up player's score which is displayed next to player's hand
 		playerScore = new JLabel ("Score: " + Integer.toString(score));
 		playerScore.setBounds (860, 35, 250, 100);
-		playerScore.setFont (new Font (Font.DIALOG, Font.PLAIN, 30));
+		playerScore.setFont (new Font ("Arial", Font.PLAIN, 30));
 		this.add (playerScore);
 		
 		// Set up collection panel and button
@@ -98,7 +97,7 @@ public class HandPanel extends JPanel {
 	
 	public synchronized void enableAllCards() {
 		//DEBUG
-		System.out.println ("Entering enableAllCards()");
+		//System.out.println ("Entering enableAllCards()");
 		
 		for (int i = 0; i < cardButtonList.size(); i++) {
 			cardButtonList.get(i).setEnabled(true);
@@ -109,7 +108,7 @@ public class HandPanel extends JPanel {
 		this.validate();
 		
 		//DEBUG
-		System.out.println ("Finished enabling all cards.");
+		//System.out.println ("Finished enabling all cards.");
 	}
 	
 	
@@ -131,18 +130,6 @@ public class HandPanel extends JPanel {
 	}
 	
 	
-	public void resetNumMatchingCards() {
-		numMatchingCards = -1;
-		
-	}
-	
-	
-	public int returnNumMatchingCards() {
-		return numMatchingCards;
-		
-	}
-	
-	
 	public void resetSelectedHandCard() {
 		currentSelectedHandCard = null;
 		
@@ -151,7 +138,7 @@ public class HandPanel extends JPanel {
 	
 	public void initialDeal() {
 		//DEBUG
-		System.out.println ("HandPanel: Entering initialDeal()");
+		//System.out.println ("HandPanel: Entering initialDeal()");
 		
 		ArrayList<Card> hand = hClient.getHand();
 		
@@ -171,7 +158,7 @@ public class HandPanel extends JPanel {
 	
 	public synchronized void refreshHand() {
 		//DEBUG
-		System.out.println ("HandPanel: Entering refreshHand()");
+		//System.out.println ("HandPanel: Entering refreshHand()");
 		
 		ArrayList<Card> hand = hClient.getHand();
 		
@@ -199,13 +186,12 @@ public class HandPanel extends JPanel {
 	
 	public void highlightMatchingCards (Card c) {
 		//DEBUG
-		System.out.println ("HandPanel: highlightMatchingCards()");
+		//System.out.println ("HandPanel: highlightMatchingCards()");
 		
 		unhighlightAllCards();
 		
 		ArrayList<Card> matchingCards = hClient.getMatchingCards (c);
 		ArrayList<CardButton> cbList = gameScreen.getFieldPanel().getCardButtonList();
-		numMatchingCards = matchingCards.size();
 		
 		// Set glow and repaint cards in the field that match c
 		for (int i = 0 ; i < matchingCards.size(); i++) {
@@ -222,7 +208,7 @@ public class HandPanel extends JPanel {
 	
 	public void unhighlightAllCards() {
 		//DEBUG
-		System.out.println ("HandPanel: Entering unhighlightAllCards()");
+		//System.out.println ("HandPanel: Entering unhighlightAllCards()");
 		
 		ArrayList<CardButton> cbList = gameScreen.getFieldPanel().getCardButtonList();
 		
@@ -235,7 +221,7 @@ public class HandPanel extends JPanel {
 	
 	public void setScore (int s) {
 		//DEBUG
-		System.out.println ("HandPanel: Entering setScore()");
+		//System.out.println ("HandPanel: Entering setScore()");
 		
 		score = s;
 		playerScore.setText ("Score: " + Integer.toString (score));
@@ -245,7 +231,7 @@ public class HandPanel extends JPanel {
 	
 	public synchronized void removeAllCardButtons() {
 		//DEBUG
-		System.out.println ("HandPanel: removeAllCardButtons()");
+		//System.out.println ("HandPanel: removeAllCardButtons()");
 		
 		for (int i = 0 ; i < cardButtonList.size(); i++) {
 			this.remove (cardButtonList.get(i));
@@ -259,7 +245,7 @@ public class HandPanel extends JPanel {
 	
 	public synchronized void refreshDisplay() {
 		//DEBUG
-		System.out.println ("HandPanel: Entering refreshDisplay()");
+		//System.out.println ("HandPanel: Entering refreshDisplay()");
 		
 		for (int i = 0 ; i < cardButtonList.size(); i++) {
 			this.add (cardButtonList.get(i));
@@ -279,7 +265,7 @@ public class HandPanel extends JPanel {
 	
 	
 	public void incScore (int incBy) {
-		System.out.println ("HandPanel: Entering incScore()");
+		//System.out.println ("HandPanel: Entering incScore()");
 		
 		score = score + incBy;
 		playerScore.setText ("Score: " + Integer.toString (score));

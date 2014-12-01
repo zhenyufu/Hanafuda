@@ -107,7 +107,7 @@ public class ServerThread extends Thread {
 							//DEBUG
 							//System.out.println("Field Card received");
 							received.printName();
-							System.out.println("I have <"+hs.Field.size()+"> cards in Field");
+							//System.out.println("I have <"+hs.Field.size()+"> cards in Field");
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
@@ -130,7 +130,7 @@ public class ServerThread extends Thread {
 							//DEBUG
 							//System.out.println("Field Card received");
 							received.printName();
-							System.out.println ("I have <"+hs.Collection.size()+"> cards in Collection");
+							//System.out.println ("I have <"+hs.Collection.size()+"> cards in Collection");
 							
 						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
@@ -228,16 +228,36 @@ public class ServerThread extends Thread {
 					}
 					
 					// If the game is over
-					else {
-						//TODO: Signal client to find final score
-						
+					else {						
 						hs.notifyEndOfGame();
+						
 					}					
+				}
+				
+				if (line.equals ("Signal:SendName")) {					
+					String nextMessage = (String) is.readObject();
+					
+					// If the score belongs to the host
+					if (nextMessage.charAt(0) == 'h') {		
+						String name = nextMessage.substring(1, nextMessage.length());
+						
+						hs.setHostName (name);
+						
+						//DEBUG
+						//System.out.println ("Set host name to: " + name);
+						
+					}
+					
+					// If the score is not the host's
+					else {						
+						hs.setClientName (nextMessage);
+						
+					}
 				}
 				
 				if (line.equals ("Signal:SendScore")) {
 					//DEBUG
-					System.out.println("Score!");
+					//System.out.println("Score!");
 					
 					String nextMessage = (String) is.readObject();
 					
@@ -250,7 +270,7 @@ public class ServerThread extends Thread {
 						PendingScore = score;
 						
 						//DEBUG
-						System.out.println ("Set host score to: " + score);
+						//System.out.println ("Set host score to: " + score);
 						
 						// Set pending target to opponent (not host)
 						ServerThread another = hs.vServerThread.get(1);
@@ -270,7 +290,7 @@ public class ServerThread extends Thread {
 						PendingScore = score;
 						
 						//DEBUG
-						System.out.println ("Set other score to: " + score);
+						//System.out.println ("Set other score to: " + score);
 						
 						// Set pending target to opponent (host)
 						ServerThread another = hs.vServerThread.get(0);
@@ -313,7 +333,7 @@ public class ServerThread extends Thread {
 				
 				if (line.equals ("Signal:SendFinalScore")) {
 					//DEBUG
-					System.out.println("FinalScore!");
+					//System.out.println("FinalScore!");
 					
 					String nextMessage = (String) is.readObject();
 					
@@ -330,14 +350,14 @@ public class ServerThread extends Thread {
 						PendingScore = score;
 						
 						//DEBUG
-						System.out.println ("Set host final score to: " + score);
+						//System.out.println ("Set host final score to: " + score);
 						
 						// Set pending target to opponent (not host)
 						ServerThread another = hs.vServerThread.get(1);
 						
 						PendingTarget = another;
 						
-						hs.sendMessage("Signal:ScoreOfAnother", another);
+						hs.sendMessage("Signal:FinalScoreOfAnother", another);
 						hs.sendMessage(Integer.toString(score), another);
 					}
 					
@@ -354,21 +374,21 @@ public class ServerThread extends Thread {
 						PendingScore = score;
 						
 						//DEBUG
-						System.out.println ("Set other final score to: " + score);
+						//System.out.println ("Set other final score to: " + score);
 						
 						// Set pending target to opponent (host)
 						ServerThread another = hs.vServerThread.get(0);
 						
 						PendingTarget = another;
 						
-						hs.sendMessage("Signal:ScoreOfAnother", another);
+						hs.sendMessage("Signal:FinalScoreOfAnother", another);
 						hs.sendMessage(Integer.toString(score), another);
 						
 					}
 				}
 				
 				//DEBUG
-				System.out.println ("Received message: " + line);
+				//System.out.println ("Received message: " + line);
 			} // End of while loop
 		} catch (IOException e) {
 			e.printStackTrace();

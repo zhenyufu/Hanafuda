@@ -29,7 +29,7 @@ public class CollectionPanel extends JPanel {
 	
 	public void updateCollection() {
 		//DEBUG
-		System.out.println ("CollectionPanel: updateCollection()");
+		//System.out.println ("CollectionPanel: updateCollection()");
 		
 		ArrayList<Card> collection = gameScreen.getClient().getCollection();
 		
